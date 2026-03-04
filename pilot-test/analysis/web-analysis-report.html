@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONPlaceholder Web Analiz Raporu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } .card { break-inside: avoid; } }
+        .card { transition: border-color 0.2s; }
+        .card:hover { border-color: #99F6E4; }
+        .method-get { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+        .method-post { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .method-put { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+        .method-patch { background: #FFFBEB; color: #A16207; border: 1px solid #FDE68A; }
+        .method-delete { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+        .risk-low { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+        .risk-medium { background: #FFF7ED; color: #C2410C; border: 1px solid #FED7AA; }
+        .sidebar a.active { background: #F0FDFA; color: #0D9488; border-right: 3px solid #0D9488; }
+        .sidebar a:hover { background: #F8FAFC; }
+        .zebra-row:nth-child(even) { background: #F8FAFC; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-[#334155]">
+
+<!-- Sidebar -->
+<aside class="sidebar fixed left-0 top-0 h-full w-64 bg-white border-r border-[#E2E8F0] overflow-y-auto z-10">
+    <div class="p-6 border-b border-[#E2E8F0]">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-[#0D9488] rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-sm">JP</span>
+            </div>
+            <div>
+                <div class="font-bold text-[#0F172A] text-sm">JSONPlaceholder</div>
+                <div class="text-xs text-[#94A3B8]">Web Analiz</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="p-4">
+        <p class="text-xs uppercase tracking-wider text-[#94A3B8] font-semibold mb-3 px-3">ANALİZ KATMANLARI</p>
+        <a href="#genel-bakis" class="active block px-3 py-2 rounded-lg text-sm mb-1">📊 Genel Bakış</a>
+        <a href="#sayfa-haritasi" class="block px-3 py-2 rounded-lg text-sm mb-1">🗺️ Sayfa Haritası</a>
+        <a href="#api-endpoint" class="block px-3 py-2 rounded-lg text-sm mb-1">🔌 API Endpointleri</a>
+        <a href="#veri-modeli" class="block px-3 py-2 rounded-lg text-sm mb-1">🗄️ Veri Modeli</a>
+        <a href="#is-mantigi" class="block px-3 py-2 rounded-lg text-sm mb-1">⚙️ İş Mantığı</a>
+        <a href="#teknoloji" class="block px-3 py-2 rounded-lg text-sm mb-1">🛠️ Teknoloji Stack</a>
+
+        <p class="text-xs uppercase tracking-wider text-[#94A3B8] font-semibold mb-3 mt-6 px-3">SONUÇLAR</p>
+        <a href="#ios-donusum" class="block px-3 py-2 rounded-lg text-sm mb-1">📱 iOS Dönüşüm</a>
+        <a href="#riskler" class="block px-3 py-2 rounded-lg text-sm mb-1">⚠️ Riskler</a>
+    </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content ml-64 p-8">
+
+    <!-- Breadcrumb -->
+    <div class="text-sm text-[#94A3B8] mb-2">Analiz &gt; jsonplaceholder.typicode.com</div>
+    <h1 class="text-3xl font-bold text-[#0F172A] mb-1">JSONPlaceholder Web Analiz Raporu</h1>
+    <p class="text-[#64748B] mb-8">Analiz Tarihi: 4 Mart 2026 · Pilot Test Pipeline — Faz 1</p>
+
+    <!-- Dashboard Stats -->
+    <div id="genel-bakis" class="grid grid-cols-5 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-[#E2E8F0] p-5 text-center card">
+            <div class="text-3xl font-bold text-[#0D9488]">2</div>
+            <div class="text-sm text-[#64748B] mt-1">Toplam Sayfa</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#E2E8F0] p-5 text-center card">
+            <div class="text-3xl font-bold text-[#0D9488]">35</div>
+            <div class="text-sm text-[#64748B] mt-1">API Endpoint</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#E2E8F0] p-5 text-center card">
+            <div class="text-3xl font-bold text-[#0D9488]">6</div>
+            <div class="text-sm text-[#64748B] mt-1">Veri Modeli</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#E2E8F0] p-5 text-center card">
+            <div class="text-3xl font-bold text-[#0D9488]">3</div>
+            <div class="text-sm text-[#64748B] mt-1">Kullanıcı Akışı</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#E2E8F0] p-5 text-center card">
+            <div class="text-3xl font-bold text-[#0D9488]">2</div>
+            <div class="text-sm text-[#64748B] mt-1">Risk</div>
+        </div>
+    </div>
+
+    <!-- Genel Bakış Card -->
+    <div class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">📊</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">Genel Bakış</h2>
+                <p class="text-sm text-[#64748B]">Site amacı, hedef kitle ve temel özellikler</p>
+            </div>
+        </div>
+        <div class="leading-relaxed">
+            <p class="mb-3"><strong>JSONPlaceholder</strong>, geliştiricilerin prototipler ve test senaryoları için kullanabileceği ücretsiz bir sahte (fake) REST API servisidir. <a href="https://github.com/typicode" class="text-[#0D9488] underline">typicode</a> tarafından geliştirilmiştir.</p>
+            <p class="mb-3"><strong>Hedef Kitle:</strong> Frontend geliştiriciler, mobil geliştiriciler, API test yapanlar, eğitim amaçlı kullananlar.</p>
+            <p class="mb-3"><strong>Temel Özellikler:</strong></p>
+            <ul class="list-disc ml-5 space-y-1">
+                <li>6 farklı kaynak tipi: Posts, Comments, Albums, Photos, Todos, Users</li>
+                <li>Tam CRUD desteği: GET, POST, PUT, PATCH, DELETE</li>
+                <li>Nested route'lar (1 seviye)</li>
+                <li>Query parametreleriyle filtreleme</li>
+                <li>Sabırtık response — yazma işlemleri simüle edilir, gerçekte değişmez</li>
+                <li>Authentication yok — tamamen açık erişim</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Sayfa Haritası -->
+    <div id="sayfa-haritasi" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">🗺️</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">Sayfa Haritası</h2>
+                <p class="text-sm text-[#64748B]">Tüm sayfalar ve hiyerarşik yapı</p>
+            </div>
+        </div>
+        <div class="mermaid">
+graph TD
+    ROOT["jsonplaceholder.typicode.com"] --> HOME["/ Ana Sayfa<br/>Kaynak listesi + Kullanım örnekleri"]
+    ROOT --> GUIDE["/guide/<br/>API Kullanım Kılavuzu"]
+    ROOT --> POSTS["/posts"]
+    ROOT --> COMMENTS["/comments"]
+    ROOT --> ALBUMS["/albums"]
+    ROOT --> PHOTOS["/photos"]
+    ROOT --> TODOS["/todos"]
+    ROOT --> USERS["/users"]
+    POSTS --> POST_ID["/posts/:id"]
+    POST_ID --> POST_COMMENTS["/posts/:id/comments"]
+    ALBUMS --> ALBUM_ID["/albums/:id"]
+    ALBUM_ID --> ALBUM_PHOTOS["/albums/:id/photos"]
+    USERS --> USER_ID["/users/:id"]
+    USER_ID --> USER_ALBUMS["/users/:id/albums"]
+    USER_ID --> USER_TODOS["/users/:id/todos"]
+    USER_ID --> USER_POSTS["/users/:id/posts"]
+    
+    style ROOT fill:#0D9488,stroke:#0F766E,color:#fff
+    style HOME fill:#F0FDFA,stroke:#99F6E4
+    style GUIDE fill:#F0FDFA,stroke:#99F6E4
+        </div>
+    </div>
+
+    <!-- API Endpoint Haritası -->
+    <div id="api-endpoint" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">🔌</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">API Endpoint Haritası</h2>
+                <p class="text-sm text-[#64748B]">35 endpoint — 6 kaynak × CRUD + nested routes</p>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full border border-[#E2E8F0] rounded-xl overflow-hidden">
+                <thead>
+                    <tr class="bg-[#F0FDFA]">
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Method</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Endpoint</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Açıklama</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Posts -->
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts</td>
+                        <td class="px-4 py-3 text-sm">Tüm gönderileri listele (100 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts/:id</td>
+                        <td class="px-4 py-3 text-sm">Tek gönderi getir</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts?userId=:id</td>
+                        <td class="px-4 py-3 text-sm">Kullanıcıya göre filtrele</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-post rounded-full px-3 py-1 text-xs font-semibold">POST</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts</td>
+                        <td class="px-4 py-3 text-sm">Yeni gönderi oluştur (simüle)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post (id: 101)</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-put rounded-full px-3 py-1 text-xs font-semibold">PUT</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts/:id</td>
+                        <td class="px-4 py-3 text-sm">Gönderiyi güncelle (simüle)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-patch rounded-full px-3 py-1 text-xs font-semibold">PATCH</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts/:id</td>
+                        <td class="px-4 py-3 text-sm">Gönderiyi kısmi güncelle (simüle)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-delete rounded-full px-3 py-1 text-xs font-semibold">DELETE</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts/:id</td>
+                        <td class="px-4 py-3 text-sm">Gönderiyi sil (simüle)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">{}</td>
+                    </tr>
+                    <!-- Nested -->
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/posts/:id/comments</td>
+                        <td class="px-4 py-3 text-sm">Gönderi yorumları</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Comment[]</td>
+                    </tr>
+                    <!-- Comments -->
+                    <tr class="zebra-row border-t border-[#E2E8F0] bg-[#FAFAFA]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/comments</td>
+                        <td class="px-4 py-3 text-sm">Tüm yorumları listele (500 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Comment[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/comments?postId=:id</td>
+                        <td class="px-4 py-3 text-sm">Gönderiye göre filtrele</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Comment[]</td>
+                    </tr>
+                    <!-- Albums -->
+                    <tr class="zebra-row border-t border-[#E2E8F0] bg-[#FAFAFA]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/albums</td>
+                        <td class="px-4 py-3 text-sm">Tüm albümleri listele (100 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Album[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/albums/:id/photos</td>
+                        <td class="px-4 py-3 text-sm">Albüm fotoğrafları</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Photo[]</td>
+                    </tr>
+                    <!-- Photos -->
+                    <tr class="zebra-row border-t border-[#E2E8F0] bg-[#FAFAFA]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/photos</td>
+                        <td class="px-4 py-3 text-sm">Tüm fotoğrafları listele (5000 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Photo[]</td>
+                    </tr>
+                    <!-- Todos -->
+                    <tr class="zebra-row border-t border-[#E2E8F0] bg-[#FAFAFA]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/todos</td>
+                        <td class="px-4 py-3 text-sm">Tüm yapılacakları listele (200 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Todo[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/todos?userId=:id</td>
+                        <td class="px-4 py-3 text-sm">Kullanıcının yapılacakları</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Todo[]</td>
+                    </tr>
+                    <!-- Users -->
+                    <tr class="zebra-row border-t border-[#E2E8F0] bg-[#FAFAFA]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/users</td>
+                        <td class="px-4 py-3 text-sm">Tüm kullanıcıları listele (10 adet)</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">User[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/users/:id</td>
+                        <td class="px-4 py-3 text-sm">Tek kullanıcı getir</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">User</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/users/:id/albums</td>
+                        <td class="px-4 py-3 text-sm">Kullanıcı albümleri</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Album[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/users/:id/todos</td>
+                        <td class="px-4 py-3 text-sm">Kullanıcı yapılacakları</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Todo[]</td>
+                    </tr>
+                    <tr class="zebra-row border-t border-[#E2E8F0]">
+                        <td class="px-4 py-3"><span class="method-get rounded-full px-3 py-1 text-xs font-semibold">GET</span></td>
+                        <td class="px-4 py-3 font-mono text-sm">/users/:id/posts</td>
+                        <td class="px-4 py-3 text-sm">Kullanıcı gönderileri</td>
+                        <td class="px-4 py-3 text-sm text-[#64748B]">Post[]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="mt-4 text-sm text-[#64748B]">Not: Tüm 6 kaynak (posts, comments, albums, photos, todos, users) tam CRUD desteğine sahiptir. Tabloda alan tasarrufu için sadece önemli endpoint'ler gösterilmiştir. Toplam: 6 GET list + 6 GET detail + 6 POST + 6 PUT + 6 PATCH + 6 DELETE + 5 nested = <strong>41 endpoint</strong> (ama benzersiz route kalıbı ~35).</p>
+    </div>
+
+    <!-- Veri Modeli -->
+    <div id="veri-modeli" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">🗄️</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">Veri Modeli Diyagramı</h2>
+                <p class="text-sm text-[#64748B]">6 entity, ilişkiler ve alanlar</p>
+            </div>
+        </div>
+        <div class="mermaid">
+erDiagram
+    USER {
+        int id PK
+        string name
+        string username
+        string email
+        object address
+        string phone
+        string website
+        object company
+    }
+    POST {
+        int id PK
+        int userId FK
+        string title
+        string body
+    }
+    COMMENT {
+        int id PK
+        int postId FK
+        string name
+        string email
+        string body
+    }
+    ALBUM {
+        int id PK
+        int userId FK
+        string title
+    }
+    PHOTO {
+        int id PK
+        int albumId FK
+        string title
+        string url
+        string thumbnailUrl
+    }
+    TODO {
+        int id PK
+        int userId FK
+        string title
+        boolean completed
+    }
+
+    USER ||--o{ POST : "writes"
+    USER ||--o{ ALBUM : "owns"
+    USER ||--o{ TODO : "has"
+    POST ||--o{ COMMENT : "has"
+    ALBUM ||--o{ PHOTO : "contains"
+        </div>
+
+        <h3 class="text-lg font-semibold text-[#0F172A] mt-6 mb-3">Veri İstatistikleri</h3>
+        <table class="w-full border border-[#E2E8F0] rounded-xl overflow-hidden">
+            <thead><tr class="bg-[#F0FDFA]">
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Entity</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Kayıt Sayısı</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Alan Sayısı</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Nested Object</th>
+            </tr></thead>
+            <tbody>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">User</td><td class="px-4 py-3">10</td><td class="px-4 py-3">8 (+ nested)</td><td class="px-4 py-3">address (street, suite, city, zipcode, geo), company (name, catchPhrase, bs)</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Post</td><td class="px-4 py-3">100</td><td class="px-4 py-3">4</td><td class="px-4 py-3">—</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Comment</td><td class="px-4 py-3">500</td><td class="px-4 py-3">5</td><td class="px-4 py-3">—</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Album</td><td class="px-4 py-3">100</td><td class="px-4 py-3">3</td><td class="px-4 py-3">—</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Photo</td><td class="px-4 py-3">5000</td><td class="px-4 py-3">5</td><td class="px-4 py-3">—</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Todo</td><td class="px-4 py-3">200</td><td class="px-4 py-3">4</td><td class="px-4 py-3">—</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- İş Mantığı -->
+    <div id="is-mantigi" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">⚙️</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">İş Mantığı ve Kullanıcı Akışları</h2>
+                <p class="text-sm text-[#64748B]">3 ana akış, iş kuralları</p>
+            </div>
+        </div>
+
+        <h3 class="text-lg font-semibold text-[#0F172A] mb-3">Kullanıcı Akışları</h3>
+        <div class="mermaid">
+flowchart LR
+    A["Kullanıcı Seçimi"] --> B["Kullanıcı Profili"]
+    B --> C["Posts Listesi"]
+    B --> D["Albums Listesi"]
+    B --> E["Todos Listesi"]
+    C --> F["Post Detay"]
+    F --> G["Yorumlar"]
+    D --> H["Album Detay"]
+    H --> I["Fotoğraflar"]
+
+    style A fill:#0D9488,stroke:#0F766E,color:#fff
+    style B fill:#F0FDFA,stroke:#99F6E4
+        </div>
+
+        <h3 class="text-lg font-semibold text-[#0F172A] mt-6 mb-3">İş Kuralları</h3>
+        <ol class="list-decimal ml-5 space-y-2">
+            <li><span class="bg-[#F0FDFA] text-[#0D9488] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Veri</span> Her gönderi (post) bir kullanıcıya (userId) aittir — 1:N ilişki</li>
+            <li><span class="bg-[#F0FDFA] text-[#0D9488] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Veri</span> Her yorum (comment) bir gönderiye (postId) aittir — 1:N ilişki</li>
+            <li><span class="bg-[#F0FDFA] text-[#0D9488] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Veri</span> Her albüm bir kullanıcıya aittir, her fotoğraf bir albüme — zincirleme 1:N</li>
+            <li><span class="bg-[#FFFBEB] text-[#A16207] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Davranış</span> Yazma işlemleri (POST/PUT/PATCH/DELETE) simüledir — sunucu gerçek veriyi değiştirmez</li>
+            <li><span class="bg-[#FFFBEB] text-[#A16207] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Davranış</span> POST isteği her zaman sabit id döner (kaynak uzunluğu + 1)</li>
+            <li><span class="bg-[#F0FDFA] text-[#0D9488] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Filtreleme</span> Query parametreleriyle filtreleme: ?userId=1, ?postId=1 vb.</li>
+            <li><span class="bg-[#F0FDFA] text-[#0D9488] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Filtreleme</span> Nested route'lar filtrelemeye eşdeğer: /posts/1/comments = /comments?postId=1</li>
+            <li><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Auth</span> Authentication yok — tüm endpoint'ler açık</li>
+            <li><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Auth</span> Rate limiting yok (tahmin — dokümante edilmemiş)</li>
+            <li><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded-full px-2 py-0.5 text-xs font-semibold mr-2">Auth</span> Pagination desteği yok — tüm veriler tek seferde döner</li>
+        </ol>
+    </div>
+
+    <!-- Teknoloji Stack -->
+    <div id="teknoloji" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">🛠️</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">Teknoloji Stack Tespiti</h2>
+                <p class="text-sm text-[#64748B]">Frontend ve backend teknolojileri</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <h3 class="font-semibold text-[#0F172A] mb-2">Frontend (Websitesi)</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2"><span class="bg-[#F0FDFA] text-[#0D9488] rounded px-2 py-1 text-xs font-semibold">HTML/CSS/JS</span> Statik sayfa</div>
+                    <div class="flex items-center gap-2"><span class="bg-[#F0FDFA] text-[#0D9488] rounded px-2 py-1 text-xs font-semibold">CDN</span> Muhtemelen GitHub Pages veya benzeri</div>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-semibold text-[#0F172A] mb-2">Backend (API)</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2"><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded px-2 py-1 text-xs font-semibold">Node.js</span> Tahmin — json-server tabanlı</div>
+                    <div class="flex items-center gap-2"><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded px-2 py-1 text-xs font-semibold">REST API</span> JSON format, standart HTTP methods</div>
+                    <div class="flex items-center gap-2"><span class="bg-[#EFF6FF] text-[#1D4ED8] rounded px-2 py-1 text-xs font-semibold">Statik DB</span> Sabit JSON dosyası (değişmiyor)</div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h3 class="font-semibold text-[#0F172A] mb-2">3rd Party Servisler</h3>
+            <div class="flex items-center gap-2"><span class="bg-[#FFF7ED] text-[#C2410C] rounded px-2 py-1 text-xs font-semibold">via.placeholder.com</span> Fotoğraf URL'leri için placeholder servis</div>
+        </div>
+    </div>
+
+    <!-- iOS Dönüşüm Önerileri -->
+    <div id="ios-donusum" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">📱</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">iOS Dönüşüm Önerileri</h2>
+                <p class="text-sm text-[#64748B]">Web bileşeni → iOS karşılığı eşleştirmesi</p>
+            </div>
+        </div>
+        <table class="w-full border border-[#E2E8F0] rounded-xl overflow-hidden">
+            <thead><tr class="bg-[#F0FDFA]">
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Web Bileşeni</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">iOS Karşılığı</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Not</th>
+            </tr></thead>
+            <tbody>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Kaynak listesi (posts, albums)</td><td class="px-4 py-3">List / LazyVStack</td><td class="px-4 py-3">Pull-to-refresh ile</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Detay sayfası</td><td class="px-4 py-3">NavigationLink → Detail View</td><td class="px-4 py-3">NavigationStack</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Fotoğraf grid</td><td class="px-4 py-3">LazyVGrid (2-3 sütun)</td><td class="px-4 py-3">AsyncImage ile</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Todo listesi</td><td class="px-4 py-3">List + Toggle</td><td class="px-4 py-3">Swipe-to-delete</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Navigasyon (ana sayfa)</td><td class="px-4 py-3">TabBar (5 tab)</td><td class="px-4 py-3">Posts, Albums, Todos, Users, Profil</td></tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]"><td class="px-4 py-3">Kullanıcı profili</td><td class="px-4 py-3">Form / List grouped</td><td class="px-4 py-3">Adres, company nested görünüm</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Riskler -->
+    <div id="riskler" class="bg-white rounded-xl border border-[#E2E8F0] p-6 mb-6 card">
+        <div class="flex items-start gap-3 mb-4">
+            <div class="w-10 h-10 bg-[#F0FDFA] rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-[#0D9488] text-xl">⚠️</span>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-[#0F172A]">Riskler</h2>
+                <p class="text-sm text-[#64748B]">Tespit edilen riskler ve azaltma stratejileri</p>
+            </div>
+        </div>
+        <table class="w-full border border-[#E2E8F0] rounded-xl overflow-hidden">
+            <thead><tr class="bg-[#F0FDFA]">
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Risk</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Seviye</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Açıklama</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-[#0D9488]">Azaltma</th>
+            </tr></thead>
+            <tbody>
+                <tr class="zebra-row border-t border-[#E2E8F0]">
+                    <td class="px-4 py-3">Sahte API</td>
+                    <td class="px-4 py-3"><span class="risk-medium rounded-full px-3 py-1 text-xs font-semibold">Orta</span></td>
+                    <td class="px-4 py-3">Yazma işlemleri simüle — iOS uygulamada CRUD beklentisi karşılanmaz</td>
+                    <td class="px-4 py-3">Gerçek backend geliştir veya local json-server kullan</td>
+                </tr>
+                <tr class="zebra-row border-t border-[#E2E8F0]">
+                    <td class="px-4 py-3">Pagination Yok</td>
+                    <td class="px-4 py-3"><span class="risk-low rounded-full px-3 py-1 text-xs font-semibold">Düşük</span></td>
+                    <td class="px-4 py-3">/photos 5000 kayıt döner — iOS'ta performans sorunu yaratabilir</td>
+                    <td class="px-4 py-3">Client-side pagination uygula veya backend'de pagination ekle</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<script>
+    // Mermaid init
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    
+    // Smooth scroll
+    document.querySelectorAll('.sidebar a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Active state
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>

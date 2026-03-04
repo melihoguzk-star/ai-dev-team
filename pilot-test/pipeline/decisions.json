@@ -1,0 +1,154 @@
+{
+    "decisions": [
+        {
+            "id": "DEC-001",
+            "phase": 1,
+            "timestamp": "2026-03-05T00:05:00+03:00",
+            "category": "complexity_assessment",
+            "decision": "Backend karmaşıklık: Düşük (6 kaynak × CRUD = ~35 endpoint kalıbı, ama tümü basit CRUD)",
+            "rationale": "Tüm endpoint'ler standart REST CRUD. İş mantığı çok basit — veri okuma/yazma. Filtreleme sadece query parametreleriyle.",
+            "impact": "Faz 6a tahmini süre: 30-45 dk. Basit FastAPI veya Express yeterli.",
+            "auto_generated": true
+        },
+        {
+            "id": "DEC-002",
+            "phase": 1,
+            "timestamp": "2026-03-05T00:05:00+03:00",
+            "category": "ios_screen_estimate",
+            "decision": "Tahmini iOS ekran sayısı: 8-10 ekran",
+            "rationale": "2 web sayfa ama 6 kaynak tipi. TabBar + NavigationStack ile drill-down.",
+            "impact": "Tahmini Faz 6b+6c süresi: 45-60 dk.",
+            "auto_generated": true
+        },
+        {
+            "id": "DEC-003",
+            "phase": 1,
+            "timestamp": "2026-03-05T00:05:00+03:00",
+            "category": "security_assessment",
+            "decision": "Güvenlik seviyesi: Düşük (Auth yok)",
+            "rationale": "JSONPlaceholder tamamen açık API. Auth modülü gerekmez.",
+            "impact": "Ek süre etkisi: 0.",
+            "auto_generated": true
+        },
+        {
+            "id": "DEC-004",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "backend_framework",
+            "decision": "FastAPI (Python) seçildi",
+            "rationale": "Async desteği, otomatik OpenAPI docs, Pydantic validation. Proje karmaşıklığı düşük — overengineering yapılmamalı.",
+            "impact": "Backend geliştirme dili Python olarak belirlendi.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-005",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "database",
+            "decision": "SQLite (dev) → PostgreSQL (prod)",
+            "rationale": "6 entity, ~6000 kayıt. Tamamen ilişkisel yapı — SQL doğal çözüm.",
+            "impact": "ORM olarak SQLAlchemy 2.0 + Alembic migration.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-006",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "api_design",
+            "decision": "REST API + /api/v1/ prefix + offset pagination",
+            "rationale": "Orijinal API REST, GraphQL overengineering olur. Pagination eklenerek /photos 5000 kayıt riski çözüldü.",
+            "impact": "Standart response envelope: {data, meta} formatı.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-007",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "ios_architecture",
+            "decision": "MVVM pattern + @Observable macro",
+            "rationale": "SwiftUI ile doğal uyum. Bu proje boyutunda VIPER/Clean Architecture overengineering.",
+            "impact": "View ↔ ViewModel ↔ Repository ↔ NetworkService katmanlı yapı.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-008",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "ios_networking",
+            "decision": "URLSession + async/await (native)",
+            "rationale": "iOS 17+ hedef. Alamofire gereksiz — basit REST API.",
+            "impact": "Generic APIClient actor sınıfı yazılacak.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-009",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "ios_persistence",
+            "decision": "SwiftData",
+            "rationale": "iOS 17+ hedef. Core Data'ya göre çok daha az boilerplate, offline cache için ideal.",
+            "impact": "6 @Model sınıfı oluşturulacak.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-010",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "ios_navigation",
+            "decision": "TabBar (5 tab) + NavigationStack",
+            "rationale": "8-10 ekran için ideal. Tab'lar: Posts, Albums, Todos, Users, Profil.",
+            "impact": "ContentView TabBar root olacak, her tab kendi NavigationStack'ine sahip.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-011",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "ios_target",
+            "decision": "Minimum iOS 17+",
+            "rationale": "SwiftData, @Observable, NavigationStack hepsi iOS 17 gerektiriyor.",
+            "impact": "En yeni teknolojiler kullanılabilir.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-012",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "hosting",
+            "decision": "Railway veya Fly.io",
+            "rationale": "Basit deploy, ücretsiz tier, FastAPI + PostgreSQL native desteği. AWS/GCP overengineering.",
+            "impact": "Deployment Dockerfile ile yapılacak.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-013",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "authentication",
+            "decision": "Auth yok (opsiyonel API key)",
+            "rationale": "Orijinal API'de auth yok. Pilot test için atlanabilir.",
+            "impact": "Auth modülü yazılmayacak.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-014",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "project_structure",
+            "decision": "Backend: layered (models/schemas/routers), iOS: feature-based",
+            "rationale": "Backend'de endişelerin ayrılması, iOS'ta feature modülerliği.",
+            "impact": "Dizin yapıları architecture-decisions.md'de detaylı tanımlı.",
+            "auto_generated": false
+        },
+        {
+            "id": "DEC-015",
+            "phase": 2,
+            "timestamp": "2026-03-05T00:08:00+03:00",
+            "category": "database_schema",
+            "decision": "User nested object'ları (address, company) ayrı sütunlara açılacak, ayrı tablo yapılmayacak",
+            "rationale": "Sadece 10 user kaydı var. address ve company her zaman user ile birlikte okunuyor. Ayrı tablo join overhead ekler.",
+            "impact": "users tablosunda 15+ sütun olacak ama sorgu sayısı azalacak.",
+            "auto_generated": false
+        }
+    ]
+}

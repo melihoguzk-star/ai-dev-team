@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Prompt Kalite Audit | Loodos Research OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #F8FAFC; color: #334155; margin: 0; }
+.sidebar-link { transition: all 0.15s; color: #334155; text-decoration: none; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; padding: 7px 12px; margin-bottom: 2px; font-size: 13px; cursor: pointer; }
+.sidebar-link:hover { background: #F0FDFA; color: #0D9488; }
+.sidebar-link.active { background: #F0FDFA; color: #0D9488; font-weight: 600; }
+.card { background: white; border: 1px solid #E2E8F0; border-radius: 14px; margin-bottom: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+.card:hover { border-color: #99F6E4; box-shadow: 0 4px 16px rgba(13,148,136,0.07); }
+.card-header { display: flex; align-items: center; padding: 18px 22px; cursor: pointer; user-select: none; }
+.card-body { padding: 4px 22px 22px; }
+.card-body.collapsed { display: none; }
+.chevron { transition: transform 0.25s; }
+.chevron.rot { transform: rotate(-90deg); }
+.tbl { width: 100%; border-collapse: collapse; border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden; font-size: 13px; }
+.tbl th { background: #F0FDFA; color: #0D9488; font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 1px solid #E2E8F0; }
+.tbl td { padding: 9px 14px; color: #334155; border-top: 1px solid #F1F5F9; vertical-align: middle; line-height: 1.5; }
+.tbl tr:nth-child(even) td { background: #F8FAFC; }
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 9px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.bkr { background:#FEF2F2;color:#DC2626;border:1px solid #FECACA; }
+.biy { background:#FEFCE8;color:#CA8A04;border:1px solid #FEF08A; }
+.bmk { background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0; }
+.bop { background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE; }
+.bso { background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE; }
+.bha { background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0; }
+.bt  { background:#F0FDFA;color:#0D9488;border:1px solid #99F6E4; }
+.bo  { background:#FFF7ED;color:#EA580C;border:1px solid #FED7AA; }
+.icon-circle { width:36px;height:36px;background:#F0FDFA;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.bar-bg { height:8px;background:#E5E7EB;border-radius:999px;overflow:hidden;flex:1;margin:0 10px; }
+.bar-fill { height:100%;border-radius:999px;transition:width 0.5s; }
+.diff-add { background:#DCFCE7;padding:1px 4px;border-radius:3px;color:#15803D; }
+.diff-del { background:#FEE2E2;padding:1px 4px;border-radius:3px;color:#DC2626;text-decoration:line-through; }
+@media print { aside { display:none !important; } main { margin-left:0 !important; } .card { break-inside:avoid; } }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside style="width:256px;position:fixed;top:0;left:0;height:100vh;background:white;border-right:1px solid #E2E8F0;overflow-y:auto;z-index:50;display:flex;flex-direction:column;">
+  <div style="padding:16px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:9px;">
+    <div style="width:30px;height:30px;background:#0D9488;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i data-lucide="shield-check" style="color:white;width:15px;height:15px;"></i>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#0F172A;">Research OS</div>
+      <div style="font-size:10px;color:#94A3B8;">Prompt Audit</div>
+    </div>
+  </div>
+  <nav style="padding:10px 8px;flex:1;">
+    <div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;margin:5px 0 3px;">GENEL</div>
+    <a class="sidebar-link" onclick="scrollTo2('dashboard')">
+      <span style="display:flex;align-items:center;gap:8px;"><i data-lucide="layout-dashboard" style="width:14px;height:14px;color:#0D9488;flex-shrink:0;"></i>Dashboard</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo2('ozet')">
+      <span style="display:flex;align-items:center;gap:8px;"><i data-lucide="table" style="width:14px;height:14px;color:#0D9488;flex-shrink:0;"></i>Özet Tablosu</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo2('matrix')">
+      <span style="display:flex;align-items:center;gap:8px;"><i data-lucide="grid" style="width:14px;height:14px;color:#0D9488;flex-shrink:0;"></i>Karşılaştırma</span>
+    </a>
+    <div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;margin:12px 0 3px;">AGENT'LAR</div>
+    <!-- KRİTİK -->
+    <div style="font-size:9px;color:#DC2626;font-weight:600;padding:2px 10px;margin:4px 0 2px;text-transform:uppercase;letter-spacing:.06em;">Kritik</div>
+    <a class="sidebar-link" onclick="scrollTo2('a-code-reviewer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="search-code" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>code-reviewer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.3</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-backend-developer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="server" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>backend-developer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.3</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-swift-expert')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="smartphone" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>swift-expert</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.5</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-test-automator')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="flask-conical" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>test-automator</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.1</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-devops-engineer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="git-branch" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>devops-engineer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.4</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-documentation-engineer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="book-open" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>documentation-engineer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.0</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-mobile-developer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="tablet-smartphone" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>mobile-developer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.6</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-ui-designer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="palette" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>ui-designer</span><span class="badge bkr" style="font-size:10px;padding:1px 6px;">6.1</span></a>
+    <!-- İYİ -->
+    <div style="font-size:9px;color:#CA8A04;font-weight:600;padding:2px 10px;margin:8px 0 2px;text-transform:uppercase;letter-spacing:.06em;">İyi</div>
+    <a class="sidebar-link" onclick="scrollTo2('a-uiux-translator')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="layers" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>uiux-translator</span><span class="badge biy" style="font-size:10px;padding:1px 6px;">7.4</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-system-architect')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="blocks" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>system-architect</span><span class="badge biy" style="font-size:10px;padding:1px 6px;">7.9</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-web-analyzer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="globe" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>web-analyzer</span><span class="badge biy" style="font-size:10px;padding:1px 6px;">7.8</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-market-expansion-analyst')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="trending-up" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>market-expansion</span><span class="badge biy" style="font-size:10px;padding:1px 6px;">7.6</span></a>
+    <a class="sidebar-link" onclick="scrollTo2('a-prompt-engineer')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="zap" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>prompt-engineer</span><span class="badge biy" style="font-size:10px;padding:1px 6px;">7.8</span></a>
+    <!-- MÜKEMMEL -->
+    <div style="font-size:9px;color:#16A34A;font-weight:600;padding:2px 10px;margin:8px 0 2px;text-transform:uppercase;letter-spacing:.06em;">Mükemmel</div>
+    <a class="sidebar-link" onclick="scrollTo2('a-ba-doc-generator')"><span style="display:flex;align-items:center;gap:7px;"><i data-lucide="file-text" style="width:13px;height:13px;color:#0D9488;flex-shrink:0;"></i>ba-doc-generator</span><span class="badge bmk" style="font-size:10px;padding:1px 6px;">8.5</span></a>
+  </nav>
+  <div style="padding:12px 16px;border-top:1px solid #E2E8F0;">
+    <div style="font-size:10px;color:#94A3B8;">Analiz Tarihi</div>
+    <div style="font-size:11px;font-weight:500;color:#334155;">4 Mart 2026</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main style="margin-left:256px;min-height:100vh;padding:32px 40px;">
+
+  <!-- Breadcrumb -->
+  <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:#64748B;margin-bottom:20px;">
+    <i data-lucide="home" style="width:12px;height:12px;"></i>
+    <span>Audit</span>
+    <i data-lucide="chevron-right" style="width:12px;height:12px;"></i>
+    <span style="color:#0D9488;font-weight:600;">Agent Prompt Kalite Raporu</span>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="margin-bottom:28px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="width:42px;height:42px;background:#0D9488;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i data-lucide="shield-check" style="color:white;width:21px;height:21px;"></i>
+      </div>
+      <div>
+        <h1 style="font-size:21px;font-weight:700;color:#0F172A;margin:0;line-height:1.25;">Agent Prompt Kalite Audit Raporu</h1>
+        <p style="font-size:13px;color:#64748B;margin:3px 0 0;">14 agent &middot; 8 kriter &middot; 4 Mart 2026 &middot; Loodos Research OS</p>
+      </div>
+    </div>
+    <!-- Alert -->
+    <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:12px 15px;display:flex;gap:9px;margin-bottom:20px;">
+      <i data-lucide="alert-circle" style="width:16px;height:16px;color:#DC2626;flex-shrink:0;margin-top:1px;"></i>
+      <p style="font-size:12.5px;color:#991B1B;margin:0;line-height:1.6;"><strong>Kritik Bulgular:</strong> 8 agent kritik seviyede (&lt;7.0). Ortak sorunlar: (1) Yanlış model ID formatı — <code>opus</code>/<code>sonnet</code>/<code>haiku</code> yerine <code>claude-opus-4-6</code> / <code>claude-sonnet-4-6</code> / <code>claude-haiku-4-5-20251001</code> kullanılmalı. (2) Çıktı formatı tanımlı değil. (3) Var olmayan "context manager"a referans. (4) Aşırı verbose, tekrarlı içerik.</p>
+    </div>
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;">
+        <div style="font-size:30px;font-weight:700;color:#0D9488;line-height:1;">14</div>
+        <div style="font-size:10.5px;color:#94A3B8;margin-top:4px;line-height:1.4;">Toplam<br>Agent</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;">
+        <div style="font-size:30px;font-weight:700;color:#0D9488;line-height:1;">6.9</div>
+        <div style="font-size:10.5px;color:#94A3B8;margin-top:4px;line-height:1.4;">Ortalama<br>Skor</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;">
+        <div style="font-size:30px;font-weight:700;color:#DC2626;line-height:1;">8</div>
+        <div style="font-size:10.5px;color:#94A3B8;margin-top:4px;line-height:1.4;">Kritik<br>(&lt;7.0)</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;">
+        <div style="font-size:30px;font-weight:700;color:#CA8A04;line-height:1;">5</div>
+        <div style="font-size:10.5px;color:#94A3B8;margin-top:4px;line-height:1.4;">İyi<br>(7–8)</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:16px 12px;text-align:center;">
+        <div style="font-size:30px;font-weight:700;color:#16A34A;line-height:1;">1</div>
+        <div style="font-size:10.5px;color:#94A3B8;margin-top:4px;line-height:1.4;">Mükemmel<br>(8+)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÖZET TABLOSU -->
+  <section id="ozet" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ozet-body','ozet-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="table" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">GENEL</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">Özet Tablosu</div>
+          <div style="font-size:12px;color:#64748B;">Tüm 14 agent tek bakışta</div>
+        </div>
+        <i data-lucide="chevron-down" id="ozet-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ozet-body">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>#</th><th>Agent Adı</th><th>Model</th><th>Genel Skor</th><th>Durum</th><th>Kritik Sorun</th><th>Öncelikli Öneri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><strong>code-reviewer</strong></td><td><span class="badge bop">opus</span></td><td><span style="font-weight:700;color:#DC2626;">6.25</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, çıktı formatı yok</td><td>Model ID → claude-opus-4-6, çıktı formatı ekle</td></tr>
+            <tr><td>2</td><td><strong>backend-developer</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.25</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, çıktı formatı yok</td><td>Model ID → claude-sonnet-4-6, çıktı formatı ekle</td></tr>
+            <tr><td>3</td><td><strong>swift-expert</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.50</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, çıktı formatı yok</td><td>Model ID → claude-sonnet-4-6, iOS versiyonu güncelle</td></tr>
+            <tr><td>4</td><td><strong>test-automator</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.13</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, çıktı formatı yok, aşırı verbose</td><td>Model ID düzelt, içeriği %40 kısalt</td></tr>
+            <tr><td>5</td><td><strong>devops-engineer</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.38</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, çıktı formatı yok</td><td>Model ID düzelt, çıktı formatı ekle</td></tr>
+            <tr><td>6</td><td><strong>documentation-engineer</strong></td><td><span class="badge bha">haiku</span></td><td><span style="font-weight:700;color:#DC2626;">6.00</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Haiku yetersiz karmaşık görev için, çıktı formatı yok</td><td>Model → claude-sonnet-4-6, çıktı formatı ekle</td></tr>
+            <tr><td>7</td><td><strong>mobile-developer</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.63</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, en verbose agent (%50 fazlalık)</td><td>Model ID düzelt, içeriği %50 kısalt</td></tr>
+            <tr><td>8</td><td><strong>ui-designer</strong></td><td><span class="badge bso">sonnet</span></td><td><span style="font-weight:700;color:#DC2626;">6.13</span></td><td><span class="badge bkr">KRİTİK</span></td><td>Yanlış model ID, kısıtlamalar eksik, robustness düşük</td><td>Model ID düzelt, negatif kısıtlamalar ekle</td></tr>
+            <tr><td>9</td><td><strong>uiux-translator</strong></td><td><span class="badge bso" style="background:#EFF6FF;color:#2563EB;">claude-sonnet-4-6</span></td><td><span style="font-weight:700;color:#CA8A04;">7.38</span></td><td><span class="badge biy">İYİ</span></td><td>Edge case'ler eksik</td><td>Hata dayanıklılığı senaryoları ekle</td></tr>
+            <tr><td>10</td><td><strong>system-architect</strong></td><td><span class="badge bop" style="background:#F5F3FF;color:#7C3AED;">claude-opus-4-6</span></td><td><span style="font-weight:700;color:#CA8A04;">7.88</span></td><td><span class="badge biy">İYİ</span></td><td>Hata senaryoları tanımlı değil</td><td>Robustness için belirsiz girdi senaryoları ekle</td></tr>
+            <tr><td>11</td><td><strong>web-analyzer</strong></td><td><span class="badge bop" style="background:#F5F3FF;color:#7C3AED;">claude-opus-4-6</span></td><td><span style="font-weight:700;color:#CA8A04;">7.75</span></td><td><span class="badge biy">İYİ</span></td><td>Çıktı formatı çok uzun, Lucide/Inter eksik</td><td>Çıktı formatını Loodos OS'la tam hizala</td></tr>
+            <tr><td>12</td><td><strong>market-expansion-analyst</strong></td><td><span class="badge bop" style="background:#F5F3FF;color:#7C3AED;">claude-opus-4-6</span></td><td><span style="font-weight:700;color:#CA8A04;">7.63</span></td><td><span class="badge biy">İYİ</span></td><td>Token verimliliği düşük, kısıtlamalar yetersiz</td><td>Çıktı formatını kısalt, negatif kısıtlamalar ekle</td></tr>
+            <tr><td>13</td><td><strong>prompt-engineer</strong></td><td><span class="badge bop" style="background:#F5F3FF;color:#7C3AED;">claude-opus-4-6</span></td><td><span style="font-weight:700;color:#CA8A04;">7.75</span></td><td><span class="badge biy">İYİ</span></td><td>HTML format spec prompt'un %70'ini oluşturuyor</td><td>Format spec'i ayrı dosyaya referans olarak çek</td></tr>
+            <tr><td>14</td><td><strong>ba-doc-generator</strong></td><td><span class="badge bso" style="background:#EFF6FF;color:#2563EB;">claude-sonnet-4-6</span></td><td><span style="font-weight:700;color:#16A34A;">8.50</span></td><td><span class="badge bmk">MÜKEMMEL</span></td><td>Hata dayanıklılığı biraz düşük</td><td>Belirsiz girdi durumları için fallback kuralları ekle</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENT DETAY KARTLARI -->
+
+  <!-- helper macro: her agent için kriter bar satırı JS ile çizilecek -->
+
+  <!-- 1. code-reviewer -->
+  <section id="a-code-reviewer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('cr-body','cr-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="search-code" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">code-reviewer <span class="badge bop" style="margin-left:6px;font-size:11px;">opus</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.25 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="cr-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="cr-body">
+        <div id="bars-cr"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID düzelt: <span class="diff-del">opus</span> → <span class="diff-add">claude-opus-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı tanımla — code review raporu nasıl görünmeli? (markdown, inline comment, JSON?)</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Var olmayan "context manager" referansını kaldır — Claude Code'da böyle bir mekanizma yok</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Token verimliliği: Tekrarlı bullet listelerini %40 kısalt</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Negatif kısıtlamalar ekle (ne yapmamalı, hangi durumlarda review reddedilmeli)</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">8.1</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: opus</span><br>
+            <span class="diff-add">model: claude-opus-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Her dosya için: sorun listesi (severity badge), kod örneği, öneri. Genel özet: toplam sorun, kritik sayısı, kalite skoru (0-100).<br><br>
+## KISITLAMALAR<br>
+- Kişisel yorum yapma, teknik bulgulara odaklan<br>
+- Var olmayan "context manager" kullanma<br>
+- 5'ten fazla kritik sorun varsa review'u durdur, önce kritikleri çöz</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. backend-developer -->
+  <section id="a-backend-developer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('bd-body','bd-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="server" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">backend-developer <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.25 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="bd-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="bd-body">
+        <div id="bars-bd"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı yok — hangi dosyalar oluşturulacak, hangi formatta teslim edilecek?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>JSON progress tracking blokları aşırı verbose — kaldır veya çok kısalt</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Negatif kısıtlamalar: Güvenlik açıkları içeren kod yazma, environment secrets loglama</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">8.0</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Teslim: kaynak kodlar + OpenAPI spec dosyası + README.md. Kod yorumları İngilizce.<br><br>
+## KISITLAMALAR<br>
+- Secrets/credentials asla kod içine yazma<br>
+- Var olmayan "context manager" kullanma<br>
+- Güvenlik scan geçmeden production ready deme</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. swift-expert -->
+  <section id="a-swift-expert">
+    <div class="card">
+      <div class="card-header" onclick="toggle('se-body','se-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="smartphone" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">swift-expert <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.50 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="se-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="se-body">
+        <div id="bars-se"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı yok — Swift dosyaları mı, SwiftUI preview kodu mu, Xcode proje yapısı mı?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır, Xcode proje bağlamını oku talimatıyla değiştir</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>iOS 17+ minimum belirt (şu an genel iOS ifadesi var)</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Negatif kısıtlamalar: deprecated API kullanma, force unwrap kullanma</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">8.2</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Swift 5.9+ kaynak dosyaları. Her dosya: Package.swift bağımlılıkları, SwiftUI preview ekli, inline belgeleme.<br><br>
+## KISITLAMALAR<br>
+- Force unwrap (!) kullanma — Optional binding veya guard kullan<br>
+- Deprecated API kullanma (iOS 16 altı)<br>
+- Minimum hedef: iOS 17+, macOS 14+<br>
+- Var olmayan "context manager" kullanma</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. test-automator -->
+  <section id="a-test-automator">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ta-body','ta-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="flask-conical" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">test-automator <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.13 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="ta-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ta-body">
+        <div id="bars-ta"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı: test dosyaları nereye kaydedilecek, hangi framework?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>İçerik %40 kısaltılabilir — çok sayıda tekrarlı bullet listesi var</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Negatif kısıtlamalar: Flaky test yazma, sleep() kullanma, hard-coded test data kullanma</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">7.9</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Test dosyaları proje yapısına uygun dizinde. CI/CD config (GitHub Actions / GitLab CI YAML). Coverage raporu özeti.<br><br>
+## KISITLAMALAR<br>
+- sleep() / Thread.sleep kullanma — explicit wait kullan<br>
+- Hard-coded test datası yazma — factory/fixture kullan<br>
+- Test bağımlılığı oluşturma — her test bağımsız çalışmalı</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. devops-engineer -->
+  <section id="a-devops-engineer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('de-body','de-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="git-branch" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">devops-engineer <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.38 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="de-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="de-body">
+        <div id="bars-de"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı: IaC dosyaları, pipeline YAML, hangi cloud platform varsayılan?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>İçerik %35 kısaltılabilir</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Güvenlik kısıtlamaları: secrets plaintext loglama, root container çalıştırma yasakları</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">8.0</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+IaC: Terraform veya Pulumi (belirtilmezse Terraform). Pipeline: GitHub Actions YAML. Teslim: çalışır halde dosyalar + README.<br><br>
+## KISITLAMALAR<br>
+- Secrets asla YAML/env içine yazma — Vault/Secrets Manager kullan<br>
+- Root kullanıcılı Docker container çalıştırma<br>
+- Production'a direkt push yapma — staging önce</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. documentation-engineer -->
+  <section id="a-documentation-engineer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('doc-body','doc-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="book-open" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">documentation-engineer <span class="badge bha" style="margin-left:6px;font-size:11px;">haiku</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.00 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="doc-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="doc-body">
+        <div id="bars-doc"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model yanlış: <span class="diff-del">haiku</span> → <span class="diff-add">claude-sonnet-4-6</span> (doc mühendisliği karmaşık görev — haiku yetersiz)</li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı: Docs site nerede? Hangi tool (Docusaurus, MkDocs, Mintlify)?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Hata dayanıklılığı ekle: Kod örneği çalışmazsa ne yapmalı?</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Kısıtlamalar: Kodu kopyala-yapıştır değil, örnekleri test et</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">7.8</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: haiku</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Markdown dosyaları (docs/ dizini). Tüm kod örnekleri çalıştırılabilir olmalı. README ile navigasyon.<br><br>
+## KISITLAMALAR<br>
+- Test edilmemiş kod örneği ekleme<br>
+- Broken link bırakma<br>
+- "Coming soon" gibi placeholder içerik bırakma</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. mobile-developer -->
+  <section id="a-mobile-developer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('md-body','md-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="tablet-smartphone" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">mobile-developer <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.63 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="md-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="md-body">
+        <div id="bars-md"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>En verbose agent: ~284 satır — platform bilgisi ayrı bölümlere taşınabilir</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Çıktı formatı belirle: React Native projesi mi? Flutter mi? Hangi dizin yapısı?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Kısıtlamalar: blocking main thread, memory leak'e yol açan retain cycle</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">8.0</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+React Native 0.82+ kaynak dosyaları. Platform: iOS 17+ / Android 15+. Dizin: feature-based.<br><br>
+## KISITLAMALAR<br>
+- Main thread'i bloklama<br>
+- Retain cycle oluşturacak strong reference döngüsü kurma<br>
+- console.log production kodunda bırakma</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ui-designer -->
+  <section id="a-ui-designer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('uid-body','uid-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="palette" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">ui-designer <span class="badge bso" style="margin-left:6px;font-size:11px;">sonnet</span> <span class="badge bkr" style="margin-left:4px;font-size:11px;">6.13 KRİTİK</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="uid-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="uid-body">
+        <div id="bars-uid"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 16px;">
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Model ID: <span class="diff-del">sonnet</span> → <span class="diff-add">claude-sonnet-4-6</span></li>
+          <li><span class="badge bkr" style="margin-right:5px;">Kritik</span>Çıktı formatı belirsiz: CSS mi, Tailwind mi, Figma token mu, SwiftUI mü?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Kapsam yetersiz: erişilebilirlik WCAG standartları belirtilmemiş</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>"context manager" referansını kaldır</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Hata dayanıklılığı: tasarım dosyası yoksa ne yapmalı?</li>
+        </ol>
+        <div style="border-left:3px solid #DC2626;background:#FEF2F2;border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-size:12px;font-weight:600;color:#DC2626;margin-bottom:6px;">Optimize Edilmiş Frontmatter &mdash; Beklenen Skor: <span class="badge bt">7.8</span></div>
+          <code style="font-size:12px;color:#334155;line-height:1.8;display:block;">
+            <span class="diff-del">model: sonnet</span><br>
+            <span class="diff-add">model: claude-sonnet-4-6</span><br><br>
+            <span class="diff-add">## ÇIKTI FORMATI<br>
+Tailwind CSS bileşenleri (varsayılan). Design token'lar JSON. WCAG 2.1 AA uyum raporu.<br><br>
+## KISITLAMALAR<br>
+- Erişilebilirlik ihlali içeren tasarım üretme (kontrast oranı &lt;4.5:1)<br>
+- Marka renk paletinin dışına çıkma<br>
+- Figma dosyası yoksa varsayım yapma, sor</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. uiux-translator -->
+  <section id="a-uiux-translator">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ux-body','ux-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="layers" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">uiux-translator <span class="badge bso" style="background:#EFF6FF;color:#2563EB;margin-left:6px;font-size:11px;">claude-sonnet-4-6</span> <span class="badge biy" style="margin-left:4px;font-size:11px;">7.38 İYİ</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="ux-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ux-body">
+        <div id="bars-ux"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0 0 0;">
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Hata dayanıklılığı: Web sitesine erişilemezse ne yapmalı?</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Kapsam: iPad ve macOS (Catalyst) dönüşümleri eksik</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Kısıtlamalar: Web'de olmayan native feature eklemekten kaçın (örn. sensör) — kullanıcıya sor</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>iOS version minimum belirt (iOS 17+)</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. system-architect -->
+  <section id="a-system-architect">
+    <div class="card">
+      <div class="card-header" onclick="toggle('sa-body','sa-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="blocks" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">system-architect <span class="badge bop" style="background:#F5F3FF;color:#7C3AED;margin-left:6px;font-size:11px;">claude-opus-4-6</span> <span class="badge biy" style="margin-left:4px;font-size:11px;">7.88 İYİ</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="sa-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="sa-body">
+        <div id="bars-sa"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Hata dayanıklılığı: Analiz raporu eksik veya belirsizse nasıl davranmalı?</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Mermaid şema çıktısı da beklense belirtilebilir</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>SwiftData vs Core Data karar matrisini doküman içine ekle</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. web-analyzer -->
+  <section id="a-web-analyzer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('wa-body','wa-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="globe" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">web-analyzer <span class="badge bop" style="background:#F5F3FF;color:#7C3AED;margin-left:6px;font-size:11px;">claude-opus-4-6</span> <span class="badge biy" style="margin-left:4px;font-size:11px;">7.75 İYİ</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="wa-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="wa-body">
+        <div id="bars-wa"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Çıktı formatı Loodos Research OS ile tam hizalanmalı: Lucide Icons + Inter font ekle</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Token verimliliği: HTML format spec çok uzun, kısaltılabilir</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Dark/light tema spec'ini kaldır — Loodos OS sadece light theme kullanıyor</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>WebFetch tool'unu araçlara ekle — web analizi için gerekli</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. market-expansion-analyst -->
+  <section id="a-market-expansion-analyst">
+    <div class="card">
+      <div class="card-header" onclick="toggle('mea-body','mea-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="trending-up" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">market-expansion-analyst <span class="badge bop" style="background:#F5F3FF;color:#7C3AED;margin-left:6px;font-size:11px;">claude-opus-4-6</span> <span class="badge biy" style="margin-left:4px;font-size:11px;">7.63 İYİ</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="mea-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="mea-body">
+        <div id="bars-mea"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Token verimliliği: HTML spec prompt'un %55'ini oluşturuyor — ayrı referans belgesi olarak çekilebilir</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Kısıtlamalar: Pazar bilgisine ulaşamazsa, URL erişilemezse ne yapmalı?</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Hata dayanıklılığı: WAF/robot engeli durumunda alternatif kaynaklara yönelme kuralı ekle</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>Çıktı dosya adı konvansiyonunu belirle: [site]-[pazar]-expansion.html</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. prompt-engineer -->
+  <section id="a-prompt-engineer">
+    <div class="card">
+      <div class="card-header" onclick="toggle('pe-body','pe-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="zap" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">prompt-engineer <span class="badge bop" style="background:#F5F3FF;color:#7C3AED;margin-left:6px;font-size:11px;">claude-opus-4-6</span> <span class="badge biy" style="margin-left:4px;font-size:11px;">7.75 İYİ</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="pe-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="pe-body">
+        <div id="bars-pe"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Token verimliliği: HTML format spec prompt'un %70'i — bu self-referential ironi. Kısalt.</li>
+          <li><span class="badge bo" style="margin-right:5px;">Yüksek</span>Çıktı dosya adı ve kaydetme yolu belirtilmemiş</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Hata dayanıklılığı: Agent dosyası okunamazsa, YAML parse hatası varsa ne yapmalı?</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>Optimize edilmiş versiyonu otomatik kaydet — sadece öneri değil, dosyayı güncelle</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. ba-doc-generator -->
+  <section id="a-ba-doc-generator">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ba-body','ba-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="file-text" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">DETAY ANALİZİ</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">ba-doc-generator <span class="badge bso" style="background:#EFF6FF;color:#2563EB;margin-left:6px;font-size:11px;">claude-sonnet-4-6</span> <span class="badge bmk" style="margin-left:4px;font-size:11px;">8.50 MÜKEMMEL</span></div>
+        </div>
+        <i data-lucide="chevron-down" id="ba-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ba-body">
+        <div id="bars-ba"></div>
+        <div style="margin-top:16px;font-size:13px;font-weight:600;color:#0F172A;margin-bottom:8px;">İyileştirme Önerileri (küçük)</div>
+        <ol style="font-size:13px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Hata dayanıklılığı: Ekran görüntüsü çok düşük kaliteli veya okunaksızsa ne yapmalı?</li>
+          <li><span class="badge biy" style="margin-right:5px;">Orta</span>Figma token'ı geçersizse veya Figma dosyasına erişilemezse fallback kural ekle</li>
+          <li><span class="badge bd" style="margin-right:5px;background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0;">Düşük</span>Çıktı dosya adı belirtle: [proje]-ba-doc.md</li>
+        </ol>
+        <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;margin-top:14px;font-size:12.5px;color:#15803D;">
+          ✓ Bu agent Loodos pipeline için referans kalite. Diğer agent'lar için model olarak kullanılabilir: negatif kısıtlamalar (İÇERİĞE DAHİL ETME bölümü), somut örnekler (YANLIŞ/DOĞRU), ve test edilebilir gereksinim kuralı (KALİTE KURALI) öne çıkan güçlü yönler.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KARŞILAŞTIRMA MATRİSİ -->
+  <section id="matrix">
+    <div class="card">
+      <div class="card-header" onclick="toggle('mx-body','mx-chev')">
+        <div class="icon-circle" style="margin-right:12px;"><i data-lucide="grid" style="width:17px;height:17px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1px;">GENEL</div>
+          <div style="font-size:15px;font-weight:700;color:#0F172A;">8 Kriter &times; 14 Agent Karşılaştırma Matrisi</div>
+          <div style="font-size:12px;color:#64748B;">Renk: kırmızı=düşük, sarı=orta, yeşil=yüksek puan</div>
+        </div>
+        <i data-lucide="chevron-down" id="mx-chev" class="chevron" style="width:18px;height:18px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="mx-body">
+        <div style="overflow-x:auto;">
+          <table class="tbl" style="min-width:900px;font-size:12px;">
+            <thead>
+              <tr>
+                <th style="width:140px;">Kriter</th>
+                <th style="text-align:center;">code<br>-reviewer</th>
+                <th style="text-align:center;">backend<br>-dev</th>
+                <th style="text-align:center;">swift<br>-expert</th>
+                <th style="text-align:center;">test<br>-auto</th>
+                <th style="text-align:center;">devops<br>-eng</th>
+                <th style="text-align:center;">doc<br>-eng</th>
+                <th style="text-align:center;">mobile<br>-dev</th>
+                <th style="text-align:center;">ui<br>-design</th>
+                <th style="text-align:center;">uiux<br>-trans</th>
+                <th style="text-align:center;">sys<br>-arch</th>
+                <th style="text-align:center;">web<br>-anlzr</th>
+                <th style="text-align:center;">mkt<br>-exp</th>
+                <th style="text-align:center;">prompt<br>-eng</th>
+                <th style="text-align:center;">ba<br>-doc</th>
+                <th style="text-align:center;background:#F0FDFA;color:#0D9488;font-weight:700;">Ort.</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div style="margin-top:24px;padding:14px 0;border-top:1px solid #E2E8F0;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-size:11px;color:#94A3B8;">Agent Prompt Kalite Audit &middot; Loodos Research OS &middot; Mart 2026</div>
+    <div style="font-size:11px;color:#94A3B8;">14 agent &middot; 8 kriter &middot; prompt-engineer v1.0</div>
+  </div>
+
+</main>
+
+<script>
+lucide.createIcons();
+
+function toggle(bodyId, chevId) {
+  var b = document.getElementById(bodyId);
+  var c = document.getElementById(chevId);
+  b.classList.toggle('collapsed');
+  c.classList.toggle('rot');
+}
+function scrollTo2(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Agent data: [aciklik, yapilandirilmislik, kapsam, kisitlamalar, cikti, token, hata, tutarlilik]
+var agents = {
+  'cr':  { name:'code-reviewer',            scores:[7,8,9,5,4,5,6,6] },
+  'bd':  { name:'backend-developer',        scores:[7,8,9,5,4,5,6,6] },
+  'se':  { name:'swift-expert',             scores:[8,8,9,5,4,5,7,6] },
+  'ta':  { name:'test-automator',           scores:[7,8,8,5,4,5,6,6] },
+  'de':  { name:'devops-engineer',          scores:[7,8,9,5,4,5,7,6] },
+  'doc': { name:'documentation-engineer',   scores:[7,7,8,5,5,5,5,6] },
+  'md':  { name:'mobile-developer',         scores:[8,8,9,5,5,4,8,6] },
+  'uid': { name:'ui-designer',              scores:[7,7,7,5,6,6,5,6] },
+  'ux':  { name:'uiux-translator',          scores:[8,8,7,6,8,9,5,8] },
+  'sa':  { name:'system-architect',         scores:[8,9,8,7,8,8,6,9] },
+  'wa':  { name:'web-analyzer',             scores:[8,9,8,8,8,6,7,8] },
+  'mea': { name:'market-expansion-analyst', scores:[8,9,9,6,9,5,6,9] },
+  'pe':  { name:'prompt-engineer',          scores:[9,8,8,8,9,4,7,9] },
+  'ba':  { name:'ba-doc-generator',         scores:[9,9,8,9,9,8,7,9] }
+};
+
+var criteria = ['Açıklık (Clarity)','Yapılandırılmışlık','Kapsam','Kısıtlamalar','Çıktı Formatı','Token Verimliliği','Hata Dayanıklılığı','Tutarlılık'];
+
+function barColor(v) {
+  if (v < 5) return '#F87171';
+  if (v < 7) return '#FACC15';
+  if (v < 8.5) return '#2DD4BF';
+  return '#0D9488';
+}
+
+function cellColor(v) {
+  if (v <= 4) return '#FEE2E2';
+  if (v <= 6) return '#FEF3C7';
+  if (v <= 7.5) return '#ECFDF5';
+  return '#D1FAE5';
+}
+
+function cellTextColor(v) {
+  if (v <= 4) return '#DC2626';
+  if (v <= 6) return '#92400E';
+  if (v <= 7.5) return '#065F46';
+  return '#14532D';
+}
+
+// Render score bars for each agent
+Object.keys(agents).forEach(function(key) {
+  var a = agents[key];
+  var el = document.getElementById('bars-' + key);
+  if (!el) return;
+  var avg = a.scores.reduce(function(s,x){return s+x;},0)/8;
+  var html = '<div style="margin-bottom:4px;">';
+  a.scores.forEach(function(v, i) {
+    html += '<div style="display:flex;align-items:center;margin-bottom:7px;">';
+    html += '<div style="width:160px;font-size:12px;color:#64748B;flex-shrink:0;">' + criteria[i] + '</div>';
+    html += '<div class="bar-bg"><div class="bar-fill" style="width:' + (v*10) + '%;background:' + barColor(v) + ';"></div></div>';
+    html += '<div style="width:28px;text-align:right;font-size:13px;font-weight:700;color:#0F172A;flex-shrink:0;">' + v + '</div>';
+    html += '</div>';
+  });
+  html += '<div style="font-size:12px;color:#64748B;margin-top:8px;">Genel Ortalama: <strong style="color:#0F172A;">' + avg.toFixed(2) + '</strong></div></div>';
+  el.innerHTML = html;
+});
+
+// Render comparison matrix
+var order = ['cr','bd','se','ta','de','doc','md','uid','ux','sa','wa','mea','pe','ba'];
+var matrixBody = document.getElementById('matrix-body');
+criteria.forEach(function(crit, ci) {
+  var row = '<tr>';
+  row += '<td style="font-weight:500;font-size:12px;">' + crit + '</td>';
+  var rowSum = 0;
+  order.forEach(function(key) {
+    var v = agents[key].scores[ci];
+    rowSum += v;
+    row += '<td style="text-align:center;background:' + cellColor(v) + ';color:' + cellTextColor(v) + ';font-weight:600;">' + v + '</td>';
+  });
+  var rowAvg = (rowSum/order.length).toFixed(1);
+  row += '<td style="text-align:center;background:#F0FDFA;color:#0D9488;font-weight:700;">' + rowAvg + '</td>';
+  row += '</tr>';
+  matrixBody.innerHTML += row;
+});
+// Total row
+var totalRow = '<tr style="border-top:2px solid #E2E8F0;">';
+totalRow += '<td style="font-weight:700;font-size:12px;color:#0F172A;">Genel Ort.</td>';
+var grandSum = 0;
+order.forEach(function(key) {
+  var avg = agents[key].scores.reduce(function(s,x){return s+x;},0)/8;
+  grandSum += avg;
+  var bg = avg < 7 ? '#FEF2F2' : avg < 8 ? '#FEFCE8' : '#F0FDF4';
+  var tc = avg < 7 ? '#DC2626' : avg < 8 ? '#CA8A04' : '#16A34A';
+  totalRow += '<td style="text-align:center;background:' + bg + ';color:' + tc + ';font-weight:700;">' + avg.toFixed(1) + '</td>';
+});
+totalRow += '<td style="text-align:center;background:#F0FDFA;color:#0D9488;font-weight:700;">' + (grandSum/order.length).toFixed(1) + '</td>';
+totalRow += '</tr>';
+matrixBody.innerHTML += totalRow;
+
+// Sidebar active highlight
+var sections = ['dashboard','ozet','a-code-reviewer','a-backend-developer','a-swift-expert','a-test-automator','a-devops-engineer','a-documentation-engineer','a-mobile-developer','a-ui-designer','a-uiux-translator','a-system-architect','a-web-analyzer','a-market-expansion-analyst','a-prompt-engineer','a-ba-doc-generator','matrix'];
+window.addEventListener('scroll', function() {
+  var cur = '';
+  sections.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 130) cur = id;
+  });
+  document.querySelectorAll('.sidebar-link').forEach(function(link) {
+    link.classList.remove('active');
+    var oc = link.getAttribute('onclick') || '';
+    if (cur && oc.indexOf("'" + cur + "'") !== -1) link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

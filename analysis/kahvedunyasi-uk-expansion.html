@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kahve Dünyası → UK Genişleme Analizi | Loodos Research OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+* { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: #F8FAFC; color: #334155; margin: 0; }
+.sidebar-link { transition: all 0.15s; color: #334155; text-decoration: none; display: flex; align-items: center; gap: 10px; border-radius: 8px; padding: 8px 12px; margin-bottom: 2px; font-size: 13.5px; cursor: pointer; }
+.sidebar-link:hover { background: #F0FDFA; color: #0D9488; }
+.sidebar-link.active { background: #F0FDFA; color: #0D9488; font-weight: 600; }
+.card { background: white; border: 1px solid #E2E8F0; border-radius: 14px; margin-bottom: 20px; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+.card:hover { border-color: #99F6E4; box-shadow: 0 4px 16px rgba(13,148,136,0.08); }
+.card-header { display: flex; align-items: center; padding: 20px 24px; cursor: pointer; user-select: none; }
+.card-body { padding: 4px 24px 24px; }
+.card-body.collapsed { display: none; }
+.chevron { transition: transform 0.25s; }
+.chevron.rot { transform: rotate(-90deg); }
+.tbl { width: 100%; border-collapse: collapse; border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden; font-size: 13.5px; }
+.tbl th { background: #F0FDFA; color: #0D9488; font-weight: 600; padding: 11px 15px; text-align: left; border-bottom: 1px solid #E2E8F0; }
+.tbl td { padding: 10px 15px; color: #334155; border-top: 1px solid #F1F5F9; vertical-align: top; line-height: 1.5; }
+.tbl tr:nth-child(even) td { background: #F8FAFC; }
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 10px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.bk { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+.by { background: #FFF7ED; color: #EA580C; border: 1px solid #FED7AA; }
+.bm { background: #FEFCE8; color: #CA8A04; border: 1px solid #FEF08A; }
+.bd { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+.bt { background: #F0FDFA; color: #0D9488; border: 1px solid #99F6E4; }
+.icon-circle { width: 38px; height: 38px; background: #F0FDFA; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.info-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 14px 16px; }
+.info-box h4 { font-size: 10px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
+.info-box p, .info-box li { font-size: 13.5px; color: #334155; margin: 0; line-height: 1.6; }
+.info-box ul { padding-left: 18px; margin: 0; }
+.phase-item { display: flex; gap: 20px; margin-bottom: 24px; }
+.phase-dot { width: 44px; height: 44px; background: #0D9488; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; flex-shrink: 0; position: relative; z-index: 1; }
+@media print { aside { display: none !important; } main { margin-left: 0 !important; } .card { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside style="width:256px;position:fixed;top:0;left:0;height:100vh;background:white;border-right:1px solid #E2E8F0;overflow-y:auto;z-index:50;display:flex;flex-direction:column;">
+  <div style="padding:18px 16px;border-bottom:1px solid #E2E8F0;display:flex;align-items:center;gap:10px;">
+    <div style="width:32px;height:32px;background:#0D9488;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i data-lucide="trending-up" style="color:white;width:17px;height:17px;"></i>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#0F172A;">Research OS</div>
+      <div style="font-size:11px;color:#94A3B8;">Pazar Genişleme</div>
+    </div>
+  </div>
+  <nav style="padding:12px 10px;flex:1;">
+    <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;margin:6px 0 4px;">ANALİZ KATMANLARI</div>
+    <a class="sidebar-link" onclick="scrollTo2('ozet')"><i data-lucide="layout-dashboard" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Yönetici Özeti</a>
+    <a class="sidebar-link" onclick="scrollTo2('kaynak')"><i data-lucide="globe" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Kaynak Site</a>
+    <a class="sidebar-link" onclick="scrollTo2('pazar')"><i data-lucide="map-pin" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>UK Pazar Analizi</a>
+    <a class="sidebar-link" onclick="scrollTo2('operasyonel')"><i data-lucide="briefcase" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Operasyonel Kararlar</a>
+    <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;margin:14px 0 4px;">KARAR NOKTALARI</div>
+    <a class="sidebar-link" onclick="scrollTo2('teknik')"><i data-lucide="cpu" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Teknik Kararlar</a>
+    <a class="sidebar-link" onclick="scrollTo2('risk')"><i data-lucide="alert-triangle" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Risk Analizi</a>
+    <a class="sidebar-link" onclick="scrollTo2('yol')"><i data-lucide="map" style="width:15px;height:15px;color:#0D9488;flex-shrink:0;"></i>Yol Haritası</a>
+  </nav>
+  <div style="padding:14px 16px;border-top:1px solid #E2E8F0;">
+    <div style="font-size:11px;color:#94A3B8;">Analiz Tarihi</div>
+    <div style="font-size:12px;font-weight:500;color:#334155;">4 Mart 2026</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main style="margin-left:256px;min-height:100vh;padding:36px 44px;">
+
+  <!-- Breadcrumb -->
+  <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#64748B;margin-bottom:22px;">
+    <i data-lucide="home" style="width:13px;height:13px;"></i>
+    <span>Analiz</span>
+    <i data-lucide="chevron-right" style="width:13px;height:13px;"></i>
+    <span>Kahve Dünyası</span>
+    <i data-lucide="chevron-right" style="width:13px;height:13px;"></i>
+    <span style="color:#0D9488;font-weight:600;">United Kingdom</span>
+  </div>
+
+  <!-- Hero -->
+  <div style="margin-bottom:32px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+      <div style="width:46px;height:46px;background:#0D9488;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i data-lucide="trending-up" style="color:white;width:23px;height:23px;"></i>
+      </div>
+      <div>
+        <h1 style="font-size:22px;font-weight:700;color:#0F172A;margin:0;line-height:1.25;">Kahve Dünyası &rarr; United Kingdom Genişleme Analizi</h1>
+        <p style="font-size:14px;color:#64748B;margin:4px 0 0;">Mevcut UK varlığı üzerine e-ticaret katmanı ekleme stratejisi &middot; Mart 2026</p>
+      </div>
+    </div>
+    <!-- Alert -->
+    <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:13px 16px;display:flex;gap:10px;margin-bottom:22px;">
+      <i data-lucide="alert-circle" style="width:17px;height:17px;color:#EA580C;flex-shrink:0;margin-top:2px;"></i>
+      <p style="font-size:13px;color:#92400E;margin:0;line-height:1.6;"><strong style="color:#EA580C;">Kritik Bulgu:</strong> Kahve Dünyası'nın halihazırda UK'de fiziksel varlığı mevcut: <strong>200 Piccadilly (W1J 9HU)</strong> mağazası, <strong>kahvedunyasi.co.uk</strong> domain'i (aktif, e-ticaret yok) ve Amazon UK mağazası. Bu analiz "UK'e ilk giriş" değil, "mevcut UK varlığına e-ticaret katmanı ekleme" stratejisini ele almaktadır.</p>
+    </div>
+    <!-- Stats Row -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:18px 14px;text-align:center;">
+        <div style="font-size:32px;font-weight:700;color:#0D9488;line-height:1;">12</div>
+        <div style="font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.4;">Teknik Karar<br>Noktası</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:18px 14px;text-align:center;">
+        <div style="font-size:32px;font-weight:700;color:#DC2626;line-height:1;">4</div>
+        <div style="font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.4;">Kritik<br>Risk</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:18px 14px;text-align:center;">
+        <div style="font-size:32px;font-weight:700;color:#EA580C;line-height:1;">6</div>
+        <div style="font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.4;">Yüksek<br>Risk</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:18px 14px;text-align:center;">
+        <div style="font-size:32px;font-weight:700;color:#0D9488;line-height:1;">36+</div>
+        <div style="font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.4;">Hafta<br>Tahmini</div>
+      </div>
+      <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;padding:18px 14px;text-align:center;">
+        <div style="font-size:18px;font-weight:700;color:#0D9488;line-height:1.2;">&#163;150K&ndash;300K</div>
+        <div style="font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.4;">Maliyet<br>Tahmini</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: YONETİCİ OZETİ -->
+  <section id="ozet">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ozet-body','ozet-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="layout-dashboard" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">ANALİZ KATMANI 1</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Yönetici Özeti</div>
+          <div style="font-size:13px;color:#64748B;">Stratejik değerlendirme ve temel öneriler</div>
+        </div>
+        <i data-lucide="chevron-down" id="ozet-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ozet-body">
+        <div class="info-grid" style="margin-bottom:16px;">
+          <div class="info-box">
+            <h4>Stratejik Öneri</h4>
+            <p>Mevcut <strong>kahvedunyasi.co.uk</strong> domain'ini e-ticaret sitesine dönüştür. TR'den cross-border shipping ile başla; Faz 2'de UK 3PL deposuna geç. Ödeme altyapısı: Stripe GBP + Apple/Google Pay.</p>
+          </div>
+          <div class="info-box">
+            <h4>UK Pazarı Fırsatı</h4>
+            <p>İngiltere specialty kahve pazarı <strong>£8.8 milyar</strong>, yıllık %10.7 büyüme. Piccadilly mağazası marka farkındalığı için güçlü bir temel sağlıyor.</p>
+          </div>
+          <div class="info-box">
+            <h4>En Büyük Risk</h4>
+            <p>UK GDPR/ICO uyumsuzluğu (£17.5M ceza riski) ve MasterPass'ın UK'de yaygın olmaması. Her ikisi de MVP öncesi çözülmeli.</p>
+          </div>
+          <div class="info-box">
+            <h4>Differentiator</h4>
+            <p>Türk kahve kültürü + premium çikolata segmenti. Rakipler (Pact Coffee, Has Bean) yalnızca kahveye odaklanıyor; hediye kutusu kombinasyonu boşluğu dolduruyor.</p>
+          </div>
+        </div>
+        <div style="background:#F0FDFA;border:1px solid #99F6E4;border-radius:10px;padding:14px 18px;">
+          <div style="font-size:13px;font-weight:600;color:#0D9488;margin-bottom:6px;">Neden Şimdi?</div>
+          <p style="font-size:13.5px;color:#334155;margin:0;line-height:1.6;">Piccadilly mağazası marka bilinirliği oluşturuyor; kahvedunyasi.co.uk domain'i hazır; Amazon UK mağazası ürün-pazar uyumunu test etti. Rakipler güçlenmeden önce kendi e-ticaret kanalını açmanın doğru zamanı.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: KAYNAK SİTE -->
+  <section id="kaynak">
+    <div class="card">
+      <div class="card-header" onclick="toggle('kaynak-body','kaynak-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="globe" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">ANALİZ KATMANI 2</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Kaynak Site Analizi — kahvedunyasi.com</div>
+          <div style="font-size:13px;color:#64748B;">Mevcut teknik altyapı ve ürün yapısı</div>
+        </div>
+        <i data-lucide="chevron-down" id="kaynak-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="kaynak-body">
+        <div class="info-grid" style="margin-bottom:20px;">
+          <div class="info-box">
+            <h4>Teknoloji Stack</h4>
+            <ul>
+              <li><strong>Frontend:</strong> Next.js + Turbopack</li>
+              <li><strong>Geliştirici:</strong> Loodos Technologies</li>
+              <li><strong>CDN:</strong> sm.mncdn.com (Medianova)</li>
+              <li><strong>Analytics:</strong> Google Analytics 4 + GTM</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Ödeme Altyapısı</h4>
+            <ul>
+              <li><strong>Ana ödeme:</strong> MasterPass</li>
+              <li><strong>Kart:</strong> Mastercard / Visa</li>
+              <li><strong>Taksit:</strong> Yerel banka entegrasyonları</li>
+              <li style="color:#EA580C;"><strong>UK'de MasterPass kullanılmıyor</strong></li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Ürün Kategorileri</h4>
+            <ul>
+              <li>Kahve (filtre, espresso, Türk)</li>
+              <li>Çikolata &amp; Pralin</li>
+              <li>Aksesuar (ekipman)</li>
+              <li>Pastacılık ürünleri</li>
+              <li>Reform ürünleri</li>
+              <li>Hediye Gönder</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Mevcut UK Varlığı</h4>
+            <ul>
+              <li>📍 200 Piccadilly, W1J 9HU (mağaza)</li>
+              <li>🌐 kahvedunyasi.co.uk (aktif, e-ticaret yok)</li>
+              <li>🛒 Amazon UK mağazası (aktif)</li>
+              <li>❌ UK e-ticaret sitesi henüz yok</li>
+            </ul>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Özellik</th><th>Mevcut (TR)</th><th>UK için Gerekli</th><th>Gap</th></tr></thead>
+          <tbody>
+            <tr><td>Dil</td><td>Türkçe</td><td>İngilizce</td><td><span class="badge bk">Kritik</span></td></tr>
+            <tr><td>Para Birimi</td><td>TRY (₺)</td><td>GBP (£)</td><td><span class="badge bk">Kritik</span></td></tr>
+            <tr><td>Ödeme</td><td>MasterPass, TR bankalar</td><td>Stripe / UK kartlar / Apple Pay</td><td><span class="badge bk">Kritik</span></td></tr>
+            <tr><td>Kargo</td><td>Aras, PTT (TR)</td><td>DHL UK / Royal Mail</td><td><span class="badge by">Yüksek</span></td></tr>
+            <tr><td>Vergi</td><td>KDV %18</td><td>UK VAT (0–20%)</td><td><span class="badge by">Yüksek</span></td></tr>
+            <tr><td>Cookie Consent</td><td>KVKK bazlı</td><td>UK GDPR / PECR</td><td><span class="badge bk">Kritik</span></td></tr>
+            <tr><td>İçerik / CMS</td><td>TR lokalize</td><td>UK İngilizce</td><td><span class="badge bm">Orta</span></td></tr>
+            <tr><td>SEO</td><td>.com / TR hedefli</td><td>.co.uk + hreflang</td><td><span class="badge bm">Orta</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: UK PAZAR -->
+  <section id="pazar">
+    <div class="card">
+      <div class="card-header" onclick="toggle('pazar-body','pazar-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="map-pin" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">ANALİZ KATMANI 3</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">UK Pazar Gereksinimleri</div>
+          <div style="font-size:13px;color:#64748B;">Yasal, ödeme, lojistik ve rekabet analizi</div>
+        </div>
+        <i data-lucide="chevron-down" id="pazar-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="pazar-body">
+        <div class="info-grid" style="margin-bottom:20px;">
+          <div class="info-box">
+            <h4>Yasal Gereksinimler</h4>
+            <ul>
+              <li><strong>UK GDPR:</strong> ICO kaydı zorunlu (£40–2.900/yıl)</li>
+              <li><strong>PECR:</strong> Cookie consent zorunlu</li>
+              <li><strong>Consumer Rights Act 2015:</strong> 14 gün iade hakkı</li>
+              <li><strong>UK VAT:</strong> £90K ciroda kayıt zorunlu</li>
+              <li><strong>Trading Standards:</strong> İngilizce ürün etiketleme</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>UK VAT Oranları</h4>
+            <ul>
+              <li>☕ Kahve (öğütülmüş/çekirdek): <strong>%0</strong></li>
+              <li>🍫 Çikolata &amp; şekerleme: <strong>%20</strong></li>
+              <li>🛠 Aksesuar &amp; ekipman: <strong>%20</strong></li>
+              <li>🎁 Karışık hediye kutular: Baskın ürüne göre</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Ödeme Tercihleri (UK)</h4>
+            <ul>
+              <li>💳 Debit/Credit card: %57</li>
+              <li>📱 PayPal: %19</li>
+              <li>🍎 Apple Pay / Google Pay: %12</li>
+              <li>🏦 Bank transfer: %8</li>
+              <li>🛍 Klarna / BNPL: %4</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Kargo &amp; Lojistik</h4>
+            <ul>
+              <li><strong>Royal Mail:</strong> En yaygın, tracked 48h</li>
+              <li><strong>DHL UK:</strong> Premium, cross-border güçlü</li>
+              <li><strong>DPD:</strong> Gıda lojistiği deneyimli</li>
+              <li>Hedef teslimat: 3–5 iş günü (TR'den)</li>
+              <li>HMRC gümrük kodu: CN22/CN23 zorunlu</li>
+            </ul>
+          </div>
+        </div>
+        <div style="font-size:14px;font-weight:600;color:#0F172A;margin-bottom:12px;">Rekabet Analizi</div>
+        <table class="tbl">
+          <thead><tr><th>Rakip</th><th>Güçlü Yönler</th><th>Zayıf Yönler</th><th>Fark Yaratma Fırsatı</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Pact Coffee</strong></td><td>Subscription lider, güçlü UK SEO</td><td>Çikolata/aksesuar yok, premium segment sınırlı</td><td>Kahve + çikolata kombine hediye kutuları</td></tr>
+            <tr><td><strong>Has Bean</strong></td><td>Specialty single origin, güçlü community</td><td>Arayüz eski, mobile zayıf</td><td>UX üstünlüğü + Türk kahve kültürü hikayesi</td></tr>
+            <tr><td><strong>Assembly Coffee</strong></td><td>London premium konumu</td><td>Sadece London odaklı, online sınırlı</td><td>Ulusal erişim + geniş ürün yelpazesi</td></tr>
+            <tr><td><strong>Fortnum &amp; Mason</strong></td><td>Premium marka, hediye segmenti güçlü</td><td>Çok pahalı, genç kitleye uzak</td><td>Erişilebilir premium fiyatlama + taze kahve</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: OPERASYONEL -->
+  <section id="operasyonel">
+    <div class="card">
+      <div class="card-header" onclick="toggle('ops-body','ops-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="briefcase" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">ANALİZ KATMANI 4</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Operasyonel Kararlar</div>
+          <div style="font-size:13px;color:#64748B;">Yasal yapılanma, ekip, tedarik zinciri ve iade</div>
+        </div>
+        <i data-lucide="chevron-down" id="ops-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="ops-body">
+        <table class="tbl">
+          <thead><tr><th>Karar Alanı</th><th>Öneri</th><th>Gerekçe</th><th>Faz</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Yasal Yapılanma</strong></td><td>Mevcut UK Ltd şirketini kullan (Piccadilly için muhtemelen kurulu)</td><td>Yeni şirket kurulumu 4–8 hafta, ek maliyet</td><td><span class="badge bt">Faz 0</span></td></tr>
+            <tr><td><strong>UK VAT Kaydı</strong></td><td>HMRC'ye kayıt + Making Tax Digital uyumlu muhasebe</td><td>£90K eşiği hızla aşılır, hazırlıklı olunmalı</td><td><span class="badge bt">Faz 0</span></td></tr>
+            <tr><td><strong>ICO Kaydı</strong></td><td>ICO.org.uk üzerinden UK GDPR data controller kaydı</td><td>Yasal zorunluluk, ceza £17.5M'e kadar</td><td><span class="badge bk">Acil</span></td></tr>
+            <tr><td><strong>UK Banka Hesabı</strong></td><td>Wise Business veya Revolut Business (GBP)</td><td>Stripe payoutları için GBP hesap zorunlu</td><td><span class="badge bt">Faz 0</span></td></tr>
+            <tr><td><strong>Fulfillment (Faz 1)</strong></td><td>TR'den cross-border DHL UK ile gönderim</td><td>Düşük başlangıç maliyeti, stok riski yok</td><td><span class="badge bm">Faz 1</span></td></tr>
+            <tr><td><strong>Fulfillment (Faz 2)</strong></td><td>UK 3PL deposu (Byrd, Huboo veya Hubspot Fulfillment)</td><td>Min. ~200 sipariş/ay sonra karlı olur</td><td><span class="badge by">Faz 2</span></td></tr>
+            <tr><td><strong>Müşteri Hizmetleri</strong></td><td>TR ekip (İngilizce), email + chat bazlı</td><td>UK hire pahalı; GMT+2 fark yönetilebilir düzeyde</td><td><span class="badge bm">Faz 1</span></td></tr>
+            <tr><td><strong>İade Politikası</strong></td><td>14 gün, prepaid iade etiketi, Piccadilly'de fiziksel iade</td><td>Consumer Rights Act zorunluluğu + müşteri beklentisi</td><td><span class="badge bm">Faz 1</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: TEKNİK KARARLAR -->
+  <section id="teknik">
+    <div class="card">
+      <div class="card-header" onclick="toggle('teknik-body','teknik-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="cpu" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">KARAR NOKTALARI 1</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Teknik Karar Noktaları</div>
+          <div style="font-size:13px;color:#64748B;">12 kritik teknik karar — seçenekler, artı/eksiler ve öneriler</div>
+        </div>
+        <i data-lucide="chevron-down" id="teknik-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="teknik-body">
+
+        <!-- K1 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">1. Domain Stratejisi</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>kahvedunyasi.co.uk (mevcut)</strong></td><td>Domain hazır, ccTLD UK SEO avantajı, müşteri güveni</td><td>TR siteden bağımsız yönetim gerekir</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>uk.kahvedunyasi.com</td><td>Ana siteyle bağlantılı görünüm</td><td>Subdomain SEO zayıf, .co.uk avantajı yok</td><td></td></tr>
+            <tr><td>kahvedunyasi.com/en-gb/</td><td>Domain authority paylaşımı</td><td>TR sitesi karmaşıklaşır, i18n routing yükü</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K2 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">2. Platform Yaklaşımı</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>Mevcut Next.js'e e-ticaret ekle</strong></td><td>Loodos bilir, marka tutarlılığı, hız, tek kod tabanı</td><td>E-ticaret modül geliştirme süresi uzar</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Ayrı Shopify UK mağazası</td><td>Hızlı kurulum, eklentiler hazır</td><td>Farklı stack, entegrasyon sorunu, marka tutarsızlığı</td><td></td></tr>
+            <tr><td>ikas.com UK hesabı</td><td>TR ekip deneyimi var</td><td>UK lokalizasyon desteği belirsiz</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K3 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">3. Ürün Kataloğu Stratejisi</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>UK için seçilmiş ürün listesi (50–80 SKU)</strong></td><td>Kargo uyumlu, düşük operasyonel yük, hızlı lansman</td><td>Manuel seçim/çeviri gerekli</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Tam TR kataloğu (çeviri)</td><td>Geniş seçenek, müşteri memnuniyeti</td><td>Bazı ürünler kargo/gümrük uyumsuz, VAT karmaşıklığı</td><td></td></tr>
+            <tr><td>UK-özgü yeni ürünler</td><td>Yerel adaptasyon, differentiator</td><td>Stok riski yüksek, başlangıç maliyeti büyük</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K4 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">4. Ürün Ağacı Kaynağı</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>TR ERP entegrasyonu</strong></td><td>Tek kaynak, stok senkronizasyonu, güvenilir</td><td>API geliştirme ve test süresi gerekli</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Ayrı UK PIM sistemi</td><td>Bağımsız UK yönetimi</td><td>Çift veri girişi, senkronizasyon sorunu</td><td></td></tr>
+            <tr><td>Manuel (spreadsheet + CMS)</td><td>Hızlı başlangıç, geliştirme yok</td><td>Ölçeklenemiyor, hata riski yüksek</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K5 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">5. Stok ve Fulfillment</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>TR'den cross-border — DHL UK (Faz 1)</strong></td><td>Sıfır stok yatırımı, düşük risk, hızlı lansman</td><td>5–10 günlük teslimat, gümrük formalitesi</td><td><span class="badge bt">✓ Faz 1</span></td></tr>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>UK 3PL deposu — Byrd/Huboo (Faz 2)</strong></td><td>1–2 gün teslimat, iade kolaylaşır, müşteri memnuniyeti</td><td>Min. ~200 sipariş/ay hacim gerekli, setup maliyeti</td><td><span class="badge bt">✓ Faz 2</span></td></tr>
+            <tr><td>Piccadilly mağazasından fulfillment</td><td>Mevcut lokasyon kullanımı</td><td>Mağaza kapasitesi yetersiz, operasyonel risk</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K6 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">6. Ödeme Entegrasyonu</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>Stripe GBP</strong></td><td>UK lider, Apple/Google Pay dahil, kolay entegrasyon, iyi dokümantasyon</td><td>%1.5 + 20p işlem ücreti</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>PayPal + Stripe</td><td>PayPal kullanıcıları için seçenek (%19 pazar payı)</td><td>Çift entegrasyon, yönetim yükü</td><td></td></tr>
+            <tr><td>Adyen</td><td>Enterprise seviye, çoklu döviz</td><td>Minimum ciro şartı, entegrasyon karmaşık ve pahalı</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K7 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">7. Kargo Entegrasyonu</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>DHL UK</strong></td><td>Cross-border güçlü, olgun API, tracking dahil, gümrük deneyimi</td><td>£8–12/paket, Royal Mail'den pahalı</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Royal Mail</td><td>En yaygın UK kargo, ucuz (£3–6), tanınmış</td><td>Cross-border desteği sınırlı, iade zor</td><td></td></tr>
+            <tr><td>DPD UK</td><td>Gıda lojistiği deneyimi, güçlü tracking</td><td>TR'den cross-border kapasitesi zayıf</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K8 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">8. Para Birimi</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>GBP native (£)</strong></td><td>UK müşteri güveni, Stripe native, basit VAT hesaplama</td><td>TRY/GBP kur riski; Wise ile yönetilebilir</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Multi-currency (TRY + GBP)</td><td>TR muhasebesi kolaylaşır</td><td>Karmaşık muhasebe, UK müşteri konfüzyonu</td><td></td></tr>
+            <tr><td>EUR bazlı</td><td>Post-Brexit AB için kullanışlı</td><td>UK için anlamsız, müşteri güvensizliği</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K9 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">9. VAT / Vergi Hesaplama</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>Avalara / TaxJar entegrasyonu</strong></td><td>Otomatik VAT hesaplama, audit trail, Making Tax Digital uyumlu</td><td>£100–300/ay maliyet</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Manuel (UK muhasebeci)</td><td>Düşük başlangıç maliyeti</td><td>Hata riski yüksek, ölçeklenemiyor</td><td></td></tr>
+            <tr><td>Stripe Tax</td><td>Stripe ile entegre, kolay</td><td>UK'ye özel karmaşık ürün VAT sınıfları için sınırlı</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K10 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">10. Müşteri Veritabanı</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>Ayrı UK veritabanı (UK bölgesi)</strong></td><td>UK GDPR uyumu, veri yerelleşmesi, ICO gereksinimleri karşılanır</td><td>TR sistemle entegrasyon ekstra iş</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Ortak TR + UK veritabanı</td><td>Tek sistem, basit yönetim</td><td>UK GDPR ihlali riski, ICO cezası</td><td></td></tr>
+            <tr><td>Federated identity</td><td>Çok bölgeli kontrol imkanı</td><td>Başlangıç için aşırı mühendislik</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K11 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">11. Cookie / PECR Uyumu</div>
+        <table class="tbl" style="margin-bottom:22px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>Cookiebot veya OneTrust</strong></td><td>UK PECR + GDPR sertifikalı, otomatik tarama, kolay entegrasyon</td><td>£25–150/ay maliyet</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>Mevcut KVKK banner'ını uyarla</td><td>Hızlı, ücretsiz</td><td>PECR uyumsuz; ICO cezası riski</td><td></td></tr>
+            <tr><td>Custom geliştirme</td><td>Tam kontrol</td><td>Yasal risk, sürekli güncelleme yükü</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <!-- K12 -->
+        <div style="font-size:13px;font-weight:700;color:#0F172A;margin:4px 0 8px;padding-bottom:6px;border-bottom:1px solid #F1F5F9;">12. SEO / Hreflang Stratejisi</div>
+        <table class="tbl" style="margin-bottom:4px;">
+          <thead><tr><th>Seçenek</th><th>Avantajlar</th><th>Dezavantajlar</th><th>Öneri</th></tr></thead>
+          <tbody>
+            <tr style="border-left:3px solid #0D9488;"><td><strong>kahvedunyasi.co.uk + hreflang</strong></td><td>UK SEO maksimum, ccTLD güveni, Google UK'de üst sıralar</td><td>Domain authority sıfırdan inşa edilmeli</td><td><span class="badge bt">✓ Önerilen</span></td></tr>
+            <tr><td>kahvedunyasi.com/en-gb/</td><td>Ana domain authority aktarımı</td><td>TR/UK içerik çakışması, i18n karmaşıklığı</td><td></td></tr>
+            <tr><td>uk.kahvedunyasi.com subdomain</td><td>Hızlı setup</td><td>Subdomain SEO zayıf, UK güveni düşük</td><td></td></tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: RİSK ANALİZİ -->
+  <section id="risk">
+    <div class="card">
+      <div class="card-header" onclick="toggle('risk-body','risk-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="alert-triangle" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">KARAR NOKTALARI 2</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Risk Analizi</div>
+          <div style="font-size:13px;color:#64748B;">10 tespit edilen risk — 4 kritik, 6 yüksek</div>
+        </div>
+        <i data-lucide="chevron-down" id="risk-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="risk-body">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:28px;">#</th>
+              <th>Risk</th>
+              <th>Kategori</th>
+              <th>Etki</th>
+              <th>Olasılık</th>
+              <th>Azaltma Stratejisi</th>
+              <th>Maliyet Etkisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>UK GDPR / ICO Uyumsuzluğu</strong></td>
+              <td>Yasal</td>
+              <td><span class="badge bk">Kritik</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>Faz 0'da ICO kaydı, UK GDPR uyum planı, PECR cookie consent (Cookiebot)</td>
+              <td>Ceza: £17.5M'e kadar</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>MasterPass UK'de Kullanılmıyor</strong></td>
+              <td>Teknik</td>
+              <td><span class="badge bk">Kritik</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>Stripe GBP + Apple/Google Pay MVP'ye dahil edilmeli — MasterPass UK'de geçerli değil</td>
+              <td>£5K–15K geliştirme</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Post-Brexit Gümrük Karmaşıklığı</strong></td>
+              <td>Operasyonel</td>
+              <td><span class="badge bk">Kritik</span></td>
+              <td><span class="badge bm">Orta</span></td>
+              <td>EORI numarası, DDP (Delivered Duty Paid) modeli, gümrük danışmanı ile çalış</td>
+              <td>£3K–8K/yıl danışmanlık</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Marka Bilinirliği Sıfırda (Online)</strong></td>
+              <td>Pazar</td>
+              <td><span class="badge bk">Kritik</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>Piccadilly mağazasını marka elçisi olarak kullan, PR kampanyaları, UK food/coffee influencer işbirlikleri</td>
+              <td>£30K–80K/yıl pazarlama</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>TRY/GBP Kur Riski</strong></td>
+              <td>Finansal</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>GBP bazlı fiyatlandırma, Wise Business döviz yönetimi, 3 aylık kur hedging planı</td>
+              <td>Marj %10–25 dalgalanma</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><strong>İade Lojistiği Karmaşıklığı</strong></td>
+              <td>Operasyonel</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bm">Orta</span></td>
+              <td>Prepaid iade etiketi (DHL), Piccadilly mağazada fiziksel iade noktası, Faz 2'de UK 3PL iade merkezi</td>
+              <td>£5–15/iade</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><strong>MH Dil/Saat Farkı</strong></td>
+              <td>Operasyonel</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bm">Orta</span></td>
+              <td>İngilizce konuşan TR ekip, GMT+2 çakışan saatler, AI chatbot ile self-service destek</td>
+              <td>£20K–40K/yıl ekip</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><strong>Yerel Rakip Fiyat Baskısı</strong></td>
+              <td>Pazar</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>Premium + Türk kahve kültürü hikayesi, çikolata kombinasyonu, hediye paketi odağı — fiyat savaşından kaç</td>
+              <td>Marj baskısı %5–15</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><strong>UK VAT Kayıt ve Muhasebe Yükü</strong></td>
+              <td>Yasal</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bk">Yüksek</span></td>
+              <td>Avalara entegrasyonu, Making Tax Digital uyumlu UK muhasebe firması (£150–300/ay)</td>
+              <td>£3K–8K/yıl</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><strong>Next.js UK Lokalizasyon Eksikliği</strong></td>
+              <td>Teknik</td>
+              <td><span class="badge by">Yüksek</span></td>
+              <td><span class="badge bm">Orta</span></td>
+              <td>next-intl kütüphanesi, i18n routing, ayrı UK içerik katmanı — Loodos tarafından yapılabilir</td>
+              <td>£8K–20K geliştirme</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: YOL HARİTASI -->
+  <section id="yol">
+    <div class="card">
+      <div class="card-header" onclick="toggle('yol-body','yol-chev')">
+        <div class="icon-circle" style="margin-right:14px;"><i data-lucide="map" style="width:18px;height:18px;color:#0D9488;"></i></div>
+        <div style="flex:1;">
+          <div style="font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px;">KARAR NOKTALARI 3</div>
+          <div style="font-size:16px;font-weight:700;color:#0F172A;">Yol Haritası Önerisi</div>
+          <div style="font-size:13px;color:#64748B;">4 fazlı genişleme planı &middot; 36+ hafta</div>
+        </div>
+        <i data-lucide="chevron-down" id="yol-chev" class="chevron" style="width:20px;height:20px;color:#94A3B8;"></i>
+      </div>
+      <div class="card-body" id="yol-body">
+
+        <!-- Mermaid Gantt -->
+        <div style="margin-bottom:28px;overflow-x:auto;">
+          <div class="mermaid">
+gantt
+    dateFormat  YYYY-MM-DD
+    title Kahve Dünyası UK E-Ticaret Yol Haritası 2026
+    section Faz 0 - Hazırlık
+    Yasal danışmanlık + ICO kaydı     :2026-03-04, 3w
+    Teknik mimari kararları            :2026-03-04, 4w
+    UK banka hesabı (Wise Business)    :2026-03-11, 2w
+    ERP API entegrasyon analizi        :2026-03-18, 3w
+    section Faz 1 - MVP
+    kahvedunyasi.co.uk e-ticaret       :2026-04-15, 8w
+    Stripe GBP + Apple Pay             :2026-04-15, 3w
+    DHL UK kargo entegrasyonu          :2026-04-22, 4w
+    UK GDPR + PECR cookie consent      :2026-04-15, 2w
+    Ürün kataloğu (50-80 SKU, EN)      :2026-05-06, 5w
+    Yumuşak lansman                    :2026-07-08, 2w
+    section Faz 2 - Büyüme
+    UK 3PL depo anlaşması              :2026-07-22, 4w
+    Abonelik kahve kutusu sistemi      :2026-07-22, 6w
+    Loyalty programı                   :2026-08-05, 6w
+    UK influencer ve PR kampanyası     :2026-07-22, 8w
+    section Faz 3 - Optimizasyon
+    UK SEO ve yerel içerik             :2026-11-18, 8w
+    CRO (conversion optimizasyon)      :2026-12-02, 6w
+    UK müşteri hizmetleri hire         :2026-11-18, 4w
+          </div>
+        </div>
+
+        <!-- Timeline Phases -->
+        <div style="position:relative;padding-left:0;">
+          <div style="position:absolute;left:21px;top:44px;bottom:80px;width:2px;background:#E2E8F0;"></div>
+
+          <!-- Faz 0 -->
+          <div class="phase-item">
+            <div class="phase-dot">0</div>
+            <div style="flex:1;padding-top:6px;">
+              <div style="background:white;border:1px solid #E2E8F0;border-radius:10px;padding:16px 18px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:#0F172A;">Faz 0 &mdash; Araştırma &amp; Hazırlık</div>
+                    <div style="font-size:12px;color:#64748B;margin-top:2px;">0&ndash;6 Hafta &middot; &pound;5K&ndash;10K</div>
+                  </div>
+                  <span class="badge bt">Şimdi Başla</span>
+                </div>
+                <ul style="font-size:13.5px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+                  <li>UK solicitor ile yasal yapı değerlendirmesi</li>
+                  <li>ICO kaydı ve UK GDPR uyum planı hazırlanması</li>
+                  <li>Wise Business GBP hesabı açılışı</li>
+                  <li>Teknik mimari karar noktalarının sonuçlandırılması</li>
+                  <li>ERP API entegrasyon fizibilite analizi</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Faz 1 -->
+          <div class="phase-item">
+            <div class="phase-dot">1</div>
+            <div style="flex:1;padding-top:6px;">
+              <div style="background:white;border:1px solid #E2E8F0;border-radius:10px;padding:16px 18px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:#0F172A;">Faz 1 &mdash; MVP Lansmanı</div>
+                    <div style="font-size:12px;color:#64748B;margin-top:2px;">6&ndash;20 Hafta &middot; &pound;60K&ndash;120K</div>
+                  </div>
+                  <span class="badge bm">Q2 2026</span>
+                </div>
+                <ul style="font-size:13.5px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+                  <li>kahvedunyasi.co.uk e-ticaret geliştirmesi (Next.js + Loodos)</li>
+                  <li>Stripe GBP + Apple Pay / Google Pay entegrasyonu</li>
+                  <li>DHL UK kargo entegrasyonu + sipariş tracking</li>
+                  <li>Seçilmiş ürün kataloğu (50&ndash;80 SKU, İngilizce çeviri)</li>
+                  <li>UK GDPR cookie consent (Cookiebot) entegrasyonu</li>
+                  <li>Yumuşak lansman + Piccadilly mağaza PR etkinliği</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Faz 2 -->
+          <div class="phase-item">
+            <div class="phase-dot">2</div>
+            <div style="flex:1;padding-top:6px;">
+              <div style="background:white;border:1px solid #E2E8F0;border-radius:10px;padding:16px 18px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:#0F172A;">Faz 2 &mdash; Büyüme &amp; Genişleme</div>
+                    <div style="font-size:12px;color:#64748B;margin-top:2px;">20&ndash;36 Hafta &middot; &pound;40K&ndash;80K</div>
+                  </div>
+                  <span class="badge by">Q3&ndash;Q4 2026</span>
+                </div>
+                <ul style="font-size:13.5px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+                  <li>UK 3PL depo anlaşması (min. ~200 sipariş/ay sonra)</li>
+                  <li>Abonelik kahve kutusu sistemi (Subscription model)</li>
+                  <li>Loyalty &amp; puan programı</li>
+                  <li>UK food/coffee influencer pazarlama kampanyası</li>
+                  <li>Amazon UK ve kahvedunyasi.co.uk stok senkronizasyonu</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Faz 3 -->
+          <div class="phase-item" style="margin-bottom:0;">
+            <div class="phase-dot">3</div>
+            <div style="flex:1;padding-top:6px;">
+              <div style="background:white;border:1px solid #E2E8F0;border-radius:10px;padding:16px 18px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:#0F172A;">Faz 3 &mdash; Optimizasyon &amp; Ölçekleme</div>
+                    <div style="font-size:12px;color:#64748B;margin-top:2px;">36+ Hafta &middot; Devam eden yatırım</div>
+                  </div>
+                  <span class="badge bd">2027+</span>
+                </div>
+                <ul style="font-size:13.5px;color:#334155;line-height:1.8;padding-left:18px;margin:0;">
+                  <li>UK SEO &amp; yerel içerik pazarlama (blog, kahve rehberleri)</li>
+                  <li>Conversion Rate Optimization (A/B testleri, UX iyileştirme)</li>
+                  <li>UK yerel müşteri hizmetleri uzmanı hire</li>
+                  <li>B2B ofis kahve aboneliği kanalı açılışı</li>
+                  <li>2. UK mağaza değerlendirmesi (Manchester, Edinburgh)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div style="margin-top:32px;padding:16px 0;border-top:1px solid #E2E8F0;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-size:12px;color:#94A3B8;">Kahve Dünyası &rarr; UK Genişleme Analizi &middot; Loodos Research OS &middot; Mart 2026</div>
+    <div style="font-size:12px;color:#94A3B8;">Kaynak: kahvedunyasi.com analizi + UK pazar araştırması</div>
+  </div>
+
+</main>
+
+<script>
+  lucide.createIcons();
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    gantt: { titleTopMargin: 20, barHeight: 18, barGap: 4, topPadding: 50, fontSize: 12 }
+  });
+
+  function toggle(bodyId, chevId) {
+    var body = document.getElementById(bodyId);
+    var chev = document.getElementById(chevId);
+    body.classList.toggle('collapsed');
+    chev.classList.toggle('rot');
+  }
+
+  function scrollTo2(id) {
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Active sidebar highlight on scroll
+  var sections = ['ozet','kaynak','pazar','operasyonel','teknik','risk','yol'];
+  var links = document.querySelectorAll('.sidebar-link');
+  window.addEventListener('scroll', function() {
+    var current = '';
+    sections.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 140) current = id;
+    });
+    links.forEach(function(link) {
+      link.classList.remove('active');
+      var oc = link.getAttribute('onclick') || '';
+      if (oc.indexOf("'" + current + "'") !== -1) link.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

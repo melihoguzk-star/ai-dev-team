@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProteinOcean — Web Analiz Raporu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {} }
+    };
+  </script>
+  <style>
+    /* Sidebar scroll */
+    #sidebar { height: calc(100vh - 0px); }
+    .section-content { transition: max-height 0.3s ease, opacity 0.3s ease; overflow: hidden; }
+    .section-content.collapsed { max-height: 0 !important; opacity: 0; }
+    /* Mermaid diagrams */
+    .mermaid svg { max-width: 100%; height: auto; }
+    /* Tree view */
+    .tree-node { list-style: none; }
+    .tree-node li::before { content: "├── "; font-family: monospace; color: #6b7280; }
+    .tree-node li:last-child::before { content: "└── "; font-family: monospace; color: #6b7280; }
+    /* Zebra tables */
+    .zebra tr:nth-child(even) { background-color: rgba(99,102,241,0.05); }
+    .dark .zebra tr:nth-child(even) { background-color: rgba(99,102,241,0.1); }
+    /* Print */
+    @media print {
+      #sidebar { display: none; }
+      #main { margin-left: 0 !important; }
+      .no-print { display: none; }
+      .section-content { max-height: none !important; opacity: 1 !important; }
+    }
+    /* Scrollbar */
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 2px; }
+    /* Active nav */
+    .nav-link.active { background-color: rgba(99,102,241,0.15); color: #6366f1; font-weight: 600; }
+    .dark .nav-link.active { background-color: rgba(99,102,241,0.25); color: #818cf8; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-950 dark:text-gray-100 font-sans transition-colors duration-300">
+
+<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+<aside id="sidebar" class="fixed left-0 top-0 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 overflow-y-auto z-30 no-print">
+  <!-- Logo / Brand -->
+  <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex items-center gap-2 mb-1">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm">PO</div>
+      <div>
+        <div class="font-bold text-sm text-gray-900 dark:text-white">ProteinOcean</div>
+        <div class="text-xs text-gray-500">Web Analiz Raporu</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav Links -->
+  <nav class="p-3 space-y-1 text-sm">
+    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 py-1 mt-1">İçindekiler</div>
+    <a href="#genel-bakis" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>🏠</span><span>Genel Bakış</span>
+    </a>
+    <a href="#sayfa-haritasi" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>🗺️</span><span>Sayfa Haritası</span>
+    </a>
+    <a href="#api-endpoints" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>⚡</span><span>API Endpoints</span>
+    </a>
+    <a href="#veri-modeli" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>🗃️</span><span>Veri Modeli</span>
+    </a>
+    <a href="#kullanici-akislari" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>🔄</span><span>Kullanıcı Akışları</span>
+    </a>
+    <a href="#is-kurallari" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>📋</span><span>İş Kuralları</span>
+    </a>
+    <a href="#tech-stack" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>🛠️</span><span>Teknoloji Stack</span>
+    </a>
+    <a href="#ios-onerileri" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>📱</span><span>iOS Önerileri</span>
+    </a>
+    <a href="#riskler" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+      <span>⚠️</span><span>Riskler</span>
+    </a>
+  </nav>
+
+  <!-- Dark Mode Toggle -->
+  <div class="p-4 border-t border-gray-200 dark:border-gray-700 mt-auto">
+    <button onclick="toggleDark()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium">
+      <span id="theme-icon">🌙</span>
+      <span id="theme-label">Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main id="main" class="ml-64 min-h-screen">
+
+  <!-- ── HEADER ── -->
+  <header class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white px-8 py-8">
+    <div class="flex items-start justify-between flex-wrap gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl">🏋️</div>
+          <div>
+            <h1 class="text-2xl font-bold">ProteinOcean Web Analiz Raporu</h1>
+            <p class="text-indigo-200 text-sm">proteinocean.com — iOS Native Dönüşüm Analizi</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-4 text-sm">
+          <span class="bg-white/20 rounded-full px-3 py-1">📅 4 Mart 2026</span>
+          <span class="bg-white/20 rounded-full px-3 py-1">🔍 Pasif Analiz</span>
+          <span class="bg-white/20 rounded-full px-3 py-1">🏗️ ikas.com Altyapısı</span>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="flex gap-4 flex-wrap">
+        <div class="bg-white/15 rounded-xl px-5 py-3 text-center">
+          <div class="text-3xl font-bold">22</div>
+          <div class="text-xs text-indigo-200">Sayfa</div>
+        </div>
+        <div class="bg-white/15 rounded-xl px-5 py-3 text-center">
+          <div class="text-3xl font-bold">70+</div>
+          <div class="text-xs text-indigo-200">API Op.</div>
+        </div>
+        <div class="bg-white/15 rounded-xl px-5 py-3 text-center">
+          <div class="text-3xl font-bold">13</div>
+          <div class="text-xs text-indigo-200">Veri Modeli</div>
+        </div>
+        <div class="bg-white/15 rounded-xl px-5 py-3 text-center">
+          <div class="text-3xl font-bold">18</div>
+          <div class="text-xs text-indigo-200">İş Kuralı</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="px-8 py-6 space-y-6">
+
+    <!-- ══════════════════════ 1. GENEL BAKIŞ ══════════════════════ -->
+    <section id="genel-bakis" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s1')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🏠</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">1. Genel Bakış</h2>
+        </div>
+        <span id="s1-icon" class="text-gray-400 text-xl transition-transform">▼</span>
+      </button>
+      <div id="s1" class="section-content px-6 pb-6" style="max-height:2000px">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 border border-indigo-100 dark:border-indigo-800">
+            <div class="text-2xl mb-2">🎯</div>
+            <div class="font-semibold text-indigo-800 dark:text-indigo-300 mb-1">Site Amacı</div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Proteinocean Gıda A.Ş.'nin B2C e-ticaret platformu. Sporcu gıdaları ve takviye edici ürünler satışı.</p>
+          </div>
+          <div class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 border border-purple-100 dark:border-purple-800">
+            <div class="text-2xl mb-2">👥</div>
+            <div class="font-semibold text-purple-800 dark:text-purple-300 mb-1">Hedef Kitle</div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Spor yapan bireyler, fitness meraklıları, sağlıklı yaşam odaklı tüketiciler.</p>
+          </div>
+          <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 border border-emerald-100 dark:border-emerald-800">
+            <div class="text-2xl mb-2">🏗️</div>
+            <div class="font-semibold text-emerald-800 dark:text-emerald-300 mb-1">Altyapı</div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">ikas.com — Türk SaaS e-ticaret platformu. Next.js frontend, GraphQL API.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Temel Özellikler</h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ 150+ ürün kataloğu</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Kategori & filtreleme</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Varyant yönetimi (tat/boyut)</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Sosyal login desteği</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Sadakat/puan programı</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ BuyXGetY kampanya</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Müşteri yorumları (Yotpo)</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Blog içerik yönetimi</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Stok hatırlatma</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ Favori ürün listesi</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ İade/garanti talebi</div>
+            <div class="flex items-center gap-2 text-sm bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">✅ 250 TL+ ücretsiz kargo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 2. SAYFA HARİTASI ══════════════════════ -->
+    <section id="sayfa-haritasi" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s2')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🗺️</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">2. Sayfa Haritası</h2>
+          <span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs font-medium px-2 py-0.5 rounded-full">22 sayfa</span>
+        </div>
+        <span id="s2-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s2" class="section-content px-6 pb-6" style="max-height:3000px">
+        <div class="overflow-x-auto mb-6">
+          <table class="zebra w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-indigo-50 dark:bg-indigo-900/30">
+                <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300 rounded-tl-lg">#</th>
+                <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300">Sayfa</th>
+                <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300">URL</th>
+                <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300 rounded-tr-lg">Açıklama</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr><td class="px-3 py-2 text-gray-400">1</td><td class="px-3 py-2 font-medium">Ana Sayfa</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Hero banner, öne çıkan ürünler, kampanyalar</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">2</td><td class="px-3 py-2 font-medium">Kategori Listesi</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/{kategori-slug}</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Ürün grid, filtre, sıralama</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">3</td><td class="px-3 py-2 font-medium">Ürün Detay</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/{urun-slug}</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Varyant seçimi, fiyat, stok, yorumlar, sepete ekle</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">4</td><td class="px-3 py-2 font-medium">Sepet</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/cart</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Ürünler, kupon, toplam, ödemeye geç</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">5</td><td class="px-3 py-2 font-medium">Ödeme (Checkout)</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/checkout</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Adres, kargo, ödeme yöntemi, sipariş özeti</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">6</td><td class="px-3 py-2 font-medium">Hesap Girişi</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/account</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Login/Register tabs, sosyal login</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">7</td><td class="px-3 py-2 font-medium">Hesabım</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/account/*</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Siparişler, adresler, favoriler, profil</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">8</td><td class="px-3 py-2 font-medium">Sipariş Detay</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/account/orders/{id}</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Sipariş durumu, ürünler, iade talebi</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">9</td><td class="px-3 py-2 font-medium">Blog</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/blog</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Blog listesi, kategoriler</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">10</td><td class="px-3 py-2 font-medium">Blog Detay</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/blog/{slug}</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Makale içeriği</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">11</td><td class="px-3 py-2 font-medium">Hakkımızda</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/hakkimizda</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Marka hikayesi</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">12</td><td class="px-3 py-2 font-medium">İletişim</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/iletisim</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">İletişim formu</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">13</td><td class="px-3 py-2 font-medium">SSS</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/sikca-sorulan-sorular</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Sık sorulan sorular</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">14</td><td class="px-3 py-2 font-medium">KVKK</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/kvkk</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">KVKK metni</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">15</td><td class="px-3 py-2 font-medium">Satış Sözleşmesi</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/satis-sozlesmesi</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Mesafeli satış sözleşmesi</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">16</td><td class="px-3 py-2 font-medium">İade &amp; Garanti</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/garanti-ve-iade-kosullari</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">İade koşulları</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">17</td><td class="px-3 py-2 font-medium">Çalışma İlkeleri</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/pages/calisma-ilkelerimiz</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Marka ilkeleri</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">18</td><td class="px-3 py-2 font-medium">Ürün Sözlüğü</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/sozluk</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Takviye terimleri ansiklopedisi</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">19</td><td class="px-3 py-2 font-medium">Promosyon</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/promosyon</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Aktif kampanyalar</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">20</td><td class="px-3 py-2 font-medium">Lansman</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/lansman</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Yeni ürün lansmanları</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">21</td><td class="px-3 py-2 font-medium">Paketler</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/paketler</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Ürün bundle'ları</td></tr>
+              <tr><td class="px-3 py-2 text-gray-400">22</td><td class="px-3 py-2 font-medium">Tüm Ürünler</td><td class="px-3 py-2 font-mono text-xs text-purple-600 dark:text-purple-400">/tum-urunler</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Tüm katalog</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Kategori Hiyerarşisi</h3>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 font-mono text-sm space-y-1 text-gray-700 dark:text-gray-300">
+          <div class="font-bold text-indigo-600 dark:text-indigo-400 mb-2">Ana Kategoriler</div>
+          <div class="ml-2">├── <span class="text-purple-600 dark:text-purple-400 font-semibold">Protein</span></div>
+          <div class="ml-6">├── Proteinler → <span class="text-gray-400">/proteinler-1</span></div>
+          <div class="ml-10">├── Whey Protein → <span class="text-gray-400">/whey-protein</span></div>
+          <div class="ml-10">├── Clear Whey → <span class="text-gray-400">/clear-whey</span></div>
+          <div class="ml-10">├── Milk Protein → <span class="text-gray-400">/milk-protein</span></div>
+          <div class="ml-10">├── Pea Protein → <span class="text-gray-400">/pea-protein</span></div>
+          <div class="ml-10">└── Vegan Gainer → <span class="text-gray-400">/vegan-gainer</span></div>
+          <div class="ml-6">└── Mass Gainer → <span class="text-gray-400">/mass-gainer</span></div>
+          <div class="ml-2">├── <span class="text-blue-600 dark:text-blue-400 font-semibold">Spor Gıdaları</span> → <span class="text-gray-400">/spor-gidalari</span></div>
+          <div class="ml-6">├── Amino Asitler (BCAA, EAA, Glutamine, Arginine, Leucine, Taurine)</div>
+          <div class="ml-6">├── Pre-Workout / Kreatin / Karbonhidrat</div>
+          <div class="ml-6">└── L-Carnitine / CLA / Burner</div>
+          <div class="ml-2">├── <span class="text-emerald-600 dark:text-emerald-400 font-semibold">Vitaminler</span> → <span class="text-gray-400">/vitaminler</span></div>
+          <div class="ml-6">└── Multivitamin / C-B Vitamini / Omega-3 / Özel Formül</div>
+          <div class="ml-2">├── <span class="text-amber-600 dark:text-amber-400 font-semibold">Sağlık</span> → Mineraller / Bitkisel / Fonksiyonel Gıdalar</div>
+          <div class="ml-2">├── <span class="text-rose-600 dark:text-rose-400 font-semibold">Gıda</span> → Fıstık Ezmeleri / Baharatlar</div>
+          <div class="ml-2">└── <span class="text-gray-600 dark:text-gray-400 font-semibold">Aksesuar</span> → Shaker / Gym Bag / Havlu / T-shirt</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 3. API ENDPOINTS ══════════════════════ -->
+    <section id="api-endpoints" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s3')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">⚡</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">3. API Endpoint Haritası</h2>
+          <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-medium px-2 py-0.5 rounded-full">GraphQL</span>
+        </div>
+        <span id="s3-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s3" class="section-content px-6 pb-6" style="max-height:5000px">
+
+        <!-- API Info -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-5 text-sm">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div><span class="font-semibold text-blue-700 dark:text-blue-300">Base URL:</span><br/><code class="text-xs bg-white dark:bg-gray-800 rounded px-2 py-0.5">https://api.myikas.com/api/sf/graphql</code></div>
+            <div><span class="font-semibold text-blue-700 dark:text-blue-300">Method:</span><br/><span class="inline-flex items-center gap-1"><span class="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">POST</span> tüm işlemler</span></div>
+            <div><span class="font-semibold text-blue-700 dark:text-blue-300">Auth:</span><br/>Bearer JWT — <code class="text-xs bg-white dark:bg-gray-800 rounded px-2 py-0.5">Authorization: Bearer {token}</code></div>
+          </div>
+        </div>
+
+        <!-- Query ops -->
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+          <span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-2 py-0.5 rounded">QUERY</span>
+          3.1 Query Operasyonları
+        </h3>
+        <div class="overflow-x-auto mb-6">
+          <table class="zebra w-full text-sm border-collapse">
+            <thead><tr class="bg-emerald-50 dark:bg-emerald-900/20">
+              <th class="text-left px-3 py-2 font-semibold text-emerald-700 dark:text-emerald-300">Operasyon</th>
+              <th class="text-left px-3 py-2 font-semibold text-emerald-700 dark:text-emerald-300">Parametreler</th>
+              <th class="text-left px-3 py-2 font-semibold text-emerald-700 dark:text-emerald-300">Açıklama</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">searchProducts</td><td class="px-3 py-2 text-xs text-gray-500">input (filtreler, sayfalama, sıralama)</td><td class="px-3 py-2 text-sm">Ürün arama ve listeleme</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getRelatedProducts</td><td class="px-3 py-2 text-xs text-gray-500">productId, categoryIds, limit, locale</td><td class="px-3 py-2 text-sm">İlgili ürünler</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getSuggestedProducts</td><td class="px-3 py-2 text-xs text-gray-500">productId, categoryIds, limit, locale</td><td class="px-3 py-2 text-sm">Önerilen ürünler</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getProductFilterData</td><td class="px-3 py-2 text-xs text-gray-500">categoryId, brandId, locale</td><td class="px-3 py-2 text-sm">Filtre seçenekleri</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listCategory</td><td class="px-3 py-2 text-xs text-gray-500">id, categoryPath, pagination, search, sort</td><td class="px-3 py-2 text-sm">Kategori listesi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listProductBrand</td><td class="px-3 py-2 text-xs text-gray-500">id, pagination, search, sort</td><td class="px-3 py-2 text-sm">Marka listesi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getCart / getCartById</td><td class="px-3 py-2 text-xs text-gray-500">id, customerId, storefrontRoutingId</td><td class="px-3 py-2 text-sm">Sepet detayı</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getCheckoutByCartId</td><td class="px-3 py-2 text-xs text-gray-500">cartId</td><td class="px-3 py-2 text-sm">Checkout bilgisi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getMyCustomer</td><td class="px-3 py-2 text-xs text-gray-500">—</td><td class="px-3 py-2 text-sm">Giriş yapan kullanıcı bilgisi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listFavoriteProducts</td><td class="px-3 py-2 text-xs text-gray-500">—</td><td class="px-3 py-2 text-sm">Favori ürünler</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getCustomerOrders</td><td class="px-3 py-2 text-xs text-gray-500">orderId</td><td class="px-3 py-2 text-sm">Kullanıcı siparişleri</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getOrder / getOrderByEmail</td><td class="px-3 py-2 text-xs text-gray-500">orderId / email, orderNumber</td><td class="px-3 py-2 text-sm">Sipariş detayı</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listCustomerReviews</td><td class="px-3 py-2 text-xs text-gray-500">productId, pagination, sortWithImagesFirst</td><td class="px-3 py-2 text-sm">Ürün yorumları</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getLoyaltyProgram</td><td class="px-3 py-2 text-xs text-gray-500">—</td><td class="px-3 py-2 text-sm">Sadakat programı detayı</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">getLoyaltyCustomerInfo</td><td class="px-3 py-2 text-xs text-gray-500">cartId</td><td class="px-3 py-2 text-sm">Kullanıcının puan bilgisi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listBlog / listBlogCategory</td><td class="px-3 py-2 text-xs text-gray-500">pagination, categoryId, search, locale</td><td class="px-3 py-2 text-sm">Blog listesi / kategoriler</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">checkStocks</td><td class="px-3 py-2 text-xs text-gray-500">lines, stockLocationIdList</td><td class="px-3 py-2 text-sm">Stok kontrolü</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listPaymentGateway</td><td class="px-3 py-2 text-xs text-gray-500">cartId, locale, transactionAmount</td><td class="px-3 py-2 text-sm">Ödeme yöntemleri</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">listStorefrontRaffle</td><td class="px-3 py-2 text-xs text-gray-500">status, pagination</td><td class="px-3 py-2 text-sm">Çekiliş listesi</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-emerald-700 dark:text-emerald-400">checkCustomerEmail</td><td class="px-3 py-2 text-xs text-gray-500">email, captchaToken, locale</td><td class="px-3 py-2 text-sm">E-posta müsaitlik kontrolü</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mutation ops -->
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+          <span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-bold px-2 py-0.5 rounded">MUTATION</span>
+          3.2 Mutation Operasyonları
+        </h3>
+        <div class="overflow-x-auto mb-6">
+          <table class="zebra w-full text-sm border-collapse">
+            <thead><tr class="bg-blue-50 dark:bg-blue-900/20">
+              <th class="text-left px-3 py-2 font-semibold text-blue-700 dark:text-blue-300">Operasyon</th>
+              <th class="text-left px-3 py-2 font-semibold text-blue-700 dark:text-blue-300">Kategori</th>
+              <th class="text-left px-3 py-2 font-semibold text-blue-700 dark:text-blue-300">Açıklama</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">customerLogin</td><td class="px-3 py-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5">Auth</span></td><td class="px-3 py-2 text-sm">E-posta/şifre ile giriş</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">registerCustomer</td><td class="px-3 py-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5">Auth</span></td><td class="px-3 py-2 text-sm">Kayıt</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">customerForgotPassword</td><td class="px-3 py-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5">Auth</span></td><td class="px-3 py-2 text-sm">Şifre sıfırlama isteği</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">customerSocialLoginMobile</td><td class="px-3 py-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5">Auth</span></td><td class="px-3 py-2 text-sm">Sosyal giriş (mobil — özel endpoint)</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">validateOTPCode</td><td class="px-3 py-2"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5">Auth</span></td><td class="px-3 py-2 text-sm">OTP doğrulama</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createCart / addItemToCart</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5">Sepet</span></td><td class="px-3 py-2 text-sm">Sepet oluştur / ürün ekle</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">saveCartCouponCode</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5">Sepet</span></td><td class="px-3 py-2 text-sm">Kupon uygula</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">useLoyaltyPoints</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5">Sepet</span></td><td class="px-3 py-2 text-sm">Puan kullan</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">updateCartCampaignOffer</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5">Sepet</span></td><td class="px-3 py-2 text-sm">Kampanya teklifini uygula</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">saveCheckout</td><td class="px-3 py-2"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5">Ödeme</span></td><td class="px-3 py-2 text-sm">Adres, kargo, ödeme yöntemi kaydet</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createIyzicoCheckoutForm</td><td class="px-3 py-2"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5">Ödeme</span></td><td class="px-3 py-2 text-sm">İyzico ödeme formu</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createAdyenPaymentSession</td><td class="px-3 py-2"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5">Ödeme</span></td><td class="px-3 py-2 text-sm">Adyen ödeme oturumu</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createStripePaymentIntent</td><td class="px-3 py-2"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5">Ödeme</span></td><td class="px-3 py-2 text-sm">Stripe ödeme niyeti</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">hepsipayFrameInit / createPaypalOrder</td><td class="px-3 py-2"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5">Ödeme</span></td><td class="px-3 py-2 text-sm">HepsiPay / PayPal ödeme</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">saveFavoriteProduct</td><td class="px-3 py-2"><span class="bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs rounded px-1.5 py-0.5">Kullanıcı</span></td><td class="px-3 py-2 text-sm">Favori ekle/kaldır</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createCustomerReview</td><td class="px-3 py-2"><span class="bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs rounded px-1.5 py-0.5">Kullanıcı</span></td><td class="px-3 py-2 text-sm">Yorum yaz (resimli)</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">createOrderRefundRequest</td><td class="px-3 py-2"><span class="bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs rounded px-1.5 py-0.5">Kullanıcı</span></td><td class="px-3 py-2 text-sm">İade talebi oluştur</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs text-blue-700 dark:text-blue-400">saveProductBackInStockRemind</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-1.5 py-0.5">Ürün</span></td><td class="px-3 py-2 text-sm">Stok bildirimi iste</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3rd party -->
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">3.3 3. Taraf Servisler</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3 text-sm">
+            <span class="text-xl">📊</span><div><div class="font-medium">Google Analytics 4</div><div class="text-xs text-gray-400">ID: G-9W5BRS01S5</div></div>
+          </div>
+          <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3 text-sm">
+            <span class="text-xl">🎯</span><div><div class="font-medium">Criteo</div><div class="text-xs text-gray-400">Retargeting reklamları</div></div>
+          </div>
+          <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3 text-sm">
+            <span class="text-xl">⭐</span><div><div class="font-medium">Yotpo</div><div class="text-xs text-gray-400">Müşteri yorumları widget</div></div>
+          </div>
+          <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3 text-sm">
+            <span class="text-xl">📡</span><div><div class="font-medium">mdznconnect</div><div class="text-xs text-gray-400">Marketing otomasyon / journey</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 4. VERİ MODELİ ══════════════════════ -->
+    <section id="veri-modeli" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s4')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🗃️</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">4. Veri Modeli Diyagramı</h2>
+          <span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs font-medium px-2 py-0.5 rounded-full">13 entity</span>
+        </div>
+        <span id="s4-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s4" class="section-content px-6 pb-6" style="max-height:3000px">
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 overflow-x-auto">
+          <div class="mermaid">
+erDiagram
+    CUSTOMER {
+        String id
+        String email
+        String firstName
+        String lastName
+        String phone
+        Timestamp birthDate
+        String gender
+        String accountStatus
+        Boolean isEmailVerified
+        Float orderCount
+    }
+    ADDRESS {
+        String id
+        String customerId
+        String city
+        String state
+        String country
+        Boolean isDefault
+    }
+    PRODUCT {
+        String id
+        String name
+        String slug
+        String brandId
+        String sku
+        Boolean isPublished
+    }
+    PRODUCT_VARIANT {
+        String id
+        String productId
+        String sku
+        Float price
+        String availability
+        Int stockQuantity
+    }
+    CATEGORY {
+        String id
+        String name
+        String slug
+        String parentId
+        Boolean isAutomated
+    }
+    CART {
+        String id
+        String customerId
+        Float totalPrice
+        Float itemCount
+        String status
+        String couponCode
+    }
+    CART_ITEM {
+        String id
+        String cartId
+        String variantId
+        Float quantity
+        Float unitPrice
+    }
+    CHECKOUT {
+        String id
+        String cartId
+        String shippingMethod
+        Float totalFinalPrice
+        String status
+        String orderId
+    }
+    ORDER {
+        String id
+        String orderNumber
+        String customerId
+        String status
+        Float totalPrice
+        Timestamp orderedAt
+    }
+    ORDER_LINE {
+        String id
+        String orderId
+        String variantId
+        Float quantity
+        Float price
+    }
+    REVIEW {
+        String id
+        String productId
+        String customerId
+        Float rating
+        Boolean isVerifiedPurchase
+    }
+    CAMPAIGN {
+        String id
+        Float minimumCartAmount
+        Timestamp startDate
+        Boolean canCombine
+    }
+    LOYALTY_PROGRAM {
+        String id
+        Float pointsPerCurrency
+        Float minimumRedeemAmount
+    }
+
+    CUSTOMER ||--o{ ADDRESS : "sahip olur"
+    CUSTOMER ||--o{ CART : "oluşturur"
+    CUSTOMER ||--o{ ORDER : "verir"
+    CUSTOMER ||--o{ REVIEW : "yazar"
+    CART ||--o{ CART_ITEM : "içerir"
+    CART_ITEM }o--|| PRODUCT_VARIANT : "referans alır"
+    PRODUCT ||--o{ PRODUCT_VARIANT : "sahiptir"
+    PRODUCT }o--o{ CATEGORY : "ait olur"
+    CHECKOUT ||--|| CART : "bağlıdır"
+    CHECKOUT ||--o| ORDER : "dönüşür"
+    ORDER ||--o{ ORDER_LINE : "içerir"
+    ORDER_LINE }o--|| PRODUCT_VARIANT : "referans alır"
+    REVIEW }o--|| PRODUCT : "ait olur"
+    CUSTOMER }o--o| LOYALTY_PROGRAM : "katılır"
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 5. KULLANICI AKIŞLARI ══════════════════════ -->
+    <section id="kullanici-akislari" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s5')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🔄</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">5. Kullanıcı Akışları</h2>
+        </div>
+        <span id="s5-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s5" class="section-content px-6 pb-6" style="max-height:4000px">
+
+        <h3 class="font-semibold text-gray-600 dark:text-gray-400 mb-3">5.1 Satın Alma Akışı</h3>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-5 overflow-x-auto">
+          <div class="mermaid">
+flowchart TD
+    A([Uygulama Açılır]) --> B[Ana Sayfa]
+    B --> C{Ürün Bul}
+    C --> D[Kategori Listesi]
+    C --> E[Arama]
+    C --> F[Ana Sayfa Önerileri]
+    D --> G[Ürün Detay]
+    E --> G
+    F --> G
+    G --> H{Varyant Seç}
+    H --> I[Tat / Boyut Seç]
+    I --> J[Sepete Ekle]
+    J --> K{Alışverişe Devam?}
+    K -- Evet --> C
+    K -- Hayır --> L[Sepet]
+    L --> M{Kupon Var mı?}
+    M -- Evet --> N[Kupon Uygula]
+    N --> O[Ödeme Adımı]
+    M -- Hayır --> O
+    O --> P[Adres Gir / Seç]
+    P --> Q[Kargo Seç]
+    Q --> R[Ödeme Yöntemi Seç]
+    R --> S{Ödeme Türü}
+    S -- Kredi Kartı --> T[İyzico / Adyen]
+    S -- HepsiPay --> U[HepsiPay Frame]
+    S -- PayPal --> V[PayPal]
+    T --> W[Sipariş Tamamlandı]
+    U --> W
+    V --> W
+    W --> X[Sipariş Onay Sayfası]
+          </div>
+        </div>
+
+        <h3 class="font-semibold text-gray-600 dark:text-gray-400 mb-3">5.2 Kayıt / Giriş Akışı</h3>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-5 overflow-x-auto">
+          <div class="mermaid">
+flowchart TD
+    A([Hesabıma Git]) --> B{Giriş Yapıldı mı?}
+    B -- Hayır --> C[Login Ekranı]
+    C --> D{Yöntem}
+    D -- E-posta/Şifre --> E[Giriş Yap]
+    D -- Sosyal Login --> F[Apple / Google]
+    D -- OTP --> G[Telefon Numarası]
+    E --> H{Doğrula}
+    H -- Başarılı --> I[Hesabım]
+    H -- Hata --> J[Hata Mesajı]
+    F --> I
+    G --> L[OTP Kodu Gir]
+    L --> I
+    C --> M[Kayıt Ol]
+    M --> N[Bilgileri Doldur]
+    N --> O[Captcha]
+    O --> P[E-posta Doğrula]
+    P --> I
+    B -- Evet --> I
+    I --> R{İşlem}
+    R -- Siparişlerim --> S[Sipariş Listesi]
+    R -- Adreslerim --> T[Adres Yönetimi]
+    R -- Favorilerim --> U[Favori Ürünler]
+    R -- Profilim --> V[Profil Düzenle]
+          </div>
+        </div>
+
+        <h3 class="font-semibold text-gray-600 dark:text-gray-400 mb-3">5.3 Ürün Keşif Akışı</h3>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 overflow-x-auto">
+          <div class="mermaid">
+flowchart LR
+    A[Ana Sayfa] --> B[Kategori Seç]
+    B --> C[Ürün Listesi]
+    C --> D{Filtrele / Sırala}
+    D --> E[Marka]
+    D --> F[Fiyat Aralığı]
+    D --> G[Stok Durumu]
+    C --> I[Ürün Detay]
+    I --> J[Yorumları Gör]
+    I --> K[İlgili Ürünler]
+    I --> L[Favoriye Ekle]
+    I --> M{Stokta Var mı?}
+    M -- Evet --> N[Sepete Ekle]
+    M -- Hayır --> O[Stok Bildirimi İste]
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 6. İŞ KURALLARI ══════════════════════ -->
+    <section id="is-kurallari" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s6')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📋</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">6. İş Kuralları</h2>
+          <span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-medium px-2 py-0.5 rounded-full">18 kural</span>
+        </div>
+        <span id="s6-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s6" class="section-content px-6 pb-6" style="max-height:3000px">
+        <div class="space-y-2">
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-01</span>
+            <div class="text-sm"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5 mr-2">Kargo</span>250 TL ve üzeri sipariş tutarında kargo ücretsizdir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-02</span>
+            <div class="text-sm"><span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded px-1.5 py-0.5 mr-2">Ürün</span>Ürün varyantları tat (flavor) ve boyut (size/gr) kombinasyonlarından oluşur.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-03</span>
+            <div class="text-sm"><span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded px-1.5 py-0.5 mr-2">Stok</span>Stokta olmayan varyantlar için "Stok Bildirimi" talep edilebilir; e-posta ile bildirim gönderilir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-04</span>
+            <div class="text-sm"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5 mr-2">Sepet</span>Sepete ürün eklemek için giriş yapma zorunlu değildir (guest cart desteklenir).</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-05</span>
+            <div class="text-sm"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5 mr-2">Ödeme</span>Ödeme aşamasında hesap girişi veya misafir bilgisi zorunludur.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-06</span>
+            <div class="text-sm"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-1.5 py-0.5 mr-2">Kampanya</span>Kupon kodları sepet veya checkout aşamasında uygulanabilir; kampanyalar birleştirilebilir veya birleştirilemez (canCombineWithOtherCampaigns).</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-07</span>
+            <div class="text-sm"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-1.5 py-0.5 mr-2">Kampanya</span>BuyXGetY kampanyası: belirli miktarda ürün alındığında ek ürün hediye veya indirim uygulanır.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-08</span>
+            <div class="text-sm"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5 mr-2">Sadakat</span>Sadakat puanları checkout sırasında belirli minimum tutardan itibaren kullanılabilir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-09</span>
+            <div class="text-sm"><span class="bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs rounded px-1.5 py-0.5 mr-2">Mobil</span>Sosyal login mobil için <code class="text-xs bg-white dark:bg-gray-700 rounded px-1">customerSocialLoginMobile</code> mutation'ı kullanılır (web'den farklı flow).</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-10</span>
+            <div class="text-sm"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5 mr-2">Auth</span>Müşteri telefon numarası OTP ile doğrulanabilir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-11</span>
+            <div class="text-sm"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-1.5 py-0.5 mr-2">Kampanya</span>CampaignOffer, sepet içeriğine ve tutarına göre otomatik tetiklenir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-12</span>
+            <div class="text-sm"><span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded px-1.5 py-0.5 mr-2">Fiyat</span>Fiyatlar TRY cinsindendir; döviz kurlu dinamik fiyatlandırma desteği mevcuttur. <span class="text-gray-400 text-xs">(tahmin)</span></div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-13</span>
+            <div class="text-sm"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-1.5 py-0.5 mr-2">Çekiliş</span>Raffle sistemi var; kullanıcılar çekilişlere katılabilir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-14</span>
+            <div class="text-sm"><span class="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs rounded px-1.5 py-0.5 mr-2">Yorum</span>Ürün yorumları için resim yüklenebilir; onaylı satın alma (verifiedPurchase) etiketi gösterilir.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-15</span>
+            <div class="text-sm"><span class="bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 text-xs rounded px-1.5 py-0.5 mr-2">İade</span>İade talebi sipariş bazlı oluşturulur.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-16</span>
+            <div class="text-sm"><span class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded px-1.5 py-0.5 mr-2">Blog</span>Blog içerikleri kategorilere ayrılmıştır (performans, diyet, besinler vb.).</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-17</span>
+            <div class="text-sm"><span class="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 text-xs rounded px-1.5 py-0.5 mr-2">Auth</span>Captcha (reCAPTCHA tahmin) giriş, kayıt, şifre sıfırlama ve iletişim formlarında zorunludur.</div>
+          </div>
+          <div class="flex gap-3 items-start bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-3">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 shrink-0 text-sm w-14">BR-18</span>
+            <div class="text-sm"><span class="bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs rounded px-1.5 py-0.5 mr-2">Bildirim</span>Müşteri pazarlama bildirimleri (e-posta, SMS) için ayrı abonelik durumu yönetilir.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 7. TECH STACK ══════════════════════ -->
+    <section id="tech-stack" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s7')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🛠️</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">7. Teknoloji Stack</h2>
+        </div>
+        <span id="s7-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s7" class="section-content px-6 pb-6" style="max-height:2000px">
+        <div class="overflow-x-auto">
+          <table class="zebra w-full text-sm border-collapse">
+            <thead><tr class="bg-gray-100 dark:bg-gray-800">
+              <th class="text-left px-3 py-2 font-semibold text-gray-600 dark:text-gray-400">Katman</th>
+              <th class="text-left px-3 py-2 font-semibold text-gray-600 dark:text-gray-400">Teknoloji</th>
+              <th class="text-left px-3 py-2 font-semibold text-gray-600 dark:text-gray-400">Güven</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Frontend Framework</td><td class="px-3 py-2 font-medium">Next.js (React)</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">E-Ticaret Altyapısı</td><td class="px-3 py-2 font-medium">ikas.com (SaaS)</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">API Katmanı</td><td class="px-3 py-2 font-medium">GraphQL</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">CDN / Medya</td><td class="px-3 py-2 font-medium">cdn.myikas.com</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Analytics</td><td class="px-3 py-2 font-medium">Google Analytics 4 + GTM</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Retargeting</td><td class="px-3 py-2 font-medium">Criteo</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Yorumlar</td><td class="px-3 py-2 font-medium">Yotpo</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Marketing Otomasyon</td><td class="px-3 py-2 font-medium">mdznconnect</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Ödeme — TR</td><td class="px-3 py-2 font-medium">İyzico, HepsiPay, MasterPass</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Ödeme — Global</td><td class="px-3 py-2 font-medium">Adyen, Stripe, PayPal</td><td class="px-3 py-2"><span class="bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded px-2 py-0.5">Kesin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Backend Dili</td><td class="px-3 py-2 font-medium">Node.js veya Go (ikas altyapısı)</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-2 py-0.5">Tahmin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Veritabanı</td><td class="px-3 py-2 font-medium">PostgreSQL veya MongoDB</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-2 py-0.5">Tahmin</span></td></tr>
+              <tr><td class="px-3 py-2 text-gray-500 text-xs">Hosting</td><td class="px-3 py-2 font-medium">ikas cloud altyapısı</td><td class="px-3 py-2"><span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs rounded px-2 py-0.5">Tahmin</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 8. iOS ÖNERİLERİ ══════════════════════ -->
+    <section id="ios-onerileri" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s8')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📱</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">8. iOS Dönüşüm Önerileri</h2>
+        </div>
+        <span id="s8-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s8" class="section-content px-6 pb-6" style="max-height:3000px">
+        <div class="overflow-x-auto mb-5">
+          <table class="zebra w-full text-sm border-collapse">
+            <thead><tr class="bg-indigo-50 dark:bg-indigo-900/20">
+              <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300">Web Bileşeni</th>
+              <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300">iOS Native Karşılığı</th>
+              <th class="text-left px-3 py-2 font-semibold text-indigo-700 dark:text-indigo-300">Uygulama Notu</th>
+            </tr></thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+              <tr><td class="px-3 py-2">Hamburger menü</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">TabBar (5 tab max)</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Ana Sayfa, Kategoriler, Arama, Sepet, Hesabım</td></tr>
+              <tr><td class="px-3 py-2">Ürün grid listesi</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">LazyVGrid + AsyncImage</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">2 kolonlu grid, pull-to-refresh</td></tr>
+              <tr><td class="px-3 py-2">Sonsuz scroll</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">List + onAppear pagination</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">20'şer ürün sayfalı yükleme</td></tr>
+              <tr><td class="px-3 py-2">Filtre sidebar</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">.sheet / NavigationStack push</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Alt sayfaya açılan filtre paneli</td></tr>
+              <tr><td class="px-3 py-2">Varyant seçici (tat/boyut)</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">ScrollView + custom Chip</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Yatay kaydırmalı seçici</td></tr>
+              <tr><td class="px-3 py-2">Toast / Snackbar</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">Custom banner + withAnimation</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">"Sepete eklendi" banner</td></tr>
+              <tr><td class="px-3 py-2">Sosyal login</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">ASAuthorizationController</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Sign in with Apple zorunlu, Google opsiyonel</td></tr>
+              <tr><td class="px-3 py-2">Ödeme</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">İyzico Mobile SDK / WKWebView</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">İyzico iOS SDK mevcuttur</td></tr>
+              <tr><td class="px-3 py-2">Push bildirim (stok)</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">APNs</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Back-in-stock bildirimleri</td></tr>
+              <tr><td class="px-3 py-2">Kampanya sayacı</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">TimelineView + CountdownTimer</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Zamanlı kampanya gösterimi</td></tr>
+              <tr><td class="px-3 py-2">Yotpo yorumlar</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">Native List + yorum bileşeni</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Yotpo web widget değil, native liste</td></tr>
+              <tr><td class="px-3 py-2">Blog</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">WKWebView / Text renderer</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">HTML/Markdown içerik gösterimi</td></tr>
+              <tr><td class="px-3 py-2">Arama</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">.searchable modifier</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">NavigationStack üstünde</td></tr>
+              <tr><td class="px-3 py-2">Puan programı</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">Custom LoyaltyCard bileşeni</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">Puan göstergesi, kazanım geçmişi</td></tr>
+              <tr><td class="px-3 py-2">Sepet badge</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">TabBar badge sayacı</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">UITabBarItem.badgeValue</td></tr>
+              <tr><td class="px-3 py-2">Adres formu</td><td class="px-3 py-2 font-mono text-xs text-indigo-600 dark:text-indigo-400">SwiftUI Form</td><td class="px-3 py-2 text-gray-600 dark:text-gray-400">İl/İlçe Picker, cascade selection</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Ekstra iOS Önerileri</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">🔧 Widget Desteği</div>
+            <div class="text-gray-600 dark:text-gray-400">Sepet tutarı veya indirim sayacı widget olarak eklenebilir.</div>
+          </div>
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">🎤 Siri Shortcuts</div>
+            <div class="text-gray-600 dark:text-gray-400">"Kreatin sipariş et" gibi kısa yollar tanımlanabilir.</div>
+          </div>
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">📳 Haptic Feedback</div>
+            <div class="text-gray-600 dark:text-gray-400">Sepete ekle, favori, ödeme onayı noktalarında.</div>
+          </div>
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">🏝️ Dynamic Island</div>
+            <div class="text-gray-600 dark:text-gray-400">Sipariş kargo takibi için Live Activities (iOS 16.1+).</div>
+          </div>
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">🔐 Face ID / Touch ID</div>
+            <div class="text-gray-600 dark:text-gray-400">Güvenli ödeme onayı için LocalAuthentication framework.</div>
+          </div>
+          <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg px-4 py-3 text-sm">
+            <div class="font-semibold text-indigo-700 dark:text-indigo-300 mb-1">🎨 SF Symbols</div>
+            <div class="text-gray-600 dark:text-gray-400">cart, heart, person, tag — sistem ikonları kullanılmalı.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ 9. RİSKLER ══════════════════════ -->
+    <section id="riskler" class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+      <button onclick="toggleSection('s9')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">⚠️</span>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">9. Riskler ve Dikkat Edilmesi Gerekenler</h2>
+        </div>
+        <span id="s9-icon" class="text-gray-400 text-xl">▼</span>
+      </button>
+      <div id="s9" class="section-content px-6 pb-6" style="max-height:2000px">
+        <div class="space-y-3">
+          <!-- Yüksek -->
+          <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-xs font-bold px-2 py-0.5 rounded">YÜKSEK</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">ikas API Bağımlılığı</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Tüm backend ikas'ın GraphQL API'sine bağlı. API değişiklikleri doğrudan mobil uygulamayı etkiler. Rate limit veya breaking change riski.</p>
+          </div>
+          <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-xs font-bold px-2 py-0.5 rounded">YÜKSEK</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">API Key Yönetimi</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">GraphQL API key client-side HTML'de mevcuttu. iOS uygulamasında bu key Keychain'de saklanmalı, obfuscation uygulanmalı.</p>
+          </div>
+          <!-- Orta -->
+          <div class="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold px-2 py-0.5 rounded">ORTA</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Captcha Uyumu</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Web'de reCAPTCHA kullanılıyor. Mobile'da reCAPTCHA v3 veya hCaptcha iOS SDK'sı entegre edilmeli; aksi hâlde auth mutasyonları çalışmaz.</p>
+          </div>
+          <div class="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold px-2 py-0.5 rounded">ORTA</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Ödeme Gateway Çeşitliliği</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">6+ farklı ödeme yöntemi. Her birinin iOS SDK entegrasyonu ayrı iş yükü. Başlangıç için İyzico + Kredi Kartı yeterli olabilir.</p>
+          </div>
+          <div class="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold px-2 py-0.5 rounded">ORTA</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Sosyal Login Apple Gerekliliği</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">App Store kuralı: eğer sosyal login sunuluyorsa Sign in with Apple zorunludur.</p>
+          </div>
+          <div class="border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 text-xs font-bold px-2 py-0.5 rounded">ORTA</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">GraphQL Schema Değişimi</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">ikas SaaS olduğundan schema bildirimsiz değişebilir. Hata toleransı yüksek veri modeli tasarlanmalı.</p>
+          </div>
+          <!-- Düşük -->
+          <div class="border-l-4 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-xs font-bold px-2 py-0.5 rounded">DÜŞÜK</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Yotpo Widget Entegrasyonu</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Yotpo'nun native iOS SDK'sı veya API'si ayrıca incelenmeli; web widget iOS'ta doğrudan çalışmaz.</p>
+          </div>
+          <div class="border-l-4 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-xs font-bold px-2 py-0.5 rounded">DÜŞÜK</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Kampanya Karmaşıklığı</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">BuyXGetY, CampaignOffer, Raffle, LoyaltyPoints aynı anda aktif olabilir. Sepet hesaplaması sunucu tarafında yapılıyor (bu avantaj).</p>
+          </div>
+          <div class="border-l-4 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/10 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-xs font-bold px-2 py-0.5 rounded">DÜŞÜK</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">KVKK / Veri Gizliliği</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Kullanıcı kişisel verisi işleniyor. iOS App Store Privacy Nutrition Label doğru doldurulmalı.</p>
+          </div>
+          <!-- Bilgi -->
+          <div class="border-l-4 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 rounded-r-xl px-4 py-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-bold px-2 py-0.5 rounded">BİLGİ</span>
+              <span class="font-semibold text-gray-900 dark:text-white text-sm">Erişilemeyen Sayfalar</span>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">/cart, /checkout, /account ve /account/* sayfaları robots.txt ile engellenmiş; statik analiz yapılamadı. İçerikleri tahmin bazlıdır.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-400 dark:text-gray-600 py-6 border-t border-gray-100 dark:border-gray-800">
+      Bu rapor pasif web analizi yöntemleriyle hazırlanmıştır (HTML kaynak kodu, sitemap, robots.txt, Schema.org, GraphQL introspection).<br/>
+      Herhangi bir kimlik bilgisi loglanmamış, siteye zarar verecek istek yapılmamıştır.<br/>
+      "Tahmin" olarak işaretlenen bilgiler doğrudan gözlemlenememiş, mantıksal çıkarımla elde edilmiştir.
+    </footer>
+  </div>
+</main>
+
+<script>
+  // ── Dark mode ──
+  const html = document.documentElement;
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  if (savedTheme === 'dark') { html.classList.add('dark'); updateThemeUI(true); }
+
+  function toggleDark() {
+    const isDark = html.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    updateThemeUI(isDark);
+  }
+
+  function updateThemeUI(isDark) {
+    document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  }
+
+  // ── Collapse / Expand ──
+  function toggleSection(id) {
+    const el = document.getElementById(id);
+    const icon = document.getElementById(id + '-icon');
+    const isCollapsed = el.classList.toggle('collapsed');
+    icon.style.transform = isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+  }
+
+  // ── Active nav on scroll ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── Mermaid init ──
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+    securityLevel: 'loose',
+    er: { diagramPadding: 20 },
+    flowchart: { htmlLabels: true, curve: 'basis' }
+  });
+
+  // Re-render mermaid on theme change
+  const origToggle = window.toggleDark;
+  window.toggleDark = function() {
+    origToggle && origToggle();
+    const isDark = html.classList.contains('dark');
+    mermaid.initialize({ theme: isDark ? 'dark' : 'default', startOnLoad: false, securityLevel: 'loose' });
+  };
+</script>
+</body>
+</html>

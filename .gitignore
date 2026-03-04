@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+
+# iOS
+DerivedData/
+*.xcworkspace
+Pods/
+*.ipa
+
+# Python
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Docker
+.docker/

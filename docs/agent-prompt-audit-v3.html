@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Agent Prompt Audit v3 — 2026-03-04</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:sans-serif;background:#0f1117;color:#e1e4e8;display:flex;min-height:100vh}
+a{color:inherit;text-decoration:none}
+#sidebar{width:210px;min-height:100vh;background:#161b22;border-right:1px solid #30363d;padding:14px 0;position:fixed;top:0;left:0;overflow-y:auto}
+#sidebar h3{font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;padding:8px 12px 3px;margin-top:6px}
+#sidebar a{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;font-size:11.5px;color:#c9d1d9;border-radius:4px;margin:1px 4px}
+#sidebar a:hover{background:#21262d}
+.sb{font-size:10px;padding:1px 6px;border-radius:8px;font-weight:700}
+#main{margin-left:210px;padding:20px;flex:1;max-width:880px}
+h1{color:#58a6ff;font-size:1.3em;border-bottom:2px solid #30363d;padding-bottom:7px;margin-bottom:4px}
+.sub{color:#8b949e;font-size:.78em;margin-bottom:14px}
+.stats{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px 16px;text-align:center}
+.sn{font-size:1.6em;font-weight:700;color:#58a6ff;line-height:1}
+.red{color:#f85149}.yel{color:#e3b341}.grn{color:#56d364}
+.sl{font-size:.68em;color:#8b949e;margin-top:2px}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.84em}
+th{background:#21262d;padding:6px 8px;text-align:left;color:#58a6ff;font-size:.78em}
+td{padding:5px 8px;border-bottom:1px solid #1c2128}
+tr:nth-child(even) td{background:#0d1117}
+.g{background:#1a2d1a;color:#56d364;padding:1px 7px;border-radius:9px;font-weight:700;font-size:.8em}
+.e{background:#1a2540;color:#79c0ff;padding:1px 7px;border-radius:9px;font-weight:700;font-size:.8em}
+.bso{background:#1a2540;color:#79c0ff;padding:1px 5px;border-radius:5px;font-size:.73em}
+.bop{background:#2d1a40;color:#c084fc;padding:1px 5px;border-radius:5px;font-size:.73em}
+.dp{color:#56d364;font-weight:700}.dn{color:#f85149;font-weight:700}.d0{color:#8b949e}
+.card{background:#161b22;border:1px solid #30363d;border-radius:7px;padding:12px 14px;margin:10px 0}
+.ch{font-size:.95em;color:#c9d1d9;margin-bottom:8px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.imp{border-left:3px solid #f0883e;padding:4px 9px;margin:3px 0;font-size:.81em;background:#1c2128;border-radius:0 4px 4px 0}
+.sec{color:#79c0ff;font-size:.95em;margin:18px 0 7px;border-bottom:1px solid #21262d;padding-bottom:4px}
+.cmp th{font-size:.7em;padding:4px 5px}
+.cmp td{font-size:.76em;padding:3px 5px;text-align:center}
+.rl{text-align:left!important;font-size:.74em;color:#8b949e}
+@media print{#sidebar{display:none}#main{margin-left:0}}
+</style>
+</head>
+<body>
+<nav id="sidebar">
+  <div style="padding:10px 12px 6px;font-size:12px;font-weight:700;color:#58a6ff;">Audit v3 — 2026-03-04</div>
+  <h3>AGENT'LAR</h3>
+  <a href="#ba-doc-generator"><span>ba-doc-generator</span><span class="sb" style="background:#1a2d1a;color:#56d364;">8.9</span></a>
+  <a href="#backend-developer"><span>backend-developer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.8</span></a>
+  <a href="#code-reviewer"><span>code-reviewer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.3</span></a>
+  <a href="#devops-engineer"><span>devops-engineer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.6</span></a>
+  <a href="#documentation-engineer"><span>doc-engineer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.4</span></a>
+  <a href="#market-expansion-analyst"><span>market-expansion</span><span class="sb" style="background:#1a2d1a;color:#56d364;">8.1</span></a>
+  <a href="#mobile-developer"><span>mobile-developer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.8</span></a>
+  <a href="#prompt-engineer"><span>prompt-engineer</span><span class="sb" style="background:#1a2d1a;color:#56d364;">8.1</span></a>
+  <a href="#swift-expert"><span>swift-expert</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.6</span></a>
+  <a href="#system-architect"><span>system-architect</span><span class="sb" style="background:#1a2d1a;color:#56d364;">8.1</span></a>
+  <a href="#test-automator"><span>test-automator</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.4</span></a>
+  <a href="#ui-designer"><span>ui-designer</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.5</span></a>
+  <a href="#uiux-translator"><span>uiux-translator</span><span class="sb" style="background:#1a2540;color:#79c0ff;">7.6</span></a>
+  <a href="#web-analyzer"><span>web-analyzer</span><span class="sb" style="background:#1a2d1a;color:#56d364;">8.3</span></a>
+  <h3>GENEL</h3>
+  <a href="#summary">Ozet Tablo</a>
+  <a href="#comparison">Karsilastirma</a>
+</nav>
+
+<main id="main">
+<h1>Agent Prompt Audit v3</h1>
+<p class="sub">2026-03-04 &middot; 14 agent &middot; 8 kriter &middot; onceki: v2 ort. 7.61</p>
+
+<div class="stats">
+  <div class="stat"><div class="sn">14</div><div class="sl">Toplam Agent</div></div>
+  <div class="stat"><div class="sn">7.82</div><div class="sl">Ort. Skor v3</div></div>
+  <div class="stat"><div class="sn">7.61</div><div class="sl">Ort. Skor v2</div></div>
+  <div class="stat"><div class="sn dp">+0.21</div><div class="sl">Ort. Delta</div></div>
+  <div class="stat"><div class="sn red">0</div><div class="sl">Kritik &lt;7.0</div></div>
+  <div class="stat"><div class="sn yel">9</div><div class="sl">Iyi 7-8</div></div>
+  <div class="stat"><div class="sn grn">5</div><div class="sl">Mukemmel 8+</div></div>
+</div>
+
+<h2 class="sec" id="summary">Ozet Tablo</h2>
+<table>
+<tr><th>#</th><th>Agent</th><th>Model</th><th>v2</th><th>v3</th><th>Delta</th><th>Durum</th><th>Kritik Sorun</th></tr>
+<tr><td>1</td><td><b>ba-doc-generator</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">8.75</td><td><span class="g">8.9</span></td><td><span class="dp">+0.15</span></td><td><span class="g">MUKEMMEL</span></td><td style="font-size:.8em">Hata senaryolari minimal</td></tr>
+<tr><td>2</td><td><b>backend-developer</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.25</td><td><span class="e">7.8</span></td><td><span class="dp">+0.55</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Token verimliligi dusuk, verbose</td></tr>
+<tr><td>3</td><td><b>code-reviewer</b></td><td><span class="bop">opus-4-6</span></td><td style="color:#8b949e">7.13</td><td><span class="e">7.3</span></td><td><span class="dp">+0.17</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Ing/Tr dil karisikligi, verbose</td></tr>
+<tr><td>4</td><td><b>devops-engineer</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.25</td><td><span class="e">7.6</span></td><td><span class="dp">+0.35</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Uzun madde listeleri</td></tr>
+<tr><td>5</td><td><b>documentation-engineer</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">6.13</td><td><span class="e">7.4</span></td><td><span class="dp">+1.27</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Model yukseltildi; dil tutarsizligi kaldi</td></tr>
+<tr><td>6</td><td><b>market-expansion-analyst</b></td><td><span class="bop">opus-4-6</span></td><td style="color:#8b949e">8.00</td><td><span class="g">8.1</span></td><td><span class="dp">+0.10</span></td><td><span class="g">MUKEMMEL</span></td><td style="font-size:.8em">Format spec cok detayli</td></tr>
+<tr><td>7</td><td><b>mobile-developer</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.50</td><td><span class="e">7.8</span></td><td><span class="dp">+0.30</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Flutter referanslari hala mevcut</td></tr>
+<tr><td>8</td><td><b>prompt-engineer</b></td><td><span class="bop">opus-4-6</span></td><td style="color:#8b949e">8.00</td><td><span class="g">8.1</span></td><td><span class="dp">+0.10</span></td><td><span class="g">MUKEMMEL</span></td><td style="font-size:.8em">HTML format spec token israfi</td></tr>
+<tr><td>9</td><td><b>swift-expert</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.25</td><td><span class="e">7.6</span></td><td><span class="dp">+0.35</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">iOS versiyon celiski (17+ vs 26)</td></tr>
+<tr><td>10</td><td><b>system-architect</b></td><td><span class="bop">opus-4-6</span></td><td style="color:#8b949e">8.00</td><td><span class="g">8.1</span></td><td><span class="dp">+0.10</span></td><td><span class="g">MUKEMMEL</span></td><td style="font-size:.8em">Belirsiz girdi icin fallback yok</td></tr>
+<tr><td>11</td><td><b>test-automator</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.00</td><td><span class="e">7.4</span></td><td><span class="dp">+0.40</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Tekrarli bullet list yapisi</td></tr>
+<tr><td>12</td><td><b>ui-designer</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.13</td><td><span class="e">7.5</span></td><td><span class="dp">+0.37</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Negatif kisitlamalar eksik</td></tr>
+<tr><td>13</td><td><b>uiux-translator</b></td><td><span class="bso">sonnet-4-6</span></td><td style="color:#8b949e">7.50</td><td><span class="e">7.6</span></td><td><span class="dp">+0.10</span></td><td><span class="e">IYI</span></td><td style="font-size:.8em">Edge case eksikligi, ornek cikti yok</td></tr>
+<tr><td>14</td><td><b>web-analyzer</b></td><td><span class="bop">opus-4-6</span></td><td style="color:#8b949e">8.13</td><td><span class="g">8.3</span></td><td><span class="dp">+0.17</span></td><td><span class="g">MUKEMMEL</span></td><td style="font-size:.8em">Edit araci eksik (sadece Write var)</td></tr>
+</table>
+
+<h2 class="sec">Agent Detaylari</h2>
+
+<div class="card" id="ba-doc-generator">
+<div class="ch">ba-doc-generator &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="g">8.9</span>&nbsp;<span class="dp">Δ+0.15 (v2:8.75)</span></div>
+<div class="imp">Bozuk/eksik gorsel girdi icin explicit fallback tanimla (ornekle)</div>
+<div class="imp">Mermaid diagram hata durumunda text alternatifi ekle</div>
+<div class="imp">Cok modullu dokumanlarda numaralandirma kontrolu icin ara adim ekle</div>
+</div>
+
+<div class="card" id="backend-developer">
+<div class="ch">backend-developer &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.8</span>&nbsp;<span class="dp">Δ+0.55 (v2:7.25)</span></div>
+<div class="imp">Cakisan bolumler (security + checklist) birlestir; madde listelerini %30 kisalt</div>
+<div class="imp">Cikti formati bolumunu prompt basina tasI (simdi en sonda geliyor)</div>
+<div class="imp">Veritabani secimi belirsiz geldiyse fallback karar kurali tanimla</div>
+</div>
+
+<div class="card" id="code-reviewer">
+<div class="ch">code-reviewer &nbsp;<span class="bop">opus-4-6</span>&nbsp;<span class="e">7.3</span>&nbsp;<span class="dp">Δ+0.17 (v2:7.13)</span></div>
+<div class="imp">Ingilizce sistem dili ile Turkce cikti kurali celisiyor; dil stratejisini netles</div>
+<div class="imp">Tekrar eden 8-maddelik listeler (quality, security, performance) ozet tabloya donustur</div>
+<div class="imp">PR olmadan direkt kod analizi icin fallback senaryosu ekle</div>
+</div>
+
+<div class="card" id="devops-engineer">
+<div class="ch">devops-engineer &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.6</span>&nbsp;<span class="dp">Δ+0.35 (v2:7.25)</span></div>
+<div class="imp">IaC dosyasi bulunamazsa ne yapilir? Hata dallari tanimla</div>
+<div class="imp">Benzer icerikli 10+ bolumu (platform, gitops, incident...) tabloya donustur</div>
+<div class="imp">Deployment checklist'ini cikti formatiyla birlestir; ayri kural olarak kalmasin</div>
+</div>
+
+<div class="card" id="documentation-engineer">
+<div class="ch">documentation-engineer &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.4</span>&nbsp;<span class="dp">Δ+1.27 (v2:6.13)</span></div>
+<div class="imp">Dil stratejisi karisik: sistem dili Ing, aciklamalar Tr — net kural koy</div>
+<div class="imp">Dokuman tipi secim mantigi (README vs Tutorial vs API Ref) tanimsiz; karar agaci ekle</div>
+<div class="imp">Verbose checklist bolumlerini (%8) kisalt; sonnet-4-6 icin fazla context</div>
+</div>
+
+<div class="card" id="market-expansion-analyst">
+<div class="ch">market-expansion-analyst &nbsp;<span class="bop">opus-4-6</span>&nbsp;<span class="g">8.1</span>&nbsp;<span class="dp">Δ+0.10 (v2:8.00)</span></div>
+<div class="imp">Tasarim sistemi spec'ini (renkler/layout) harici referansa tasI; prompt ~%40 kisalir</div>
+<div class="imp">Site erisim engellenirse (403/timeout) fallback analiz stratejisi tanimla</div>
+<div class="imp">Negatif kisitlamalar yok: hangi sektorler/ulkeler kapsam disi, belirt</div>
+</div>
+
+<div class="card" id="mobile-developer">
+<div class="ch">mobile-developer &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.8</span>&nbsp;<span class="dp">Δ+0.30 (v2:7.50)</span></div>
+<div class="imp">Flutter referanslari (Impeller, Dart, build_runner, Patrol) hala mevcut; temizle</div>
+<div class="imp">iOS 26 vs iOS 18+ versiyonu celiskili; min. hedef platformu tek yerde tanimla</div>
+<div class="imp">KMM referansi React Native odakli ajanla uyumsuz; kaldir</div>
+</div>
+
+<div class="card" id="prompt-engineer">
+<div class="ch">prompt-engineer &nbsp;<span class="bop">opus-4-6</span>&nbsp;<span class="g">8.1</span>&nbsp;<span class="dp">Δ+0.10 (v2:8.00)</span></div>
+<div class="imp">HTML tasarim spec'i (renkler/layout/bilesenler) prompt icin asiri buyuk; harici dosyaya tasI</div>
+<div class="imp">Kriter siralama v3 kriterleriyle uyumsuz (Aciklik/Yapılandırılmışlık vs Netlik/Kapsam)</div>
+<div class="imp">Optimize edilmis versiyon yazma kurali tutarsiz; v3 sistem prompt kuralıyla uyumlastir</div>
+</div>
+
+<div class="card" id="swift-expert">
+<div class="ch">swift-expert &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.6</span>&nbsp;<span class="dp">Δ+0.35 (v2:7.25)</span></div>
+<div class="imp">iOS 17+ (checklist) ile iOS 26 (delivery msg) celiski; tek hedef versiyon sec</div>
+<div class="imp">macOS-only veya server-side Swift senaryosu icin giris koruyucu tanimla</div>
+<div class="imp">Combine bolumu SwiftUI Concurrency ile cakisiyor; birini oncelikli yap</div>
+</div>
+
+<div class="card" id="system-architect">
+<div class="ch">system-architect &nbsp;<span class="bop">opus-4-6</span>&nbsp;<span class="g">8.1</span>&nbsp;<span class="dp">Δ+0.10 (v2:8.00)</span></div>
+<div class="imp">Eksik/belirsiz web analiz raporu icin minimal fallback tanimla</div>
+<div class="imp">Backend-only proje (iOS yok) senaryosu icin kapsam kisitlamasi ekle</div>
+<div class="imp">Her karar formatini (Secim/Gerekce/Risk/Alternatif) ornekle guclendir</div>
+</div>
+
+<div class="card" id="test-automator">
+<div class="ch">test-automator &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.4</span>&nbsp;<span class="dp">Δ+0.40 (v2:7.00)</span></div>
+<div class="imp">Tekrarlayan 8-maddelik bolumler tabloya donustur; yaklasik %30 kisalir</div>
+<div class="imp">CI ortami olmadan test calistirma senaryosu icin alternatif tanimla</div>
+<div class="imp">JSON rapor sablonu ile cikti formati birlestir; tek noktadan yonet</div>
+</div>
+
+<div class="card" id="ui-designer">
+<div class="ch">ui-designer &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.5</span>&nbsp;<span class="dp">Δ+0.37 (v2:7.13)</span></div>
+<div class="imp">Negatif kisitlamalar eksik: Figma yokken ne uretilir, tanimla</div>
+<div class="imp">Marka kilavuzu olmadigi durum icin renk/font secim kurali ekle</div>
+<div class="imp">CHANGELOG guncelleme zorunlu degil, istege bagli olarak yeniden tanimla</div>
+</div>
+
+<div class="card" id="uiux-translator">
+<div class="ch">uiux-translator &nbsp;<span class="bso">sonnet-4-6</span>&nbsp;<span class="e">7.6</span>&nbsp;<span class="dp">Δ+0.10 (v2:7.50)</span></div>
+<div class="imp">URL gecersiz/erisim yoksa fallback tanimla (analiz yapılamaz notu ekle)</div>
+<div class="imp">5 tab siniri asildiginda iPad NavigationSplitView secenegi nasil devreye giriyor, belirt</div>
+<div class="imp">SwiftUI kod ornegi istege bagli mi zorunlu mu; cikti bolumunde netles</div>
+</div>
+
+<div class="card" id="web-analyzer">
+<div class="ch">web-analyzer &nbsp;<span class="bop">opus-4-6</span>&nbsp;<span class="g">8.3</span>&nbsp;<span class="dp">Δ+0.17 (v2:8.13)</span></div>
+<div class="imp">Arac listesinde Edit yok, Write var; cikti dosyasini guncellerken sorun cikar — Edit'i ekle</div>
+<div class="imp">SPA/React CSR sitelerde WebFetch yetersiz kalabilir; bu sinirlamaya acik not ekle</div>
+<div class="imp">Rapor kayit yolunu (web-analysis-report.html) calisma dizinine gore dinamiklestir</div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<h2 class="sec" id="comparison">Kriter Karsilastirma (v3)</h2>
+<div style="overflow-x:auto">
+<table class="cmp">
+<tr>
+  <th class="rl">Kriter</th>
+  <th>ba-doc</th><th>backend</th><th>code-rv</th><th>devops</th><th>doc-eng</th>
+  <th>mkt</th><th>mobile</th><th>prompt</th><th>swift</th><th>sys-arc</th>
+  <th>test</th><th>ui</th><th>uiux</th><th>web-an</th>
+  <th style="color:#58a6ff">Ort.</th>
+</tr>
+<tr>
+  <td class="rl">Netlik</td>
+  <td>9</td><td>8</td><td>7</td><td>8</td><td>7</td><td>9</td><td>8</td><td>8</td><td>8</td><td>9</td><td>7</td><td>8</td><td>8</td><td>9</td>
+  <td style="color:#56d364;font-weight:700">8.1</td>
+</tr>
+<tr>
+  <td class="rl">Kapsam</td>
+  <td>9</td><td>8</td><td>8</td><td>8</td><td>8</td><td>9</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>9</td>
+  <td style="color:#56d364;font-weight:700">8.2</td>
+</tr>
+<tr>
+  <td class="rl">Arac Kullanimi</td>
+  <td>9</td><td>8</td><td>7</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>8</td><td>7</td><td>7</td><td>7</td>
+  <td style="color:#e3b341;font-weight:700">7.8</td>
+</tr>
+<tr>
+  <td class="rl">Cikti Formati</td>
+  <td>9</td><td>8</td><td>8</td><td>8</td><td>7</td><td>7</td><td>8</td><td>8</td><td>7</td><td>8</td><td>7</td><td>8</td><td>8</td><td>9</td>
+  <td style="color:#e3b341;font-weight:700">7.9</td>
+</tr>
+<tr>
+  <td class="rl">Hata Yonetimi</td>
+  <td>8</td><td>7</td><td>7</td><td>6</td><td>8</td><td>7</td><td>7</td><td>8</td><td>7</td><td>7</td><td>7</td><td>7</td><td style="color:#f85149">6</td><td>8</td>
+  <td style="color:#e3b341;font-weight:700">7.1</td>
+</tr>
+<tr>
+  <td class="rl">Token Verimliligi</td>
+  <td>9</td><td>7</td><td style="color:#f85149">6</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>7</td><td>9</td><td>7</td><td>7</td><td>8</td><td>8</td>
+  <td style="color:#e3b341;font-weight:700">7.3</td>
+</tr>
+<tr>
+  <td class="rl">Tutarlilik</td>
+  <td>9</td><td>8</td><td>8</td><td>8</td><td>7</td><td>8</td><td>8</td><td>9</td><td>8</td><td>8</td><td>8</td><td>7</td><td>8</td><td>8</td>
+  <td style="color:#56d364;font-weight:700">8.0</td>
+</tr>
+<tr>
+  <td class="rl">Uzmanlik Dili</td>
+  <td>9</td><td>8</td><td>8</td><td>8</td><td>7</td><td>9</td><td>9</td><td>9</td><td>8</td><td>9</td><td>7</td><td>8</td><td>8</td><td>8</td>
+  <td style="color:#56d364;font-weight:700">8.3</td>
+</tr>
+<tr style="border-top:2px solid #30363d">
+  <td class="rl" style="color:#58a6ff;font-weight:700">v3 Ort.</td>
+  <td style="color:#56d364;font-weight:700">8.9</td>
+  <td style="color:#e3b341;font-weight:700">7.8</td>
+  <td style="color:#e3b341;font-weight:700">7.3</td>
+  <td style="color:#e3b341;font-weight:700">7.6</td>
+  <td style="color:#e3b341;font-weight:700">7.4</td>
+  <td style="color:#56d364;font-weight:700">8.1</td>
+  <td style="color:#e3b341;font-weight:700">7.8</td>
+  <td style="color:#56d364;font-weight:700">8.1</td>
+  <td style="color:#e3b341;font-weight:700">7.6</td>
+  <td style="color:#56d364;font-weight:700">8.1</td>
+  <td style="color:#e3b341;font-weight:700">7.4</td>
+  <td style="color:#e3b341;font-weight:700">7.5</td>
+  <td style="color:#e3b341;font-weight:700">7.6</td>
+  <td style="color:#56d364;font-weight:700">8.3</td>
+  <td style="color:#58a6ff;font-weight:700">7.82</td>
+</tr>
+</table>
+</div>
+<p style="color:#8b949e;font-size:.72em;margin-top:16px;text-align:center">Agent Prompt Audit v3 &middot; 2026-03-04 &middot; Loodos Research OS &middot; v2 ort:7.61 &rarr; v3 ort:7.82 (Δ+0.21)</p>
+</main>
+</body>
+</html>
