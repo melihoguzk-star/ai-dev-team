@@ -245,3 +245,24 @@ struct ProductCard: View {
         }
     }
 }
+
+#Preview("Tüm Ürünler") {
+    ProductListView(title: "Tüm Ürünler")
+}
+
+#Preview("Protein Kategorisi") {
+    NavigationStack {
+        ProductListView(title: "Protein", categoryId: "cat-protein")
+    }
+}
+
+#Preview("Ürün Kartı - Grid") {
+    ProductCard(product: MockData.products[0], isGrid: true)
+        .frame(width: 180)
+        .padding()
+}
+
+#Preview("Ürün Kartı - Liste") {
+    ProductCard(product: MockData.products[2], isGrid: false)
+        .padding()
+}

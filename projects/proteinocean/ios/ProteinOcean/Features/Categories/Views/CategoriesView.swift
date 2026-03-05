@@ -132,3 +132,7 @@ struct ErrorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+#Preview("Kategoriler") {
+    CategoriesView()
+}
