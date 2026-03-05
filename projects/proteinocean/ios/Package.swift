@@ -9,18 +9,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "ProteinOcean",
-            path: "ProteinOcean",
-            sources: [
-                "App",
-                "Core/Network",
-                "Core/Models",
-                "Core/Extensions",
-                "Features/Categories/Views",
-                "Features/Categories/ViewModels",
-                "Features/Products/Views",
-                "Features/Products/ViewModels",
-                "Resources"
-            ]
+            path: "ProteinOcean"
         )
     ]
 )
