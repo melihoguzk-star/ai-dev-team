@@ -10,7 +10,7 @@ final class CategoriesViewModel {
 
     private let repository: ProductRepositoryProtocol
 
-    init(repository: ProductRepositoryProtocol = ProductRepository()) {
+    init(repository: ProductRepositoryProtocol = IkasAPIConfig.makeRepository()) {
         self.repository = repository
     }
 

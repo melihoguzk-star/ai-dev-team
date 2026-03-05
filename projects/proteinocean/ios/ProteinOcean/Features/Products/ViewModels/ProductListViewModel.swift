@@ -15,7 +15,7 @@ final class ProductListViewModel {
     private var categoryId: String?
     private let repository: ProductRepositoryProtocol
 
-    init(categoryId: String? = nil, repository: ProductRepositoryProtocol = ProductRepository()) {
+    init(categoryId: String? = nil, repository: ProductRepositoryProtocol = IkasAPIConfig.makeRepository()) {
         self.categoryId = categoryId
         self.repository = repository
     }

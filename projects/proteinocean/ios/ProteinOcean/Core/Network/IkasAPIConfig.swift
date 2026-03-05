@@ -1,13 +1,17 @@
 import Foundation
 
 enum IkasAPIConfig {
-    // ikas Admin API endpoint
-    // Token: ikas Admin Panel → Ayarlar → Geliştirici → Private App oluştur
+    // Mock modu: true → MockProductRepository, false → gerçek ikas API
+    // Token alındığında false yapıp IKAS_API_TOKEN env variable ekle
+    static let useMockData = true
+
     static let graphQLEndpoint = "https://api.myikas.com/api/v1/admin/graphql"
 
-    // TODO: Buraya ikas Private App token'ınızı ekleyin
     static var bearerToken: String {
-        // Gerçek kullanım: Bundle/Keychain'den oku
         ProcessInfo.processInfo.environment["IKAS_API_TOKEN"] ?? ""
+    }
+
+    static func makeRepository() -> ProductRepositoryProtocol {
+        useMockData ? MockProductRepository() : ProductRepository()
     }
 }
