@@ -1,0 +1,435 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0436DDC2E6B2AF66A2A7EB63 /* IkasQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB442C32D9C0CF65CC80296 /* IkasQueries.swift */; };
+		2906FCF45811402CD9AAC2C5 /* ProductListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E57EFA2F5B03090EBAF4DF /* ProductListView.swift */; };
+		4DBD860292BC29488AD28C86 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6ABF988F395F4DC90D1AD86 /* Category.swift */; };
+		51A5B343CE0CFB3C1AAC4F69 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A90E1E0B7A2DBA6AE6669 /* ContentView.swift */; };
+		6B45CAE105E3CFC47DF9CF98 /* GraphQLClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BAEB174F31C0E3D79ABEBA /* GraphQLClient.swift */; };
+		6D0E62E2DD3564BA248BCD8D /* MockProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4753ADAE504F9725C6CF7527 /* MockProductRepository.swift */; };
+		888871AFB2D152107ABD6588 /* CategoriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BE1866CCF8BD91D232FD1A /* CategoriesViewModel.swift */; };
+		C24E0E10AC9E50557F112898 /* IkasAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E252678F5024D731FBF45B /* IkasAPIConfig.swift */; };
+		DC8D949AC7497B9F345B1EA4 /* ProteinOceanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2ACBEB809BD72DAD6366F67 /* ProteinOceanApp.swift */; };
+		E2F93840415EE39C832AFC5A /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955A1DE9EA952B01986EA3A3 /* CategoriesView.swift */; };
+		E94B67A23BE8ADC576A28AEF /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAACA380EAA13AB6A426C74B /* Product.swift */; };
+		E9FE0BD2084A7935EC191DD2 /* ProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E02D10E1B199F9A98FA016 /* ProductRepository.swift */; };
+		EE0204C9D133AB44A97FC6DA /* ProductListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1216A031786700D1B1AA631B /* ProductListViewModel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00BE1866CCF8BD91D232FD1A /* CategoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesViewModel.swift; sourceTree = "<group>"; };
+		05E02D10E1B199F9A98FA016 /* ProductRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRepository.swift; sourceTree = "<group>"; };
+		1216A031786700D1B1AA631B /* ProductListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewModel.swift; sourceTree = "<group>"; };
+		2BF2264CBD01BDF0696E54DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		30E57EFA2F5B03090EBAF4DF /* ProductListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListView.swift; sourceTree = "<group>"; };
+		418A90E1E0B7A2DBA6AE6669 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4753ADAE504F9725C6CF7527 /* MockProductRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProductRepository.swift; sourceTree = "<group>"; };
+		88BAEB174F31C0E3D79ABEBA /* GraphQLClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQLClient.swift; sourceTree = "<group>"; };
+		955A1DE9EA952B01986EA3A3 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		B5E252678F5024D731FBF45B /* IkasAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IkasAPIConfig.swift; sourceTree = "<group>"; };
+		B6ABF988F395F4DC90D1AD86 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		E2ACBEB809BD72DAD6366F67 /* ProteinOceanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProteinOceanApp.swift; sourceTree = "<group>"; };
+		EAACA380EAA13AB6A426C74B /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		ED80085A2C9C2D12ED43E2FD /* ProteinOcean.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ProteinOcean.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBB442C32D9C0CF65CC80296 /* IkasQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IkasQueries.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		039D1FB4DDC34C1A350A02DE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B6ABF988F395F4DC90D1AD86 /* Category.swift */,
+				EAACA380EAA13AB6A426C74B /* Product.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		054A2CB67955595829CE94FE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				30E57EFA2F5B03090EBAF4DF /* ProductListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		24B98DEEFAE591C30260E6CF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3FAE3F1C2510B4948A493F77 /* ViewModels */,
+				054A2CB67955595829CE94FE /* Views */,
+			);
+			path = Products;
+			sourceTree = "<group>";
+		};
+		39ADCC945D374EAA1FC0DD8F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				418A90E1E0B7A2DBA6AE6669 /* ContentView.swift */,
+				2BF2264CBD01BDF0696E54DA /* Info.plist */,
+				E2ACBEB809BD72DAD6366F67 /* ProteinOceanApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		3FAE3F1C2510B4948A493F77 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1216A031786700D1B1AA631B /* ProductListViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		60F1951B8D09D9D0D6892AF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				00BE1866CCF8BD91D232FD1A /* CategoriesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		79A20C1DDEEB690E4A965F54 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				60F1951B8D09D9D0D6892AF1 /* ViewModels */,
+				BDE732E8297E0C8C634B0EEE /* Views */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		830202383DE18B4126C666CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED80085A2C9C2D12ED43E2FD /* ProteinOcean.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1F417E33E5BE60E392D261F /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				88BAEB174F31C0E3D79ABEBA /* GraphQLClient.swift */,
+				B5E252678F5024D731FBF45B /* IkasAPIConfig.swift */,
+				FBB442C32D9C0CF65CC80296 /* IkasQueries.swift */,
+				4753ADAE504F9725C6CF7527 /* MockProductRepository.swift */,
+				05E02D10E1B199F9A98FA016 /* ProductRepository.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		BDE732E8297E0C8C634B0EEE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				955A1DE9EA952B01986EA3A3 /* CategoriesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C49B8CFEE20A92C9FF7A2E13 /* ProteinOcean */ = {
+			isa = PBXGroup;
+			children = (
+				39ADCC945D374EAA1FC0DD8F /* App */,
+				D90265864263CB20BD8D7A4F /* Core */,
+				CF30CD6AD3DCD5F63F84DC89 /* Features */,
+			);
+			path = ProteinOcean;
+			sourceTree = "<group>";
+		};
+		CF30CD6AD3DCD5F63F84DC89 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				79A20C1DDEEB690E4A965F54 /* Categories */,
+				24B98DEEFAE591C30260E6CF /* Products */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		D90265864263CB20BD8D7A4F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				039D1FB4DDC34C1A350A02DE /* Models */,
+				A1F417E33E5BE60E392D261F /* Network */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EAD5C0235641EE328DF67AF4 = {
+			isa = PBXGroup;
+			children = (
+				C49B8CFEE20A92C9FF7A2E13 /* ProteinOcean */,
+				830202383DE18B4126C666CB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8274DD55A27222507FB4C2BA /* ProteinOcean */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C1B6A1B8D57AAC867C2DF74 /* Build configuration list for PBXNativeTarget "ProteinOcean" */;
+			buildPhases = (
+				C33FAB55737013D81CB19098 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProteinOcean;
+			packageProductDependencies = (
+			);
+			productName = ProteinOcean;
+			productReference = ED80085A2C9C2D12ED43E2FD /* ProteinOcean.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		937061CDAA85C264D1981BFB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					8274DD55A27222507FB4C2BA = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 4A409D82C4E9B068DD393789 /* Build configuration list for PBXProject "ProteinOcean" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EAD5C0235641EE328DF67AF4;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8274DD55A27222507FB4C2BA /* ProteinOcean */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C33FAB55737013D81CB19098 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2F93840415EE39C832AFC5A /* CategoriesView.swift in Sources */,
+				888871AFB2D152107ABD6588 /* CategoriesViewModel.swift in Sources */,
+				4DBD860292BC29488AD28C86 /* Category.swift in Sources */,
+				51A5B343CE0CFB3C1AAC4F69 /* ContentView.swift in Sources */,
+				6B45CAE105E3CFC47DF9CF98 /* GraphQLClient.swift in Sources */,
+				C24E0E10AC9E50557F112898 /* IkasAPIConfig.swift in Sources */,
+				0436DDC2E6B2AF66A2A7EB63 /* IkasQueries.swift in Sources */,
+				6D0E62E2DD3564BA248BCD8D /* MockProductRepository.swift in Sources */,
+				E94B67A23BE8ADC576A28AEF /* Product.swift in Sources */,
+				2906FCF45811402CD9AAC2C5 /* ProductListView.swift in Sources */,
+				EE0204C9D133AB44A97FC6DA /* ProductListViewModel.swift in Sources */,
+				E9FE0BD2084A7935EC191DD2 /* ProductRepository.swift in Sources */,
+				DC8D949AC7497B9F345B1EA4 /* ProteinOceanApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		166DA69BC5EF217050762B7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		E19E8D3A684C7212EE10C25D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ProteinOcean/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.proteinocean.app;
+				PRODUCT_NAME = ProteinOcean;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EE634CFFE84FD7514BDC49D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		F4F45DF28DE1AF4E7C6F8300 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = ProteinOcean/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.proteinocean.app;
+				PRODUCT_NAME = ProteinOcean;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A409D82C4E9B068DD393789 /* Build configuration list for PBXProject "ProteinOcean" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE634CFFE84FD7514BDC49D5 /* Debug */,
+				166DA69BC5EF217050762B7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9C1B6A1B8D57AAC867C2DF74 /* Build configuration list for PBXNativeTarget "ProteinOcean" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4F45DF28DE1AF4E7C6F8300 /* Debug */,
+				E19E8D3A684C7212EE10C25D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 937061CDAA85C264D1981BFB /* Project object */;
+}
