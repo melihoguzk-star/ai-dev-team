@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class CategoriesViewModel {
     var categories: [StoreCategory] = []
     var isLoading = false
@@ -22,7 +23,6 @@ final class CategoriesViewModel {
         categories.filter { $0.parentId == category.id }
     }
 
-    @MainActor
     func loadCategories() async {
         isLoading = true
         errorMessage = nil

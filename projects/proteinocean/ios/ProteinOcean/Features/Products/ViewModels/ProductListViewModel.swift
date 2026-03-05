@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 final class ProductListViewModel {
     var products: [Product] = []
     var isLoading = false
@@ -30,7 +31,6 @@ final class ProductListViewModel {
         reset()
     }
 
-    @MainActor
     func loadProducts() async {
         guard !isLoading else { return }
         isLoading = true
@@ -51,7 +51,6 @@ final class ProductListViewModel {
         isLoading = false
     }
 
-    @MainActor
     func loadNextPage() async {
         guard hasMore, !isLoadingMore, !isLoading else { return }
         isLoadingMore = true
@@ -70,7 +69,6 @@ final class ProductListViewModel {
         isLoadingMore = false
     }
 
-    @MainActor
     private func reset() {
         products = []
         currentPage = 0
