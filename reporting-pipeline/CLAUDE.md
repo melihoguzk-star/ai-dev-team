@@ -1,6 +1,6 @@
 # Reporting Pipeline — Project Context
 
-Bu modül, **SunExpress Sun Mobile** uygulamasının haftalık performans raporlarını otomatize eden 4 fazlı bir pipeline'dır.
+Bu modül, **SunExpress Sun Mobile** uygulamasının haftalık performans raporlarını otomatize eden 5 fazlı bir pipeline'dır.
 
 ## Amaç
 
@@ -28,6 +28,7 @@ App Store Connect, Google Play Console ve Firebase/Crashlytics'ten veri toplayar
 2. Veri İşleme & Normalizasyon → `data-processor`
 3. Trend Analizi & Insight → `trend-analyzer`
 4. Kalite Kontrol → `report-reviewer`
+5. Rapor Üretimi → `report-generator`
 
 ## Metrikler
 
@@ -38,6 +39,15 @@ App Store Connect, Google Play Console ve Firebase/Crashlytics'ten veri toplayar
 | Download (Weekly) | App Store Connect API | Google Play Developer API |
 | Active User (Weekly) | App Store Connect API | Google Play Developer API |
 | Uninstall Count (Weekly) | App Store Connect API | Google Play Developer API |
+
+### report-generator Agent
+
+| Parametre | Değer |
+|-----------|-------|
+| **Rol** | Pipeline çıktılarından SunExpress branded PPTX/PDF performans raporu üretir |
+| **Model** | claude-sonnet-4-6 |
+| **Tetikleme** | `report-generator` subagent'ını kullan |
+| **Branding referansı** | `templates/branding-spec.md` |
 
 ## Dizin Yapısı
 

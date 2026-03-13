@@ -107,6 +107,32 @@ Kalite raporunu ~/ai-dev-team/reporting-pipeline/reports/{tarih}/quality-report.
 
 ---
 
+## Faz 5 Kalite Kapısı: Rapor Üretimi
+
+```
+report-reviewer subagent'ını kullan.
+
+~/ai-dev-team/reporting-pipeline/reports/[TARIH]/sunexpress-weekly-report-[TARIH].pptx dosyasını kontrol et.
+Referans: ~/ai-dev-team/reporting-pipeline/templates/branding-spec.md + ~/ai-dev-team/reporting-pipeline/data/processed/weekly-metrics-[TARIH].csv
+
+KONTROL LİSTESİ:
+- Slide Sayısı: Minimum 9 slide mevcut mu?
+- Veri Doğruluğu: Slide 2-3 teki tablo değerleri CSV deki verilerle birebir eşleşiyor mu?
+- Grafik Doğruluğu: Slide 4-8 deki grafik data pointleri doğru mu?
+- Branding Renkler: Lacivert #1B3A5C, turuncu #E85D26, teal #2ABFBF, arka plan #F0F0F0 kullanılmış mı?
+- Branding Fontlar: Başlıklar bold 36-40pt, tablo header 14-16pt mi?
+- Branding Footer: Her slide da Loodos (sol alt) ve SunExpress Airlines (sağ alt) logosu var mı?
+- Kapak: Dekoratif mint şekil ve doğru başlık var mı?
+- Anomali İşaretleme: Warning hücreler sarı, critical hücreler kırmızı arka planlı mı?
+- Insight Slide: Trend yönleri doğru mu? Insightlar veriyle destekli mi?
+- PDF Çıktı: PDF versiyonu da oluşturulmuş mu?
+
+100 üzerinden skor ver.
+Skor 70 altındaysa geri bildirim raporunu kaydet.
+```
+
+---
+
 ## Skor Karşılaştırma Tablosu
 
 | Faz | Ad | Skor | Durum |
@@ -115,6 +141,7 @@ Kalite raporunu ~/ai-dev-team/reporting-pipeline/reports/{tarih}/quality-report.
 | 2 | Veri İşleme | — | — |
 | 3 | Trend Analizi | — | — |
 | 4 | Kalite Kontrol | — | — |
+| 5 | Rapor Üretimi | — | — |
 | **Ortalama** | — | **—** | — |
 
 > **Pipeline başarı kriteri:** Ortalama skor ≥ 75 ve hiçbir faz 50 altında olmamalı.

@@ -1,6 +1,6 @@
 # Reporting Pipeline Konfigürasyonu
 
-SunExpress Sun Mobile uygulamasının haftalık performans raporlarını otomatize eden 4 fazlı pipeline.
+SunExpress Sun Mobile uygulamasının haftalık performans raporlarını otomatize eden 5 fazlı pipeline.
 
 ---
 
@@ -100,11 +100,24 @@ SunExpress Sun Mobile uygulamasının haftalık performans raporlarını otomati
 
 ---
 
+### Faz 5: Rapor Üretimi (Report Generation)
+
+| Parametre | Değer |
+|-----------|-------|
+| **Ad** | SunExpress Branded Rapor Üretimi |
+| **Agent** | `report-generator` (claude-sonnet-4-6) |
+| **Girdi** | `data/processed/weekly-metrics-{tarih}.csv` + `data/processed/insights-{tarih}.json` + `data/processed/anomalies-{tarih}.json` + `data/processed/trend-summary-{tarih}.json` + `templates/branding-spec.md` |
+| **Çıktı** | `reports/{tarih}/sunexpress-weekly-report-{tarih}.pptx` + PDF versiyonu |
+| **Kalite Kapısı** | Slide sayısı ≥ 9; branding uyumu (`templates/branding-spec.md`); veri doğruluğu; grafik render başarılı |
+| **Tahmini Süre** | 5–10 dakika |
+
+---
+
 ## Faz Bağımlılık Haritası
 
 ```
 Faz 1a (iOS Collect) ──┐
-Faz 1b (Android Collect)├──→ Faz 2 (Process) ──→ Faz 3 (Analyze) ──→ Faz 4 (QA)
+Faz 1b (Android Collect)├──→ Faz 2 (Process) ──→ Faz 3 (Analyze) ──→ Faz 4 (QA) ──→ Faz 5 (Report)
 Faz 1c (Crashlytics) ──┘
 ```
 
@@ -118,6 +131,7 @@ Faz 1c (Crashlytics) ──┘
 | Faz 2 | Faz 1a + 1b + 1c (tümü) | Hayır |
 | Faz 3 | Faz 2 | Hayır |
 | Faz 4 | Faz 3 | Hayır |
+| Faz 5 | Faz 2 + Faz 3 + Faz 4 | Hayır |
 
 ---
 

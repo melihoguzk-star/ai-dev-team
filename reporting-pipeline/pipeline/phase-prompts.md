@@ -280,3 +280,43 @@ cd ~/ai-dev-team/reporting-pipeline
 ```bash
 ./scripts/run-pipeline.sh --phase 3 --week "2026-03-02"
 ```
+
+---
+
+## Faz 5: Rapor Üretimi
+
+```
+report-generator subagent'ını kullan.
+
+~/ai-dev-team/reporting-pipeline/templates/branding-spec.md dosyasını oku — rapor branding kurallarını oradan al.
+
+Şu veri dosyalarını oku:
+1. ~/ai-dev-team/reporting-pipeline/data/processed/weekly-metrics-[TARIH].csv
+2. ~/ai-dev-team/reporting-pipeline/data/processed/insights-[TARIH].json
+3. ~/ai-dev-team/reporting-pipeline/data/processed/anomalies-[TARIH].json
+4. ~/ai-dev-team/reporting-pipeline/data/processed/trend-summary-[TARIH].json
+
+Bu verilerden SunExpress branded PPTX rapor üret.
+
+Slide yapısı:
+1. Kapak — SunExpress Performance Overview + tarih aralığı + dekoratif mint şekil
+2. iOS Performance Overview — 7 haftalık tam tablo (anomali hücreleri renkli)
+3. Android Performance Overview — aynı format
+4. App Rating — çizgi grafik (iOS lacivert, Android turuncu) + karşılaştırma tablosu
+5. Crash Free User — grafik + tablo (Y ekseni dar aralık: 99.5-100)
+6. Download (Weekly) — grafik + tablo
+7. Active User (Weekly) — grafik + tablo
+8. Uninstall Count (Weekly) — grafik + tablo
+9. Trend Özeti ve Insightlar — trend ikonları + top insightlar + anomali uyarıları
+
+Grafikleri matplotlib ile PNG olarak oluştur, slide'a embed et.
+Her slide'da footer: sol alt loodos (teal), sağ alt SunExpress Airlines (lacivert+turuncu).
+
+Çıktı: ~/ai-dev-team/reporting-pipeline/reports/[TARIH]/sunexpress-weekly-report-[TARIH].pptx
+
+Oluşturduktan sonra:
+1. PPTX'i PDF'e çevir
+2. Slide'ları JPG'ye çevir ve görsel QA yap
+3. Veri doğruluğunu kontrol et (tablodaki sayılar CSV ile eşleşmeli)
+4. Branding uyumunu kontrol et (renkler, fontlar, layout)
+```
