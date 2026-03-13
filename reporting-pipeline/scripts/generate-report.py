@@ -10,6 +10,7 @@ Kullanım:
 import argparse
 import io
 import json
+from datetime import datetime
 from matplotlib.lines import Line2D
 from pathlib import Path
 
@@ -50,7 +51,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ---------------------------------------------------------------------------
 
 def set_cell_bg(cell, rgb: RGBColor):
-    """Set table cell background via raw XML (not exposed in python-pptx API)."""
+    """Set table cell background via raw XML."""
     from lxml import etree
     from pptx.oxml.ns import qn
     tc   = cell._tc
@@ -116,20 +117,21 @@ def style_header_row(tbl, headers, col_widths=None):
         p = cell.text_frame.paragraphs[0]
         p.alignment = PP_ALIGN.CENTER
         run = p.runs[0]
-        run.font.bold = True; run.font.size = Pt(14)
+        run.font.bold = True; run.font.size = Pt(13)
         run.font.color.rgb = WHITE; run.font.name = "Calibri"
         set_cell_bg(cell, NAVY)
-    tbl.rows[0].height = Inches(0.50)
+    tbl.rows[0].height = Inches(0.40)   # FIX 4: compact header
 
 
-def style_data_cell(cell, text, flag=None, align=PP_ALIGN.CENTER, font_size=12):
+def style_data_cell(cell, text, flag=None, align=PP_ALIGN.CENTER, font_size=11):
     cell.text = text
     p   = cell.text_frame.paragraphs[0]
     p.alignment = align
     run = p.runs[0]
     run.font.size = Pt(font_size); run.font.name = "Calibri"
+    run.font.bold = False          # FIX 8: never bold on anomaly, only bg colour
     if flag == "critical":
-        set_cell_bg(cell, CRIT_BG); run.font.bold = True
+        set_cell_bg(cell, CRIT_BG)
     elif flag == "warning":
         set_cell_bg(cell, WARN_BG)
     else:
@@ -137,8 +139,40 @@ def style_data_cell(cell, text, flag=None, align=PP_ALIGN.CENTER, font_size=12):
 
 
 # ---------------------------------------------------------------------------
-# Data helpers
+# Data / formatting helpers
 # ---------------------------------------------------------------------------
+
+def fmt_k(val: float) -> str:
+    """FIX 2: K-format for large numbers. 21900→21.9K, 74000→74K, 1370→1.4K"""
+    k = val / 1000
+    if k >= 10:
+        return f"{k:.0f}K"
+    else:
+        return f"{k:.1f}K"
+
+
+def fmt_date_range(start: str, end: str) -> str:
+    """FIX 1: '2026-01-19','2026-01-25' → '19 Jan - 25 Jan'"""
+    ds = datetime.strptime(start, "%Y-%m-%d")
+    de = datetime.strptime(end,   "%Y-%m-%d")
+    return f"{ds.day} {ds.strftime('%b')} - {de.day} {de.strftime('%b')}"
+
+
+def fmt_date_short(date_str: str) -> str:
+    """FIX 1: '2026-01-19' → '19 Jan'"""
+    dt = datetime.strptime(date_str, "%Y-%m-%d")
+    return f"{dt.day} {dt.strftime('%b')}"
+
+
+def fmt_metric(val, col: str) -> str:
+    """FIX 2 & 3: K format for big numbers; no % for crash_free."""
+    if "rating" in col:
+        return f"{val:.1f}"
+    elif "crash_free" in col:
+        return f"{val:.2f}"          # FIX 2: no % sign
+    else:
+        return fmt_k(val)            # FIX 2: K format
+
 
 def build_anomaly_map(anomalies_data: dict) -> dict:
     amap = {}
@@ -147,15 +181,6 @@ def build_anomaly_map(anomalies_data: dict) -> dict:
         for wk in anom.get("weeks", []):
             amap[(wk["week_start"], col)] = wk["flag"]
     return amap
-
-
-def fmt_metric(val, col: str) -> str:
-    if "rating" in col:
-        return f"{val:.1f}"
-    elif "crash_free" in col:
-        return f"{val:.2f}%"
-    else:
-        return f"{int(val):,}"
 
 
 # ---------------------------------------------------------------------------
@@ -168,25 +193,29 @@ def make_chart(df, col_ios, col_and, ylabel,
     fig.patch.set_facecolor("white")
     ax.set_facecolor("white")
 
-    weeks = [w[5:] for w in df["week_start"]]
+    # FIX 5: x-axis labels in "DD Mon" format
+    weeks = [fmt_date_short(w) for w in df["week_start"]]
     ios_v = df[col_ios].tolist()
     and_v = df[col_and].tolist()
 
     ax.plot(weeks, ios_v, color=M_NAVY,   lw=2.5, marker="o", ms=7, zorder=3)
     ax.plot(weeks, and_v, color=M_ORANGE, lw=2.5, marker="o", ms=7, zorder=3)
 
-    lbl = fmt if fmt else (lambda v: f"{v:,.0f}")
+    lbl = fmt if fmt else fmt_k
     for w, v in zip(weeks, ios_v):
         ax.annotate(lbl(v), (w, v), xytext=(0, 9),
                     textcoords="offset points", ha="center",
                     fontsize=8, color=M_NAVY, fontweight="bold")
     for w, v in zip(weeks, and_v):
-        ax.annotate(lbl(v), (w, v), xytext=(0, -15),
+        ax.annotate(lbl(v), (w, v), xytext=(0, -14),
                     textcoords="offset points", ha="center",
                     fontsize=8, color=M_ORANGE, fontweight="bold")
 
-    if y_min is not None:
+    # FIX 6: Y axis range
+    if y_min is not None and y_max is not None:
         ax.set_ylim(y_min, y_max)
+    elif y_min is not None:
+        ax.set_ylim(bottom=y_min)
 
     ax.set_ylabel(ylabel, fontsize=9, color=M_DGRAY)
     ax.tick_params(labelsize=8, colors=M_DGRAY)
@@ -195,7 +224,8 @@ def make_chart(df, col_ios, col_and, ylabel,
         ax.spines[spine].set_visible(False)
     ax.spines["left"].set_color(M_GRID)
     ax.spines["bottom"].set_color(M_GRID)
-    plt.xticks(rotation=30, ha="right")
+    # FIX 5: horizontal tick labels, no rotation
+    plt.xticks(rotation=0, ha="center", fontsize=8)
 
     handles = [
         Line2D([0], [0], color=M_NAVY,   lw=2.5, marker="o", ms=7, label="● iOS"),
@@ -204,7 +234,7 @@ def make_chart(df, col_ios, col_and, ylabel,
     ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 1.12),
               ncol=2, frameon=False, fontsize=10)
 
-    plt.tight_layout(pad=1.0)
+    plt.tight_layout(pad=1.2)
     buf = io.BytesIO()
     plt.savefig(buf, format="png", bbox_inches="tight", facecolor="white", dpi=120)
     plt.close(fig)
@@ -220,7 +250,6 @@ def slide_cover(prs: Presentation, week: str):
     slide = new_slide(prs)
     set_slide_bg(slide, LGRAY)
 
-    # Decorative teal oval on right half (9 = OVAL in MSO_AUTO_SHAPE_TYPE)
     sp = slide.shapes.add_shape(9, Inches(8.0), Inches(-1.2), Inches(7.0), Inches(10.0))
     sp.fill.solid()
     sp.fill.fore_color.rgb = TEAL
@@ -283,21 +312,24 @@ def slide_overview(prs: Presentation, df, platform: str, anomaly_map: dict):
     r2.text = " Performance Overview"; r2.font.bold = True; r2.font.color.rgb = NAVY
     r2.font.size = Pt(36); r2.font.name = "Calibri"
 
-    headers    = ["Date", "App Rating", "Crash Free %",
-                  "Downloads", "Active Users", "Uninstalls"]
-    col_widths = [Inches(1.5), Inches(1.8), Inches(2.0),
-                  Inches(2.2), Inches(2.6), Inches(2.6)]  # total = 12.7"
+    # FIX 3: column names match reference PDF
+    headers    = ["Date", "App Rating", "Crash Free User",
+                  "Download (Weekly)", "Active User (Weekly)", "Uninstall Count (Weekly)"]
+    col_widths = [Inches(1.9), Inches(1.6), Inches(1.9),
+                  Inches(2.0), Inches(2.3), Inches(3.0)]  # total ≈ 12.7"
     nrows = len(df) + 1
 
     tbl = slide.shapes.add_table(
-        nrows, 6, Inches(0.3), Inches(1.0), Inches(12.7), Inches(6.0)
+        nrows, 6, Inches(0.3), Inches(0.95), Inches(12.7), Inches(3.5)
     ).table
     style_header_row(tbl, headers, col_widths)
 
     for ri, (_, row) in enumerate(df.iterrows()):
         dr = ri + 1
-        tbl.rows[dr].height = Inches(0.67)
-        style_data_cell(tbl.cell(dr, 0), row["week_start"])
+        tbl.rows[dr].height = Inches(0.35)   # FIX 4: compact rows
+        # FIX 1: date range format
+        style_data_cell(tbl.cell(dr, 0),
+                        fmt_date_range(row["week_start"], row["week_end"]))
         for ci, col in enumerate(cols):
             flag = anomaly_map.get((row["week_start"], col))
             style_data_cell(tbl.cell(dr, ci + 1), fmt_metric(row[col], col), flag=flag)
@@ -323,24 +355,23 @@ def slide_metric(prs: Presentation, df, title: str,
                               Inches(0.3), Inches(0.9), Inches(7.8), Inches(5.8))
 
     headers    = ["Date", "iOS", "Android"]
-    col_widths = [Inches(1.5), Inches(1.6), Inches(1.5)]  # total = 4.6"
+    col_widths = [Inches(1.6), Inches(1.5), Inches(1.5)]  # total = 4.6"
     nrows = len(df) + 1
 
     tbl = slide.shapes.add_table(
-        nrows, 3, Inches(8.4), Inches(0.9), Inches(4.6), Inches(5.8)
+        nrows, 3, Inches(8.4), Inches(0.9), Inches(4.6), Inches(3.5)
     ).table
     style_header_row(tbl, headers, col_widths)
 
     for ri, (_, row) in enumerate(df.iterrows()):
         dr = ri + 1
-        tbl.rows[dr].height = Inches(0.68)
-        style_data_cell(tbl.cell(dr, 0), row["week_start"][5:])
+        tbl.rows[dr].height = Inches(0.35)   # FIX 4: compact rows
+        # FIX 1: short date for narrow column
+        style_data_cell(tbl.cell(dr, 0), fmt_date_short(row["week_start"]))
         flag_i = anomaly_map.get((row["week_start"], col_ios))
         flag_a = anomaly_map.get((row["week_start"], col_and))
-        style_data_cell(tbl.cell(dr, 1), fmt_metric(row[col_ios], col_ios),
-                        flag=flag_i, font_size=11)
-        style_data_cell(tbl.cell(dr, 2), fmt_metric(row[col_and], col_and),
-                        flag=flag_a, font_size=11)
+        style_data_cell(tbl.cell(dr, 1), fmt_metric(row[col_ios], col_ios), flag=flag_i)
+        style_data_cell(tbl.cell(dr, 2), fmt_metric(row[col_and], col_and), flag=flag_a)
 
     add_footer(slide)
     return slide
@@ -367,7 +398,6 @@ def slide_trends(prs: Presentation, trends_data: dict, insights_data: dict):
     def icon(d):   return "▲" if d == "increasing" else ("▼" if d == "decreasing" else "→")
     def tcolor(d): return GREEN if d == "increasing" else (RED if d == "decreasing" else SGRAY)
 
-    # ── Trend table (left) ────────────────────────────────────────────────
     tbl = slide.shapes.add_table(
         6, 3, Inches(0.3), Inches(0.95), Inches(5.8), Inches(3.5)
     ).table
@@ -388,7 +418,7 @@ def slide_trends(prs: Presentation, trends_data: dict, insights_data: dict):
         run.font.size = Pt(12); run.font.bold = True; run.font.name = "Calibri"
         set_cell_bg(cell, WHITE)
 
-        for ci, (t_data, col_idx) in enumerate([(ios_t, 1), (and_t, 2)]):
+        for t_data, col_idx in [(ios_t, 1), (and_t, 2)]:
             c = tbl.cell(dr, col_idx)
             c.text_frame.clear()
             p = c.text_frame.paragraphs[0]
@@ -401,7 +431,6 @@ def slide_trends(prs: Presentation, trends_data: dict, insights_data: dict):
             r.font.color.rgb = tcolor(direction); r.font.name = "Calibri"
             set_cell_bg(c, WHITE)
 
-    # ── Insights (right) ─────────────────────────────────────────────────
     txb_h = slide.shapes.add_textbox(Inches(6.4), Inches(0.95), Inches(6.6), Inches(0.45))
     rh = txb_h.text_frame.paragraphs[0].add_run()
     rh.text = "Key Insights"; rh.font.bold = True; rh.font.size = Pt(16)
@@ -471,30 +500,53 @@ def main():
     prs.slide_width  = Inches(13.33)
     prs.slide_height = Inches(7.5)
 
-    slide_cover(prs, week);                                    print("  ✓ Slide 1: Kapak")
-    slide_overview(prs, df, "ios",     amap);                  print("  ✓ Slide 2: iOS Performance Overview")
-    slide_overview(prs, df, "android", amap);                  print("  ✓ Slide 3: Android Performance Overview")
+    slide_cover(prs, week)
+    print("  ✓ Slide 1: Kapak")
+
+    slide_overview(prs, df, "ios",     amap)
+    print("  ✓ Slide 2: iOS Performance Overview")
+
+    slide_overview(prs, df, "android", amap)
+    print("  ✓ Slide 3: Android Performance Overview")
+
+    # FIX 6 & 7: Y-axis ranges + K-format data labels
     slide_metric(prs, df, "App Rating",
                  "ios_rating", "android_rating", "Rating (★)",
-                 amap, y_min=2.0, y_max=4.5, fmt=lambda v: f"{v:.1f}");
+                 amap,
+                 y_min=0, y_max=4,                        # PDF: 0–4
+                 fmt=lambda v: f"{v:.1f}")
     print("  ✓ Slide 4: App Rating")
+
     slide_metric(prs, df, "Crash Free User",
                  "ios_crash_free_user", "android_crash_free_user", "Crash-Free Rate (%)",
-                 amap, y_min=99.4, y_max=100.1, fmt=lambda v: f"{v:.2f}%");
+                 amap,
+                 y_min=98, y_max=100,                     # PDF: 98–100
+                 fmt=lambda v: f"{v:.2f}")
     print("  ✓ Slide 5: Crash Free User")
+
     slide_metric(prs, df, "Download (Weekly)",
                  "ios_downloads", "android_downloads", "Downloads",
-                 amap, fmt=lambda v: f"{v/1000:.0f}K");
+                 amap,
+                 y_min=0,                                  # starts at 0
+                 fmt=fmt_k)
     print("  ✓ Slide 6: Download (Weekly)")
+
     slide_metric(prs, df, "Active User (Weekly)",
                  "ios_active_users", "android_active_users", "Active Users",
-                 amap, fmt=lambda v: f"{v/1000:.0f}K");
+                 amap,
+                 y_min=0,                                  # starts at 0
+                 fmt=fmt_k)
     print("  ✓ Slide 7: Active User (Weekly)")
+
     slide_metric(prs, df, "Uninstall Count (Weekly)",
                  "ios_uninstalls", "android_uninstalls", "Uninstalls",
-                 amap, fmt=lambda v: f"{v/1000:.1f}K");
+                 amap,
+                 y_min=0,                                  # starts at 0
+                 fmt=fmt_k)
     print("  ✓ Slide 8: Uninstall Count (Weekly)")
-    slide_trends(prs, trends, insights);                       print("  ✓ Slide 9: Trend Summary & Insights")
+
+    slide_trends(prs, trends, insights)
+    print("  ✓ Slide 9: Trend Summary & Insights")
 
     print("\n[3/3] Dosya kaydediliyor...")
     out_dir  = BASE_DIR / "reports" / week
