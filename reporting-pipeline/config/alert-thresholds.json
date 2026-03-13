@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "description": "Anomali tespit eşik değerleri — SunExpress Sun Mobile",
+  "thresholds": {
+    "app_rating": {
+      "warning": {
+        "wow_change_lte": -0.2,
+        "absolute_lt": 3.0,
+        "description": "Rating haftalık 0.2+ düşüş veya mutlak 3.0 altı"
+      },
+      "critical": {
+        "wow_change_lte": -0.5,
+        "absolute_lt": 2.5,
+        "description": "Rating haftalık 0.5+ düşüş veya mutlak 2.5 altı"
+      }
+    },
+    "crash_free_user": {
+      "warning": {
+        "absolute_lt": 99.5,
+        "description": "Crash-free rate %99.5 altı"
+      },
+      "critical": {
+        "absolute_lt": 99.0,
+        "description": "Crash-free rate %99.0 altı — acil müdahale"
+      }
+    },
+    "weekly_downloads": {
+      "warning": {
+        "wow_change_pct_lte": -20,
+        "description": "İndirmeler haftalık %20+ düşüş"
+      },
+      "critical": {
+        "wow_change_pct_lte": -40,
+        "description": "İndirmeler haftalık %40+ düşüş — kampanya/ASO kontrol et"
+      }
+    },
+    "weekly_active_users": {
+      "warning": {
+        "wow_change_pct_lte": -10,
+        "description": "Aktif kullanıcılar haftalık %10+ düşüş"
+      },
+      "critical": {
+        "wow_change_pct_lte": -25,
+        "description": "Aktif kullanıcılar haftalık %25+ düşüş — retansiyon sorunu"
+      }
+    },
+    "weekly_uninstalls": {
+      "warning": {
+        "wow_change_pct_gte": 30,
+        "description": "Silmeler haftalık %30+ artış"
+      },
+      "critical": {
+        "wow_change_pct_gte": 50,
+        "description": "Silmeler haftalık %50+ artış — kullanıcı kaybı krizi"
+      }
+    }
+  },
+  "anomaly_detection": {
+    "z_score_threshold": 2.0,
+    "iqr_multiplier": 1.5,
+    "min_data_points": 4,
+    "methods": ["z_score", "iqr"],
+    "combine_strategy": "any"
+  },
+  "notification": {
+    "slack_webhook": "REPLACE_WITH_SLACK_WEBHOOK_URL",
+    "notify_on": ["critical"],
+    "digest_on": ["warning"],
+    "digest_schedule": "weekly"
+  }
+}
