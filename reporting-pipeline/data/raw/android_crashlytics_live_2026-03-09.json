@@ -1,0 +1,50 @@
+{
+  "app_name": "SunExpress",
+  "platform": "android",
+  "metric": "crash_free_user",
+  "collection_date": "2026-03-13T13:07:33.772116+00:00",
+  "source": "unavailable",
+  "live": false,
+  "period": {
+    "start": "2026-01-19",
+    "end": "2026-03-08",
+    "granularity": "weekly"
+  },
+  "data": [
+    {
+      "week_start": "2026-01-19",
+      "week_end": "2026-01-25",
+      "value": null
+    },
+    {
+      "week_start": "2026-01-26",
+      "week_end": "2026-02-01",
+      "value": null
+    },
+    {
+      "week_start": "2026-02-02",
+      "week_end": "2026-02-08",
+      "value": null
+    },
+    {
+      "week_start": "2026-02-09",
+      "week_end": "2026-02-15",
+      "value": null
+    },
+    {
+      "week_start": "2026-02-16",
+      "week_end": "2026-02-22",
+      "value": null
+    },
+    {
+      "week_start": "2026-02-23",
+      "week_end": "2026-03-01",
+      "value": null
+    },
+    {
+      "week_start": "2026-03-02",
+      "week_end": "2026-03-08",
+      "value": null
+    }
+  ]
+}

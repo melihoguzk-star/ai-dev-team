@@ -18,6 +18,18 @@ Bu doküman, bir web sitesini iOS native uygulamaya dönüştürmek için kullan
 
 ---
 
+### Faz 1.5: Marka Kimliği Analizi
+| Parametre | Değer |
+|-----------|-------|
+| **Ad** | Marka Kimliği Analizi ve Token Üretimi |
+| **Agent** | `brand-analyzer` (claude-sonnet-4-6) |
+| **Girdi** | `~/ai-dev-team/analysis/web-analysis-report.html` + hedef web sitesi URL'si |
+| **Çıktı** | `~/ai-dev-team/docs/brand-tokens.json` + `~/ai-dev-team/docs/brand-style-guide.html` |
+| **Kalite Kapısı** | Renk paleti (tüm semantik roller), tipografi, spacing, border, shadow, ikon mapping ve buton stilleri eksiksiz tanımlanmış; iOS eşdeğerleri belirtilmiş olmalı |
+| **Tahmini Süre** | 10-20 dakika |
+
+---
+
 ### Faz 2: Mimari Tasarım
 | Parametre | Değer |
 |-----------|-------|
@@ -107,13 +119,15 @@ Bu doküman, bir web sitesini iOS native uygulamaya dönüştürmek için kullan
 
 ```
 Faz 1 (Web Analiz)
-  ├──→ Faz 2 (Mimari Tasarım)
-  │      └──→ Faz 3 (BA Doküman) ─────────────────┐
-  │             └──→ Faz 4 (UI/UX Tasarım)         │
-  │                    └──→ Faz 5 (iOS Dönüşüm)    │
-  │                           │                     │
-  │                           ▼                     ▼
-  │                    Faz 6 (Geliştirme) ◄─────────┘
+  ├──→ Faz 1.5 (Marka Kimliği Analizi)
+  │      └──────────────────────────────────────────┐
+  ├──→ Faz 2 (Mimari Tasarım)                       │
+  │      └──→ Faz 3 (BA Doküman) ─────────────────┐ │
+  │             └──→ Faz 4 (UI/UX Tasarım) ◄───────┘ │
+  │                    └──→ Faz 5 (iOS Dönüşüm) ◄────┘
+  │                           │
+  │                           ▼
+  │                    Faz 6 (Geliştirme)
   │                           │
   │                           ▼
   │                    Faz 7 (Test & QA)
@@ -127,11 +141,12 @@ Faz 1 (Web Analiz)
 | Faz | Bağımlı Olduğu Fazlar | Paralel Çalışabilir Mi? |
 |-----|------------------------|-------------------------|
 | Faz 1 | — | — |
-| Faz 2 | Faz 1 | Hayır |
+| Faz 1.5 | Faz 1 | **Evet** — Faz 2 ile paralel çalışabilir |
+| Faz 2 | Faz 1 | **Evet** — Faz 1.5 ile paralel çalışabilir |
 | Faz 3 | Faz 1, Faz 2 | Hayır |
-| Faz 4 | Faz 1, Faz 3 | Hayır |
-| Faz 5 | Faz 3, Faz 4 | Hayır |
-| Faz 6 | Faz 2, Faz 3, Faz 5 | **Evet** — backend-developer, swift-expert, mobile-developer paralel çalışabilir |
+| Faz 4 | Faz 1, Faz 1.5, Faz 3 | Hayır |
+| Faz 5 | Faz 1.5, Faz 3, Faz 4 | Hayır |
+| Faz 6 | Faz 2, Faz 3, Faz 5 | **Evet** — backend-developer, swift-expert paralel çalışabilir |
 | Faz 7 | Faz 6 | **Kısmen** — test-automator ve code-reviewer paralel çalışabilir |
 | Faz 8 | Faz 1-7 (tümü) | **Kısmen** — devops ve documentation paralel çalışabilir |
 

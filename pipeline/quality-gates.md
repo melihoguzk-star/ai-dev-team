@@ -57,6 +57,31 @@ Skor 70 altındaysa geri bildirim raporunu ~/ai-dev-team/docs/quality-feedback-f
 
 ---
 
+### Faz 1.5 Kalite Kapısı: Marka Kimliği Analizi
+
+```
+code-reviewer subagent'ını kullan.
+
+~/ai-dev-team/docs/brand-tokens.json ve ~/ai-dev-team/docs/brand-style-guide.html dosyalarını oku.
+Referans: ~/ai-dev-team/analysis/web-analysis-report.html
+
+KONTROL LİSTESİ:
+□ Renk Paleti: primary, secondary, accent, background, text (primary/secondary/tertiary/inverse), status (success/error/warning/info), border, divider tanımlı mı?
+□ Tipografi: heading_font, body_font, scale (h1–caption) ile size/weight/line_height eksiksiz mi?
+□ Spacing: base unit ve xs–2xl skala tanımlı mı?
+□ Border/Shadow: radius (sm–full) ve shadow (sm/md/lg) değerleri var mı?
+□ iOS Mapping: Font'ların iOS karşılığı, ikon'ların SF Symbols eşleşmesi belirtilmiş mi?
+□ Veri Kaynağı: Renkler CSS'den mi çıkarıldı, yoksa tahmin mi? (tahmini değerler işaretli mi?)
+□ HTML Rehber: brand-style-guide.html renk swatchları, tipografi showcase ve bileşen örneklerini içeriyor mu?
+
+Her kontrol için TAMAM / EKSİK / YETERSİZ belirt.
+100 üzerinden skor ver.
+
+Skor 70 altındaysa geri bildirim raporunu ~/ai-dev-team/docs/quality-feedback-faz-1.5.md olarak kaydet.
+```
+
+---
+
 ### Faz 2 Kalite Kapısı: Mimari Tasarım
 
 ```
@@ -241,6 +266,7 @@ Pipeline tamamlandığında tüm fazların skorlarını şu tablo ile karşıla�
 | Faz | Ad | Skor | Durum |
 |-----|-----|------|-------|
 | 1 | Web Analiz | — | — |
+| 1.5 | Marka Kimliği Analizi | — | — |
 | 2 | Mimari Tasarım | — | — |
 | 3 | BA Doküman | — | — |
 | 4 | UI/UX Tasarım | — | — |

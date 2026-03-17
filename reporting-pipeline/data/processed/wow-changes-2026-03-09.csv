@@ -1,0 +1,8 @@
+week_start,week_end,ios_rating_wow_pct,android_rating_wow_pct,ios_crash_free_user_wow_pct,android_crash_free_user_wow_pct,ios_downloads_wow_pct,android_downloads_wow_pct,ios_active_users_wow_pct,android_active_users_wow_pct,ios_uninstalls_wow_pct,android_uninstalls_wow_pct,android_active_users_flag,android_crash_free_user_flag,android_downloads_flag,android_rating_flag,android_uninstalls_flag,ios_active_users_flag,ios_crash_free_user_flag,ios_downloads_flag,ios_rating_flag,ios_uninstalls_flag
+2026-01-19,2026-01-25,-,-,-,-,-,-,-,-,-,-,none,none,none,warning,none,none,none,none,none,none
+2026-01-26,2026-02-01,-,21.37,-,-,-,-,-,-,-,-,none,none,none,none,none,none,none,none,none,none
+2026-02-02,2026-02-08,-,-31.76,-,-,-,-,-,-,-,-,none,none,none,critical,none,none,none,none,none,none
+2026-02-09,2026-02-15,-,17.05,-,-,-,-,-,-,-,-,none,none,none,warning,none,none,none,none,none,none
+2026-02-16,2026-02-22,-,-42.52,-,-,-,-,-,-,-,-,none,none,none,critical,none,none,none,none,critical,none
+2026-02-23,2026-03-01,27.03,56.85,-,-,-,-,-,-,-,-,none,none,none,critical,none,none,none,none,critical,none
+2026-03-02,2026-03-08,-29.08,-10.92,-,-,-,-,-,-,-,-,none,none,none,critical,none,none,none,none,critical,none

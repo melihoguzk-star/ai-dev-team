@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProteinOcean — Satis Oncesi Analiz Paketi | Loodos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root {
+  --bg:#F8FAFC;--bg-alt:#F1F5F9;--card:#FFFFFF;--primary:#0D9488;--primary-dk:#0F766E;--primary-lt:#CCFBF1;
+  --text:#0F172A;--text-2:#475569;--text-3:#94A3B8;--border:#E2E8F0;
+  --danger:#EF4444;--warning:#F59E0B;--success:#10B981;--info:#3B82F6;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.08);--radius:12px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* TOPBAR */
+.topbar{background:#FFFFFF;border-bottom:1px solid var(--border);padding:14px 40px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-mark{width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;letter-spacing:-0.5px;flex-shrink:0}
+.tb-name{font-size:15px;font-weight:800;color:var(--text)}
+.tb-sub{font-size:11px;color:var(--text-3)}
+.tb-chips{display:flex;gap:6px}
+.chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid}
+.chip-teal{background:#F0FDFA;color:var(--primary);border-color:#99F6E4}
+.chip-blue{background:#EFF6FF;color:#2563EB;border-color:#BFDBFE}
+.chip-slate{background:#F8FAFC;color:#475569;border-color:#CBD5E1}
+
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:48px 40px 80px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#F0FDFA 0%,#FFFFFF 50%,#EFF6FF 100%);border:1px solid #A7F3D0;border-radius:20px;padding:48px;margin-bottom:48px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--primary);background:#F0FDFA;border:1px solid #99F6E4;border-radius:20px;padding:4px 14px;margin-bottom:20px}
+.hero-title{font-size:32px;font-weight:900;color:var(--text);line-height:1.2;margin-bottom:12px}
+.hero-title em{font-style:normal;color:var(--primary)}
+.hero-sub{font-size:15px;color:var(--text-2);max-width:580px;margin:0 auto 20px}
+.hero-meta{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.hero-meta-item{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:5px}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px}
+.stat-card{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);text-align:center}
+.stat-value{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em}
+.c-teal{color:var(--primary)}.c-amber{color:#D97706}.c-blue{color:#2563EB}.c-purple{color:#7C3AED}
+
+/* REPORT CARDS */
+.report-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:48px}
+.report-card{background:#FFFFFF;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);transition:all 0.2s;cursor:pointer;text-decoration:none;display:block}
+.report-card:hover{box-shadow:var(--shadow-md);border-color:#99F6E4;transform:translateY(-2px)}
+.report-card-inner{display:flex;align-items:stretch}
+.report-accent{width:6px;flex-shrink:0}
+.report-body{padding:24px 28px;flex:1;display:flex;align-items:center;gap:20px}
+.report-icon-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.report-content{flex:1}
+.report-num{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.report-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
+.report-desc{font-size:13px;color:var(--text-2);line-height:1.5}
+.report-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.report-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:var(--bg-alt);color:var(--text-2)}
+.report-arrow{display:flex;align-items:center;padding:0 24px;color:var(--text-3);transition:color 0.15s}
+.report-card:hover .report-arrow{color:var(--primary)}
+
+/* FOOTER */
+.footer{text-align:center;padding:32px 0;border-top:1px solid var(--border);margin-top:24px}
+.footer-brand{font-size:14px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.footer-text{font-size:12px;color:var(--text-3)}
+
+/* INFO BOX */
+.info-section{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:32px;box-shadow:var(--shadow-sm)}
+.info-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-item{display:flex;align-items:flex-start;gap:8px}
+.info-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:6px}
+.info-text{font-size:12.5px;color:var(--text-2);line-height:1.5}
+@media print {
+  .sidebar, aside, nav, .sb-nav, .sb-logo, .sb-footer { display: none !important; }
+  .main, main, .content, .main-content { margin-left: 0 !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; max-width: 100% !important; }
+  body { display: block !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-mark">L</div>
+    <div>
+      <div class="tb-name">Loodos</div>
+      <div class="tb-sub">Research OS</div>
+    </div>
+  </div>
+  <div class="tb-chips">
+    <span class="chip chip-teal">Satis Oncesi Analiz</span>
+    <span class="chip chip-slate">Gizli</span>
+    <span class="chip chip-blue">Mart 2026</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">
+      <i data-lucide="shield-check" style="width:12px;height:12px;"></i>
+      Loodos Research OS
+    </div>
+    <h1 class="hero-title">ProteinOcean<br><em>Satis Oncesi Analiz Paketi</em></h1>
+    <p class="hero-sub">Spor beslenme e-ticaret platformu icin kapsamli teknik, rekabet ve stratejik analiz. Native iOS uygulamasina gecis icin temel bulgular ve oneriler.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><i data-lucide="globe" style="width:13px;height:13px;color:#0D9488;"></i> proteinocean.com</div>
+      <div class="hero-meta-item"><i data-lucide="building-2" style="width:13px;height:13px;color:#0D9488;"></i> Hazirlayan: Loodos</div>
+      <div class="hero-meta-item"><i data-lucide="users" style="width:13px;height:13px;color:#0D9488;"></i> Sunan: Melih Oguz</div>
+      <div class="hero-meta-item"><i data-lucide="calendar" style="width:13px;height:13px;color:#0D9488;"></i> Mart 2026</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-value c-teal">3</div>
+      <div class="stat-label">Analiz Raporu</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value c-amber">9</div>
+      <div class="stat-label">Incelenen Rakip</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value c-blue">15</div>
+      <div class="stat-label">Feature Onerisi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value c-purple">7</div>
+      <div class="stat-label">Kritik Bulgu</div>
+    </div>
+  </div>
+
+  <!-- REPORT CARDS -->
+  <div class="report-grid">
+
+    <!-- RAPOR 1 -->
+    <a href="01-engineering-analysis.html" class="report-card">
+      <div class="report-card-inner">
+        <div class="report-accent" style="background:var(--primary);"></div>
+        <div class="report-body">
+          <div class="report-icon-wrap" style="background:#F0FDFA;color:var(--primary);">
+            <i data-lucide="cpu" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="report-content">
+            <div class="report-num">Rapor 01</div>
+            <div class="report-title">Mevcut Mobil Uygulama Engineering Analizi</div>
+            <div class="report-desc">proteinocean.com teknoloji stack tespiti, UX denetimi, performans metrikleri, guclu/zayif yon analizi ve erisilebilirlik degerlendirmesi. Mevcut iOS uygulamasinin detayli incelemesi.</div>
+            <div class="report-tags">
+              <span class="report-tag">ikas Platform</span>
+              <span class="report-tag">Next.js</span>
+              <span class="report-tag">UX Denetimi</span>
+              <span class="report-tag">Performans</span>
+              <span class="report-tag">App Store 3.19/5</span>
+            </div>
+          </div>
+          <div class="report-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- RAPOR 2 -->
+    <a href="02-competitor-analysis.html" class="report-card">
+      <div class="report-card-inner">
+        <div class="report-accent" style="background:#3B82F6;"></div>
+        <div class="report-body">
+          <div class="report-icon-wrap" style="background:#EFF6FF;color:#3B82F6;">
+            <i data-lucide="target" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="report-content">
+            <div class="report-num">Rapor 02</div>
+            <div class="report-title">Rakip Analizi, Benchmark & Feature Roadmap</div>
+            <div class="report-desc">5 Turkiye + 4 global rakip profili, 18 ozellik karsilastirma matrisi, gap analizi ve 3 fazli stratejik feature roadmap onerisi. Supplementler.com, Myprotein, iHerb, GNC ve daha fazlasi.</div>
+            <div class="report-tags">
+              <span class="report-tag">9 Rakip</span>
+              <span class="report-tag">Feature Matrisi</span>
+              <span class="report-tag">Gap Analizi</span>
+              <span class="report-tag">Roadmap</span>
+              <span class="report-tag">7 Kritik Gap</span>
+            </div>
+          </div>
+          <div class="report-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- RAPOR 3 -->
+    <a href="03-industry-expertise.html" class="report-card">
+      <div class="report-card-inner">
+        <div class="report-accent" style="background:#7C3AED;"></div>
+        <div class="report-body">
+          <div class="report-icon-wrap" style="background:#F5F3FF;color:#7C3AED;">
+            <i data-lucide="trending-up" style="width:26px;height:26px;"></i>
+          </div>
+          <div class="report-content">
+            <div class="report-num">Rapor 03</div>
+            <div class="report-title">Sektor Hakimiyeti & Loodos Deger Onerisi</div>
+            <div class="report-desc">Turkiye spor beslenme pazari analizi ($1.2B+), demografik yapi, mevsimsel trendler, sektore ozel zorluklar, buyume firsatlari ve Loodos'un teknik deger onerisi.</div>
+            <div class="report-tags">
+              <span class="report-tag">$1.2B Pazar</span>
+              <span class="report-tag">%20 Buyume</span>
+              <span class="report-tag">B2B Firsatlari</span>
+              <span class="report-tag">Loodos Degeri</span>
+              <span class="report-tag">SwiftUI</span>
+            </div>
+          </div>
+          <div class="report-arrow">
+            <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- OZET -->
+  <div class="info-section">
+    <div class="info-title">
+      <i data-lucide="clipboard-list" style="width:16px;height:16px;color:var(--primary);"></i>
+      Temel Bulgular Ozeti
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>Mevcut uygulama 3.19/5 puan</strong> — sektorun en dusuk puanli uygulamasi. Rakipler 4.5+ seviyesinde. Native gecis zorunlu.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>ikas SaaS platformu</strong> uzerinde calisiyor. API sinirlamalari native app icin ek cozum gerektirebilir.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>7 kritik ozellik gap'i</strong> tespit edildi: Loyalty, abonelik, AI oneri, Apple Pay, quiz, chatbot, affiliate.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>Turkiye pazari $1.2B+</strong> ve yillik %20 buyuyor. Mobil penetrasyon %68. Buyuk firsat penceresi acik.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>Abonelik modeli (ProteinBox)</strong> — Turkiye'de supplement sektorde ilk uygulayan rekabet avantaji kazanir.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-dot"></div>
+        <div class="info-text"><strong>SwiftUI + iOS 17+</strong> ile native uygulama, mevcut deneyimi 5-10x iyilestirecek. Hedef: 4.5+ App Store puani.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">loodos.com</div>
+    <div class="footer-text">Bu dokuman gizlidir. Loodos tarafindan ProteinOcean icin hazirlanmistir. Mart 2026.</div>
+  </div>
+
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

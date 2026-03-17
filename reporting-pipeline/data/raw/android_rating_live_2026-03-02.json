@@ -1,0 +1,122 @@
+{
+  "app_name": "SunExpress",
+  "package_name": "com.sunexpress.lite",
+  "platform": "android",
+  "metric": "rating",
+  "collection_date": "2026-03-13T10:35:37.971668+00:00",
+  "source": "google_play_scraper",
+  "live": true,
+  "general": {
+    "overall": 3.42,
+    "total_count": 557,
+    "version": "1.0.9",
+    "installs": "100.000+"
+  },
+  "period": {
+    "start": "2026-01-12",
+    "end": "2026-03-08",
+    "granularity": "weekly"
+  },
+  "data": [
+    {
+      "week_start": "2026-01-12",
+      "week_end": "2026-01-18",
+      "value": null,
+      "review_count": 4,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-01-19",
+      "week_end": "2026-01-25",
+      "value": null,
+      "review_count": 4,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-01-26",
+      "week_end": "2026-02-01",
+      "value": 3.29,
+      "review_count": 7,
+      "histogram": [
+        3,
+        0,
+        0,
+        0,
+        4
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-02",
+      "week_end": "2026-02-08",
+      "value": 2.2,
+      "review_count": 5,
+      "histogram": [
+        2,
+        2,
+        0,
+        0,
+        1
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-09",
+      "week_end": "2026-02-15",
+      "value": 1.83,
+      "review_count": 6,
+      "histogram": [
+        4,
+        1,
+        0,
+        0,
+        1
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-16",
+      "week_end": "2026-02-22",
+      "value": 1.69,
+      "review_count": 13,
+      "histogram": [
+        10,
+        1,
+        0,
+        0,
+        2
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-23",
+      "week_end": "2026-03-01",
+      "value": 2.61,
+      "review_count": 23,
+      "histogram": [
+        13,
+        1,
+        0,
+        0,
+        9
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-03-02",
+      "week_end": "2026-03-08",
+      "value": 2.43,
+      "review_count": 14,
+      "histogram": [
+        9,
+        0,
+        0,
+        0,
+        5
+      ],
+      "status": "ok"
+    }
+  ]
+}

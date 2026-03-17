@@ -42,3 +42,6 @@ pip-delete-this-directory.txt
 
 # Docker
 .docker/
+worktrees/
+logs/
+reporting-pipeline/keys/

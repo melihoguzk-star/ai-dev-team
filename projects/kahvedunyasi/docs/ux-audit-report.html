@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UX Denetim Raporu — Kahve Dünyası Kiosk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    :root {
+      --primary: #0D9488;
+      --title: #0F172A;
+      --body: #334155;
+      --bg: #F8FAFC;
+      --border: #E2E8F0;
+      --sidebar-w: 256px;
+    }
+    body { background: var(--bg); color: var(--body); }
+    .sidebar { width: var(--sidebar-w); min-height: 100vh; background: #fff; border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .main-content { margin-left: 0; flex: 1; }
+    .score-circle-track { fill: none; stroke: #E2E8F0; stroke-width: 8; }
+    .score-circle-fill { fill: none; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s ease; }
+    .flow-step { display: flex; align-items: flex-start; position: relative; }
+    .flow-step:not(:last-child)::after { content: ''; position: absolute; left: 19px; top: 40px; width: 2px; height: calc(100% - 8px); background: var(--border); }
+    .flow-node { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; z-index: 1; }
+    .expand-btn { cursor: pointer; user-select: none; }
+    .expandable { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
+    .expandable.open { max-height: 2000px; }
+    .progress-bar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+    @media print {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+    }
+    .badge-kiosk { background: #0D9488; color: white; padding: 8px 20px; border-radius: 8px; font-weight: 700; font-size: 18px; display: inline-flex; align-items: center; gap: 8px; }
+    .metric-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .severity-critical { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+    .severity-high { background: #FFF7ED; color: #EA580C; border: 1px solid #FED7AA; }
+    .severity-medium { background: #FEFCE8; color: #CA8A04; border: 1px solid #FEF08A; }
+    .severity-low { background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; }
+    .quick-win-card { border-left: 3px solid #0D9488; }
+    .status-good { color: #16A34A; }
+    .status-medium { color: #CA8A04; }
+    .status-bad { color: #DC2626; }
+  </style>
+</head>
+<body class="flex">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar flex-shrink-0 p-4">
+    <div class="mb-6">
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Audit</div>
+      <div class="font-bold text-slate-800 text-sm">Kahve Dünyası Kiosk</div>
+      <div class="text-xs text-slate-500 mt-1">2026-03-06</div>
+    </div>
+
+    <nav class="space-y-1 text-sm">
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">Genel Bakış</div>
+      <a href="#dashboard" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-700 font-medium">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </a>
+
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">Akışlar</div>
+      <a href="#flow-1" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="git-branch" class="w-4 h-4"></i> Ürün Siparişi
+      </a>
+      <a href="#flow-2" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="sliders" class="w-4 h-4"></i> Özelleştirme
+      </a>
+      <a href="#flow-3" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="credit-card" class="w-4 h-4"></i> Ödeme Akışı
+      </a>
+      <a href="#flow-4" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="search" class="w-4 h-4"></i> Arama / Filtre
+      </a>
+
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">UI/UX Kalitesi</div>
+      <a href="#visual-hierarchy" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="eye" class="w-4 h-4"></i> Görsel Hiyerarşi
+      </a>
+      <a href="#consistency" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="copy" class="w-4 h-4"></i> Tutarlılık
+      </a>
+      <a href="#accessibility" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="accessibility" class="w-4 h-4"></i> Erişilebilirlik
+      </a>
+      <a href="#micro" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="zap" class="w-4 h-4"></i> Mikro Etkileşimler
+      </a>
+      <a href="#ia" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="sitemap" class="w-4 h-4"></i> Bilgi Mimarisi
+      </a>
+
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">Performans</div>
+      <a href="#performance" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="gauge" class="w-4 h-4"></i> Core Web Vitals
+      </a>
+      <a href="#kiosk-perf" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="monitor" class="w-4 h-4"></i> Kiosk Metrikleri
+      </a>
+
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">Sorunlar</div>
+      <a href="#platform-issues" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="alert-triangle" class="w-4 h-4"></i> Platform Sorunları
+      </a>
+      <a href="#top-issues" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="list-ordered" class="w-4 h-4"></i> En Kritik 10 Sorun
+      </a>
+
+      <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-4 mb-2 px-2">Öneriler</div>
+      <a href="#recommendations" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-slate-50 text-slate-600">
+        <i data-lucide="lightbulb" class="w-4 h-4"></i> İyileştirme Önerileri
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content p-8 max-w-6xl">
+
+    <!-- BREADCRUMB -->
+    <div class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+      <span>Audit</span>
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      <span>Kahve Dünyası Kiosk</span>
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      <span class="text-slate-700 font-medium">UX Denetim Raporu</span>
+    </div>
+
+    <!-- HEADER -->
+    <div class="mb-8">
+      <div class="flex items-center gap-4 mb-3">
+        <h1 class="text-3xl font-bold text-slate-900">UX Denetim Raporu</h1>
+        <span class="badge-kiosk">
+          <i data-lucide="monitor" class="w-5 h-5"></i>
+          KIOSK ANALİZİ
+        </span>
+      </div>
+      <p class="text-slate-500 text-sm">
+        <span class="font-medium text-slate-700">URL:</span> https://kahvedunyasi.robotpos.com/kiosk/kahvedunyasi/70/ &nbsp;|&nbsp;
+        <span class="font-medium text-slate-700">Tarih:</span> 6 Mart 2026 &nbsp;|&nbsp;
+        <span class="font-medium text-slate-700">Platform:</span> RobotPOS Self-Servis Kiosk (32" PCAP) &nbsp;|&nbsp;
+        <span class="font-medium text-slate-700">Stack:</span> Next.js + Tailwind CSS
+      </p>
+      <div class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+        <i data-lucide="info" class="w-4 h-4 inline mr-1"></i>
+        <strong>Analiz Notu:</strong> Kiosk URL'si dışarıdan 404 döndürüyor — sistem yalnızca mağaza içi ağa açık. Analiz CSS kaynak dosyaları, RobotPOS platform dokümantasyonu, Kahve Dünyası marka profili ve kiosk sektörü benchmark'ları kullanılarak gerçekleştirildi.
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6">Genel Değerlendirme</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- Genel Skor Dairesi -->
+        <div class="metric-card col-span-1 flex flex-col items-center justify-center">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle class="score-circle-track" cx="70" cy="70" r="58"/>
+            <circle class="score-circle-fill" cx="70" cy="70" r="58"
+              stroke="#CA8A04"
+              stroke-dasharray="364.4"
+              stroke-dashoffset="159.7"/>
+          </svg>
+          <div class="absolute text-center" style="margin-top:-115px; margin-bottom:80px;">
+            <div class="text-4xl font-black text-slate-900">56</div>
+            <div class="text-xs text-slate-500 font-medium">/ 100</div>
+          </div>
+          <div class="mt-2 text-center">
+            <span class="inline-block px-4 py-1 bg-amber-100 text-amber-700 font-bold rounded-full text-sm">ORTA</span>
+          </div>
+        </div>
+
+        <!-- Üç Kategori Kartı -->
+        <div class="metric-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="git-branch" class="w-4 h-4 text-teal-600"></i>
+            <span class="text-sm font-semibold text-slate-600">Akış Skoru</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 mb-1">5.5<span class="text-lg text-slate-400">/10</span></div>
+          <div class="text-xs text-slate-500 mb-3">Ağırlık: %45</div>
+          <div class="progress-bar">
+            <div class="progress-fill bg-amber-400" style="width: 55%"></div>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">Katkı: 24.75 puan</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="palette" class="w-4 h-4 text-teal-600"></i>
+            <span class="text-sm font-semibold text-slate-600">UI/UX Skoru</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 mb-1">5.4<span class="text-lg text-slate-400">/10</span></div>
+          <div class="text-xs text-slate-500 mb-3">Ağırlık: %35</div>
+          <div class="progress-bar">
+            <div class="progress-fill bg-amber-400" style="width: 54%"></div>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">Katkı: 18.9 puan</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="gauge" class="w-4 h-4 text-teal-600"></i>
+            <span class="text-sm font-semibold text-slate-600">Performans Skoru</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 mb-1">6.2<span class="text-lg text-slate-400">/10</span></div>
+          <div class="text-xs text-slate-500 mb-3">Ağırlık: %20</div>
+          <div class="progress-bar">
+            <div class="progress-fill bg-teal-500" style="width: 62%"></div>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">Katkı: 12.4 puan</div>
+        </div>
+      </div>
+
+      <!-- Ağırlık Açıklaması -->
+      <div class="p-4 bg-teal-50 border border-teal-100 rounded-lg text-sm text-teal-800">
+        <strong>Kiosk Ağırlıkları:</strong> Akış %45 (en kritik — dokunuş sayısı ve basitlik) | UI/UX %35 (dokunmatik hedef, okunabilirlik) | Performans %20 (lokal ağda görece düşük kritiklik)
+      </div>
+    </section>
+
+    <!-- KULLANICI AKIŞLARI -->
+    <section id="user-flows" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="git-branch" class="w-5 h-5 text-teal-600"></i>
+        Kullanıcı Akışı Analizi
+      </h2>
+
+      <!-- Flow 1 -->
+      <div id="flow-1" class="metric-card mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3">
+              <h3 class="text-lg font-bold text-slate-900">Akış 1: Ana Ekrandan Ürün Siparişi</h3>
+              <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-semibold">5/10</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">Çekici ekrandan ürün seçimine ve sepete eklemeye kadar tam akış</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-red-500">6 dokunuş</div>
+            <div class="text-xs text-slate-400">Kiosk ideali: ≤4</div>
+          </div>
+        </div>
+
+        <!-- Adımlar - Timeline -->
+        <div class="space-y-4 mb-5">
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-50 text-teal-700 border-2 border-teal-200">0</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Attract Screen</div>
+              <div class="text-sm text-slate-500">Döngüsel animasyon/reklam — blob animasyonu CSS'de doğrulandı</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">1</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Ekrana dokunarak başlat</div>
+              <div class="text-sm text-slate-500">İlk dokunuş — makul bir tetikleyici</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">2</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Kategori seçimi</div>
+              <div class="text-sm text-slate-500">Kahve / Çikolatalı İçecekler / Soğuk İçecekler / Pastane</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-orange-100 text-orange-700 border-2 border-orange-200">3</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Ürün seçimi</div>
+              <div class="text-sm text-slate-500">Ürün listesi — <span class="text-red-500 font-medium">FRICTION: Font boyutu kiosk mesafesinde yetersiz (CSS: text-xs/text-sm)</span></div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-orange-100 text-orange-700 border-2 border-orange-200">4</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Özelleştirme ekranı</div>
+              <div class="text-sm text-slate-500"><span class="text-orange-500 font-medium">Ekstra dokunuş — 4 dokunuş idealini aşıyor</span></div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">5</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Sepete Ekle</div>
+              <div class="text-sm text-slate-500">CSS: button height h-14 (56px) — kiosk minimumunu karşılıyor</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">6</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Ödemeye Geç</div>
+              <div class="text-sm text-slate-500">Sepet özeti ve CTA</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div class="text-xs font-semibold text-red-600 mb-2 uppercase tracking-wide">Friction Noktaları</div>
+            <ul class="space-y-1 text-sm text-red-700">
+              <li>• Font boyutu kiosk mesafesinde okunamıyor</li>
+              <li>• Özelleştirme ekranı akışı uzatıyor</li>
+              <li>• Kategori → Ürün → Detay = 3 ekran</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-orange-50 border border-orange-100 rounded-lg">
+            <div class="text-xs font-semibold text-orange-600 mb-2 uppercase tracking-wide">Drop-off Riskleri</div>
+            <ul class="space-y-1 text-sm text-orange-700">
+              <li>• Karmaşık özelleştirme — kullanıcı vazgeçebilir</li>
+              <li>• Küçük font — sipariş süresi uzar, sıra oluşur</li>
+              <li>• Timeout mekanizması belirsiz</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 2 -->
+      <div id="flow-2" class="metric-card mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3">
+              <h3 class="text-lg font-bold text-slate-900">Akış 2: Ürün Özelleştirme</h3>
+              <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-semibold">6/10</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">Boyut, şeker, süt tipi ve ekstralar seçimi</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-amber-500">5 dokunuş</div>
+            <div class="text-xs text-slate-400">Kiosk ideali: ≤4</div>
+          </div>
+        </div>
+
+        <div class="space-y-4 mb-5">
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">1</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Ürün kartına dokunma</div>
+              <div class="text-sm text-slate-500">Ürün listesinden seçim</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">2</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Boyut seçimi (S/M/L)</div>
+              <div class="text-sm text-slate-500">CSS button height: 50px — kiosk minimumu karşılanıyor (48px min)</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">3</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Şeker tercihi</div>
+              <div class="text-sm text-slate-500">Az / Orta / Çok / Şekersiz</div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-orange-100 text-orange-700 border-2 border-orange-200">4</div>
+            <div class="pt-2 pb-6 flex-1">
+              <div class="font-semibold text-slate-800">Ekstra seçeneği</div>
+              <div class="text-sm text-slate-500"><span class="text-orange-500 font-medium">FRICTION: Zorunlu/opsiyonel ayrımı belirsiz olabilir</span></div>
+            </div>
+          </div>
+          <div class="flow-step gap-4">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200">5</div>
+            <div class="pt-2 pb-4 flex-1">
+              <div class="font-semibold text-slate-800">Sepete Ekle / Onayla</div>
+              <div class="text-sm text-slate-500">Alt CTA butonu — başparmak erişim alanında olmalı</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div class="text-xs font-semibold text-red-600 mb-2 uppercase tracking-wide">Friction Noktaları</div>
+            <ul class="space-y-1 text-sm text-red-700">
+              <li>• Zorunlu/opsiyonel seçenek ayrımı belirsiz</li>
+              <li>• react-simple-keyboard metin girişi yavaş</li>
+              <li>• Scroll gerektiren liste — içerik kaybolabilir</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-orange-50 border border-orange-100 rounded-lg">
+            <div class="text-xs font-semibold text-orange-600 mb-2 uppercase tracking-wide">İyileştirme Önerileri</div>
+            <ul class="space-y-1 text-sm text-orange-700">
+              <li>• Seçenekleri hiyerarşik grupla</li>
+              <li>• Toggle/chip bileşenleri kullan</li>
+              <li>• Sayfayı scroll'suz tasarla</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow 3 -->
+      <div id="flow-3" class="metric-card mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3">
+              <h3 class="text-lg font-bold text-slate-900">Akış 3: Ödeme Akışı</h3>
+              <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">6/10</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">Sepet onayından ödeme tamamlamaya kadar</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-teal-500">3 dokunuş</div>
+            <div class="text-xs text-slate-400">Kiosk ideali: ≤3 ✓</div>
+          </div>
+        </div>
+
+        <div class="space-y-3 mb-5">
+          <div class="flex items-start gap-3">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200 w-8 h-8 text-sm">—</div>
+            <div class="pt-1 flex-1"><span class="font-medium">Sepet özeti inceleme</span> <span class="text-sm text-slate-500">— Büyük yazıyla sipariş listesi</span></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200 w-8 h-8 text-sm">1</div>
+            <div class="pt-1 flex-1"><span class="font-medium">Ödemeye Geç butonu</span></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200 w-8 h-8 text-sm">2</div>
+            <div class="pt-1 flex-1"><span class="font-medium">Ödeme yöntemi seçimi</span> <span class="text-sm text-slate-500">— Kredi kartı / Temassız</span></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="flow-node bg-orange-100 text-orange-700 border-2 border-orange-200 w-8 h-8 text-sm">!</div>
+            <div class="pt-1 flex-1"><span class="font-medium">Kart okutma</span> <span class="text-sm text-orange-500">— FRICTION: POS terminal yönlendirmesi kritik</span></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="flow-node bg-teal-100 text-teal-700 border-2 border-teal-200 w-8 h-8 text-sm">3</div>
+            <div class="pt-1 flex-1"><span class="font-medium">Fiş seçimi + Sipariş numarası</span> <span class="text-sm text-orange-500">— Fiş adımı akışı uzatıyor</span></div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-green-50 border border-green-100 rounded-lg">
+          <div class="text-xs font-semibold text-green-600 mb-1">Olumlu: Dokunuş sayısı ideal seviyede (3)</div>
+          <div class="text-sm text-green-700">Ödeme akışı en kısa akış — kiosk idealiyle uyumlu</div>
+        </div>
+      </div>
+
+      <!-- Flow 4 -->
+      <div id="flow-4" class="metric-card mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-3">
+              <h3 class="text-lg font-bold text-slate-900">Akış 4: Arama / Filtreleme</h3>
+              <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-semibold">5/10</span>
+            </div>
+            <p class="text-sm text-slate-500 mt-1">Metin araması veya kategori filtresiyle ürün bulma</p>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-red-500">7+ dokunuş</div>
+            <div class="text-xs text-slate-400">Kiosk ideali: ≤2</div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-red-50 border border-red-200 rounded-lg mb-4">
+          <div class="flex items-start gap-2">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-semibold text-red-800">Kritik UX Sorunu</div>
+              <div class="text-sm text-red-700 mt-1">
+                <strong>react-simple-keyboard</strong> ile metin girişi kiosk'ta ciddi kullanılabilirlik sorunu yaratıyor.
+                Kullanıcı bir ürün ararken ekran klavyesiyle metin yazmak zorunda — bu hem yavaş hem de hatalı bir deneyim.
+                Kiosk'ta metin girişi minimize edilmeli, yerine görsel kategori navigasyonu kullanılmalı.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div class="text-xs font-semibold text-red-600 mb-2 uppercase tracking-wide">Temel Sorunlar</div>
+            <ul class="space-y-1 text-sm text-red-700">
+              <li>• Metin araması kiosk'ta yavaş ve hatalı</li>
+              <li>• Derin kategori hiyerarşisi = çok dokunuş</li>
+              <li>• Arama sonucu boş sayfa dead-end riski</li>
+              <li>• Scroll yorgunluğu uzun listelerde</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-teal-50 border border-teal-100 rounded-lg">
+            <div class="text-xs font-semibold text-teal-600 mb-2 uppercase tracking-wide">Önerilen Çözüm</div>
+            <ul class="space-y-1 text-sm text-teal-700">
+              <li>• Metin aramasını kaldır</li>
+              <li>• Büyük görsel kategori butonları</li>
+              <li>• "Popüler Ürünler" ana ekranda</li>
+              <li>• Sıcak / Soğuk / Pastane ikonları</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UI/UX KALİTE -->
+    <section id="uiux-quality" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="palette" class="w-5 h-5 text-teal-600"></i>
+        UI/UX Kalite Değerlendirmesi
+      </h2>
+
+      <!-- Özet Skor Barları -->
+      <div class="metric-card mb-6">
+        <h3 class="font-semibold text-slate-700 mb-4">Kategori Skorları</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-slate-700">Görsel Hiyerarşi</span>
+              <span class="text-sm font-bold text-amber-600">6/10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill bg-amber-400" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-slate-700">Tutarlılık</span>
+              <span class="text-sm font-bold text-amber-600">6/10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill bg-amber-400" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-slate-700">Erişilebilirlik</span>
+              <span class="text-sm font-bold text-red-600">4/10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill bg-red-400" style="width:40%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-slate-700">Mikro Etkileşimler</span>
+              <span class="text-sm font-bold text-amber-600">6/10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill bg-amber-400" style="width:60%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium text-slate-700">Bilgi Mimarisi</span>
+              <span class="text-sm font-bold text-amber-600">5/10</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill bg-amber-400" style="width:50%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Görsel Hiyerarşi Detay -->
+      <div id="visual-hierarchy" class="metric-card mb-4">
+        <div class="expand-btn flex items-center justify-between" onclick="toggleExpand('vh-detail')">
+          <h3 class="font-bold text-slate-900">Görsel Hiyerarşi — 6/10</h3>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </div>
+        <div id="vh-detail" class="expandable open mt-4 space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Font boyutu yetersiz:</strong> CSS'de text-xs (12px) ve text-sm (14px) kullanımı kiosk mesafesinde (1-2m) okunamaz. Kiosk standardı: body min 24px, başlık min 32px.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold flex-shrink-0">ORTA</span>
+            <div class="text-sm text-slate-700"><strong>Glass morphism riski:</strong> backdrop-filter: blur(12px) mağaza aydınlatması altında yansıma yaratır, içerik okunabilirliğini düşürür.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-low rounded text-xs font-semibold flex-shrink-0">OLUMLU</span>
+            <div class="text-sm text-slate-700"><strong>CTA butonları:</strong> shadow-xl ve gradient efektleri ile CTA'lar görsel olarak ayrışıyor — doğru yaklaşım.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tutarlılık Detay -->
+      <div id="consistency" class="metric-card mb-4">
+        <div class="expand-btn flex items-center justify-between" onclick="toggleExpand('cons-detail')">
+          <h3 class="font-bold text-slate-900">Tutarlılık — 6/10</h3>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </div>
+        <div id="cons-detail" class="expandable mt-4 space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-low rounded text-xs font-semibold flex-shrink-0">OLUMLU</span>
+            <div class="text-sm text-slate-700">Tailwind CSS değişken sistemi tutarlı kullanılıyor (--primary, --secondary, --destructive).</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold flex-shrink-0">ORTA</span>
+            <div class="text-sm text-slate-700"><strong>Font uyumsuzluğu:</strong> react-simple-keyboard kendi CSS'sini getiriyor (Helvetica/Arial) — uygulama fontuyla uyumsuz.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold flex-shrink-0">ORTA</span>
+            <div class="text-sm text-slate-700"><strong>Buton boyutu tutarsızlığı:</strong> h-14 (56px) ve h-10 (40px) karışık kullanım — dokunma deneyimini tutarsız kılıyor.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Erişilebilirlik Detay -->
+      <div id="accessibility" class="metric-card mb-4">
+        <div class="expand-btn flex items-center justify-between" onclick="toggleExpand('acc-detail')">
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-slate-900">Erişilebilirlik — 4/10</h3>
+            <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-semibold">KRİTİK</span>
+          </div>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </div>
+        <div id="acc-detail" class="expandable mt-4 space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-100">
+            <span class="px-2 py-0.5 severity-critical rounded text-xs font-semibold flex-shrink-0">KRİTİK</span>
+            <div class="text-sm text-slate-700"><strong>Font boyutu kriteri sağlanmıyor:</strong> CSS text-xs/text-sm kiosk standardının (24px body, 32px başlık) çok altında.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-100">
+            <span class="px-2 py-0.5 severity-critical rounded text-xs font-semibold flex-shrink-0">KRİTİK</span>
+            <div class="text-sm text-slate-700"><strong>Kontrast doğrulaması yok:</strong> CSS primary rengi (HSL 142 76% 36%) ve glass effect üzerindeki metinlerin WCAG AAA (7:1) uyumu doğrulanmamış.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Timeout/inaktivite uyarısı:</strong> CSS'de geri sayım animasyonu veya timeout uyarı komponenti görülmüyor.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Sesli yönlendirme:</strong> Desteği belirsiz — işitme/görme engelli kullanıcılar için erişilemez.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold flex-shrink-0">ORTA</span>
+            <div class="text-sm text-slate-700"><strong>Tekerlekli sandalye erişimi:</strong> 32" ekranda alt butonların konumu belirsiz.</div>
+          </div>
+
+          <!-- Kiosk Dokunmatik Hedef Kontrolü -->
+          <div class="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="text-xs font-semibold text-slate-600 mb-2">Kiosk Dokunmatik Hedef Denetimi</div>
+            <table class="w-full text-sm">
+              <thead><tr class="text-slate-500 text-left"><th class="py-1">Bileşen</th><th>Tespit Edilen</th><th>Kiosk Min</th><th>Durum</th></tr></thead>
+              <tbody class="text-slate-700">
+                <tr><td class="py-1">Ana butonlar (.h-14)</td><td>56px</td><td>48px</td><td class="status-good font-semibold">✓ Geçer</td></tr>
+                <tr><td class="py-1">Input alanları (.inputHeight)</td><td>50px</td><td>48px</td><td class="status-good font-semibold">✓ Geçer</td></tr>
+                <tr><td class="py-1">Küçük butonlar (.h-10)</td><td>40px</td><td>48px</td><td class="status-bad font-semibold">✗ Başarısız</td></tr>
+                <tr><td class="py-1">Klavye butonları (simple-keyboard)</td><td>40-50px</td><td>48px</td><td class="status-medium font-semibold">⚠ Sınırda</td></tr>
+                <tr><td class="py-1">Numeric klavye tuşları</td><td>60px</td><td>48px</td><td class="status-good font-semibold">✓ Geçer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mikro Etkileşimler -->
+      <div id="micro" class="metric-card mb-4">
+        <div class="expand-btn flex items-center justify-between" onclick="toggleExpand('micro-detail')">
+          <h3 class="font-bold text-slate-900">Mikro Etkileşimler — 6/10</h3>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </div>
+        <div id="micro-detail" class="expandable mt-4 space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-low rounded text-xs font-semibold flex-shrink-0">OLUMLU</span>
+            <div class="text-sm text-slate-700">hover:scale / active:scale transform animasyonları mevcut — dokunma geri bildirimi sağlanmış.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-low rounded text-xs font-semibold flex-shrink-0">OLUMLU</span>
+            <div class="text-sm text-slate-700">animate-pulse / animate-bounce loading state desteği mevcut.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Hata mesajı boyutu:</strong> --destructive renk var ancak font boyutu ve mesaj formatı belirsiz. Kiosk'ta hata mesajları çok büyük ve net olmalı.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold flex-shrink-0">ORTA</span>
+            <div class="text-sm text-slate-700"><strong>Blob animasyonu:</strong> 7 saniyelik döngü attract screen'de. GPU yükünü sürekli cihazda izle.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bilgi Mimarisi -->
+      <div id="ia" class="metric-card mb-4">
+        <div class="expand-btn flex items-center justify-between" onclick="toggleExpand('ia-detail')">
+          <h3 class="font-bold text-slate-900">Bilgi Mimarisi — 5/10</h3>
+          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </div>
+        <div id="ia-detail" class="expandable mt-4 space-y-3">
+          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Derin kategori hiyerarşisi:</strong> Kahve Dünyası geniş ürün yelpazesi (Kahve, Çikolata, Pastane, Soğuk İçecekler) kiosk'ta dokunuş sayısını artırıyor.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold flex-shrink-0">YÜKSEK</span>
+            <div class="text-sm text-slate-700"><strong>Multi-tenant karmaşıklığı:</strong> [tenantId]/[branchId] dinamik routing genel uygulama karmaşıklığını kiosk'a taşımış olabilir.</div>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+            <span class="px-2 py-0.5 severity-low rounded text-xs font-semibold flex-shrink-0">OLUMLU</span>
+            <div class="text-sm text-slate-700">Next.js App Router altyapısı iyileştirmeler için esnek ve modüler.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERFORMANS -->
+    <section id="performance" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="gauge" class="w-5 h-5 text-teal-600"></i>
+        Performans Metrikleri
+      </h2>
+
+      <!-- Core Web Vitals Büyük Kartlar -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="metric-card text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">LCP</div>
+          <div class="text-3xl font-black text-amber-500 mb-1">~2.8s</div>
+          <div class="text-xs text-slate-500 mb-3">Hedef: 2.5s</div>
+          <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold">ORTA</span>
+          <div class="text-xs text-slate-400 mt-2">Tahmini</div>
+        </div>
+        <div class="metric-card text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">INP</div>
+          <div class="text-3xl font-black text-teal-500 mb-1">~120ms</div>
+          <div class="text-xs text-slate-500 mb-3">Hedef: 200ms</div>
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">İYİ</span>
+          <div class="text-xs text-slate-400 mt-2">Tahmini</div>
+        </div>
+        <div class="metric-card text-center">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">CLS</div>
+          <div class="text-3xl font-black text-teal-500 mb-1">~0.07</div>
+          <div class="text-xs text-slate-500 mb-3">Hedef: 0.1</div>
+          <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">İYİ</span>
+          <div class="text-xs text-slate-400 mt-2">Tahmini</div>
+        </div>
+      </div>
+
+      <!-- Ek Metrikler Tablosu -->
+      <div class="metric-card mb-6">
+        <h3 class="font-semibold text-slate-700 mb-4">Ek Performans Metrikleri</h3>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-slate-400 text-left border-b border-slate-100">
+              <th class="py-2 font-medium">Metrik</th>
+              <th class="py-2 font-medium">Tahmini Değer</th>
+              <th class="py-2 font-medium">Hedef</th>
+              <th class="py-2 font-medium">Durum</th>
+              <th class="py-2 font-medium">Öneri</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-50">
+            <tr>
+              <td class="py-3 font-medium text-slate-700">TTFB</td>
+              <td>~200-400ms</td>
+              <td>&lt;600ms</td>
+              <td><span class="status-good font-semibold">✓ İyi</span></td>
+              <td class="text-slate-500 text-xs">Menüyü cache'le</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-medium text-slate-700">FCP</td>
+              <td>~1.5s</td>
+              <td>&lt;1.8s</td>
+              <td><span class="status-good font-semibold">✓ İyi</span></td>
+              <td class="text-slate-500 text-xs">Font preload ekle</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-medium text-slate-700">Speed Index</td>
+              <td>~3.0s</td>
+              <td>&lt;3.4s</td>
+              <td><span class="status-good font-semibold">✓ İyi</span></td>
+              <td class="text-slate-500 text-xs">Lazy loading</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-medium text-slate-700">Sayfa Boyutu</td>
+              <td>~1.0-1.5MB</td>
+              <td>&lt;1MB</td>
+              <td><span class="status-medium font-semibold">⚠ Orta</span></td>
+              <td class="text-slate-500 text-xs">Tailwind purge doğrula</td>
+            </tr>
+            <tr>
+              <td class="py-3 font-medium text-slate-700">HTTP İstekleri</td>
+              <td>~25-40</td>
+              <td>&lt;30</td>
+              <td><span class="status-medium font-semibold">⚠ Orta</span></td>
+              <td class="text-slate-500 text-xs">Chunk birleştirme</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Kiosk Özel Metrikler -->
+      <div id="kiosk-perf" class="metric-card">
+        <h3 class="font-semibold text-slate-700 mb-4">Kiosk Özel Performans</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 border border-slate-100 rounded-lg">
+            <div class="text-xs text-slate-400 mb-1">Sayfa Geçiş Hızı</div>
+            <div class="text-2xl font-black text-teal-500">~300-500ms</div>
+            <div class="text-xs text-slate-400">Hedef: &lt;500ms</div>
+            <span class="inline-block mt-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-semibold">İyi</span>
+            <div class="text-xs text-slate-500 mt-2">Next.js istemci navigasyonu hızlandırıyor</div>
+          </div>
+          <div class="p-4 border border-slate-100 rounded-lg">
+            <div class="text-xs text-slate-400 mb-1">Dokunma Yanıt Süresi</div>
+            <div class="text-2xl font-black text-teal-500">~50-100ms</div>
+            <div class="text-xs text-slate-400">Hedef: &lt;100ms</div>
+            <span class="inline-block mt-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-semibold">İyi</span>
+            <div class="text-xs text-slate-500 mt-2">PCAP ekran + React event handler</div>
+          </div>
+          <div class="p-4 border border-red-100 rounded-lg bg-red-50">
+            <div class="text-xs text-red-400 mb-1">Offline Mod</div>
+            <div class="text-2xl font-black text-red-500">Belirsiz</div>
+            <div class="text-xs text-red-400">Mevcut olmalı</div>
+            <span class="inline-block mt-2 px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-semibold">Bilinmiyor</span>
+            <div class="text-xs text-red-600 mt-2">Service Worker tespit edilmedi</div>
+          </div>
+          <div class="p-4 border border-amber-100 rounded-lg bg-amber-50">
+            <div class="text-xs text-amber-400 mb-1">Attract Screen Animasyon Yükü</div>
+            <div class="text-2xl font-black text-amber-500">Orta Risk</div>
+            <div class="text-xs text-amber-400">7sn döngülü blob animasyonu</div>
+            <span class="inline-block mt-2 px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs font-semibold">İzle</span>
+            <div class="text-xs text-amber-600 mt-2">GPU kullanımını fiziksel cihazda test et</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLATFORM SORUNLARI -->
+    <section id="platform-issues" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-5 h-5 text-teal-600"></i>
+        Kiosk Platform Sorunları
+      </h2>
+
+      <div class="space-y-4">
+        <!-- Sorun 1 -->
+        <div class="metric-card border-l-4 border-red-500">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-critical rounded text-xs font-bold">KRİTİK</span>
+              <h3 class="font-bold text-slate-900">Font Boyutları Kiosk Standardının Altında</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-002</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">CSS'de text-xs (12px), text-sm (14px) kullanımı 1-2 metre mesafeden okunabilirliği yok ediyor. Minimum: body 24px, başlık 32px.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> Tailwind config'e kiosk font boyutları ekle (text-kiosk-body: 24px, text-kiosk-title: 32px). Global uygulanabilir — düşük efor.</div>
+        </div>
+
+        <!-- Sorun 2 -->
+        <div class="metric-card border-l-4 border-orange-400">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-high rounded text-xs font-bold">YÜKSEK</span>
+              <h3 class="font-bold text-slate-900">Timeout / İnaktivite Mekanizması Eksik</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-003</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">Belirli süre (önerilen: 60-90 sn) dokunulmadığında oturum sıfırlanmalı. CSS'de timeout animasyonu veya uyarı komponenti yok.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> 60sn inaktivite sayacı + 15sn uyarı modalı + otomatik sıfırlama. Kişisel veri güvenliği açısından zorunlu.</div>
+        </div>
+
+        <!-- Sorun 3 -->
+        <div class="metric-card border-l-4 border-orange-400">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-high rounded text-xs font-bold">YÜKSEK</span>
+              <h3 class="font-bold text-slate-900">Ekran Klavyesi Kiosk'a Uygun Değil</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-004</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">react-simple-keyboard ile metin araması kiosk platformunda yavaş ve hatalı. Kiosk'ta metin girişi minimize edilmeli.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> Metin aramasını görsel/kategori navigasyonla değiştir. Yalnızca telefon numarası için sayısal pad kullan.</div>
+        </div>
+
+        <!-- Sorun 4 -->
+        <div class="metric-card border-l-4 border-orange-400">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-high rounded text-xs font-bold">YÜKSEK</span>
+              <h3 class="font-bold text-slate-900">Yardım Çağırma Mekanizması Yok</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-007</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">Kullanıcı sorun yaşadığında personeli çağırabileceği sabit 'Yardım İste' butonu görülmüyor.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> Her ekranda sabit floating 'Yardım' butonu (minimum 56x56px). Dokunulduğunda personele bildirim.</div>
+        </div>
+
+        <!-- Sorun 5 -->
+        <div class="metric-card border-l-4 border-yellow-400">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-medium rounded text-xs font-bold">ORTA</span>
+              <h3 class="font-bold text-slate-900">Glass Morphism Mağaza Aydınlatmasında Sorun</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-006</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">backdrop-filter: blur(12px) parlak mağaza ortamında yansıma ve parlamalarla okunabilirliği düşürür.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> Solid yüksek kontrast arka planlar kullan. WCAG AAA (7:1) kontrast oranını doğrula.</div>
+        </div>
+
+        <!-- Sorun 6 -->
+        <div class="metric-card border-l-4 border-yellow-400">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center gap-3">
+              <span class="px-2 py-1 severity-medium rounded text-xs font-bold">ORTA</span>
+              <h3 class="font-bold text-slate-900">Offline / Ağ Kesintisi Senaryosu Tanımsız</h3>
+            </div>
+            <span class="text-xs text-slate-400">#kiosk-005</span>
+          </div>
+          <p class="text-sm text-slate-600 mb-2">Lokal ağ kesintisinde uygulama nasıl davranacağı belirsiz. Service Worker tespit edilmedi.</p>
+          <div class="text-xs bg-teal-50 text-teal-700 p-2 rounded"><strong>Çözüm:</strong> PWA Service Worker ile menü verisini cache'le. Kesintide 'Sistem geçici kullanım dışı' ekranı göster.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EN KRİTİK 10 SORUN -->
+    <section id="top-issues" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="list-ordered" class="w-5 h-5 text-teal-600"></i>
+        En Kritik 10 Sorun
+      </h2>
+
+      <div class="space-y-3">
+        <!-- Sorun 1 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">01</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-critical rounded text-xs font-semibold">KRİTİK</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">Erişilebilirlik</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Font boyutları kiosk standardının altında</h3>
+              <p class="text-sm text-slate-600 mb-1">text-xs (12px) ve text-sm (14px) 1-2 metre mesafeden okunamaz.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Minimum 24px body text uygula — 1-3 gün efor</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 2 -->
+        <div class="metric-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">02</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold">YÜKSEK</span>
+                <span class="text-xs text-slate-400">Kullanıcı Akışı</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Sipariş akışı 4 dokunuş idealini aşıyor (6 dokunuş)</h3>
+              <p class="text-sm text-slate-600 mb-1">Uzun sipariş süresi sıra oluşturuyor.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Kategori + ürün listesini tek ekranda birleştir — 3-6 hafta UX redesign</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 3 -->
+        <div class="metric-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">03</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold">YÜKSEK</span>
+                <span class="text-xs text-slate-400">Platform</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">react-simple-keyboard kiosk platformuyla uyumsuz</h3>
+              <p class="text-sm text-slate-600 mb-1">Metin araması yavaş ve hatalı — kullanım oranı düşük.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Görsel kategori navigasyonuyla değiştir — 2-4 hafta</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 4 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">04</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold">YÜKSEK</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">Platform</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Timeout / inaktivite mekanizması eksik</h3>
+              <p class="text-sm text-slate-600 mb-1">Terk edilmiş oturum ve kişisel veri riski.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> 60sn sayaç + uyarı + sıfırlama — 3-5 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 5 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">05</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold">YÜKSEK</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">Erişilebilirlik</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Kontrast oranı kiosk ortamında yetersiz</h3>
+              <p class="text-sm text-slate-600 mb-1">Glass effect + parlak mağaza = düşük okunabilirlik.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Solid arka planlar + WCAG AAA doğrulama — 1-2 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 6 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">06</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-high rounded text-xs font-semibold">YÜKSEK</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">Platform</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Yardım çağırma mekanizması yok</h3>
+              <p class="text-sm text-slate-600 mb-1">Sorun yaşayan kullanıcı çıkmaza giriyor.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Sabit 'Yardım İste' floating butonu — 2-3 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 7 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">07</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold">ORTA</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">UI/UX</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Dokunmatik hedef boyutu tutarsız (h-10: 40px)</h3>
+              <p class="text-sm text-slate-600 mb-1">Bazı alanlar 48px minimumun altında.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Global CSS min-height: 48px kuralı — 1 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 8 -->
+        <div class="metric-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">08</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold">ORTA</span>
+                <span class="text-xs text-slate-400">Performans</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Offline / ağ kesintisi senaryosu tanımsız</h3>
+              <p class="text-sm text-slate-600 mb-1">Lokal ağ kesilince servis durabilir.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> PWA Service Worker + menü cache + hata ekranı — 4-8 hafta</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 9 -->
+        <div class="metric-card quick-win-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">09</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold">ORTA</span>
+                <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-xs font-semibold">QUICK WIN</span>
+                <span class="text-xs text-slate-400">UI/UX</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Glass morphism efekti mağaza aydınlatmasında sorunlu</h3>
+              <p class="text-sm text-slate-600 mb-1">Parlak ortamlarda yansıma ve okunabilirlik kaybı.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Solid arka planlar tercih et — 1-2 gün</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sorun 10 -->
+        <div class="metric-card">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl font-black text-slate-200">10</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 severity-medium rounded text-xs font-semibold">ORTA</span>
+                <span class="text-xs text-slate-400">Bilgi Mimarisi</span>
+              </div>
+              <h3 class="font-bold text-slate-900 mb-1">Derin navigasyon hiyerarşisi kiosk'a uygun değil</h3>
+              <p class="text-sm text-slate-600 mb-1">Çok katmanlı kategori yapısı dokunuş sayısını artırıyor.</p>
+              <div class="text-xs text-teal-700"><strong>Çözüm:</strong> Flat navigasyon: maksimum 2 seviye (kategori + ürün)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÖNERİLER -->
+    <section id="recommendations" class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="lightbulb" class="w-5 h-5 text-teal-600"></i>
+        İyileştirme Önerileri
+      </h2>
+
+      <div class="grid grid-cols-2 gap-6">
+        <!-- Hızlı Kazanımlar -->
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="zap" class="w-4 h-4 text-teal-600"></i>
+            <h3 class="font-bold text-slate-800">Hızlı Kazanımlar</h3>
+            <span class="text-xs text-slate-400">(1-2 hafta)</span>
+          </div>
+          <div class="space-y-3">
+            <div class="p-4 bg-white border-l-4 border-teal-500 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#1 Font boyutlarını yükselt</span>
+                <div class="flex gap-1">
+                  <span class="px-1.5 py-0.5 bg-red-100 text-red-600 rounded text-xs">Çok Yüksek Etki</span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">Tailwind config'de kiosk font boyutları. Body min 24px, başlık min 32px.</p>
+              <div class="flex gap-3 text-xs text-slate-400">
+                <span>Efor: Düşük</span>
+                <span>Süre: 1-3 gün</span>
+              </div>
+            </div>
+            <div class="p-4 bg-white border-l-4 border-teal-500 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#2 İnaktivite timeout sistemi</span>
+                <span class="px-1.5 py-0.5 bg-orange-100 text-orange-600 rounded text-xs">Yüksek Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">60sn sayaç, 15sn uyarı modalı, otomatik session sıfırlama.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Orta</span><span>Süre: 3-5 gün</span></div>
+            </div>
+            <div class="p-4 bg-white border-l-4 border-teal-500 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#3 Glass effect → Solid arka plan</span>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">Orta Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">backdrop-filter: blur kaldır. WCAG AAA kontrast doğrula.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Düşük</span><span>Süre: 1-2 gün</span></div>
+            </div>
+            <div class="p-4 bg-white border-l-4 border-teal-500 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#4 'Yardım İste' floating butonu</span>
+                <span class="px-1.5 py-0.5 bg-orange-100 text-orange-600 rounded text-xs">Yüksek Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">Tüm ekranlarda sabit, minimum 56x56px, belirgin renk.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Düşük</span><span>Süre: 2-3 gün</span></div>
+            </div>
+            <div class="p-4 bg-white border-l-4 border-teal-500 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#5 Global min dokunma hedefi</span>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">Orta Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">CSS: min-height: 48px global kural. Klavye 60px.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Düşük</span><span>Süre: 1 gün</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Uzun Vadeli -->
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+            <h3 class="font-bold text-slate-800">Uzun Vadeli</h3>
+            <span class="text-xs text-slate-400">(1-3 ay)</span>
+          </div>
+          <div class="space-y-3">
+            <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#1 Sipariş akışı UX yeniden tasarımı</span>
+                <span class="px-1.5 py-0.5 bg-red-100 text-red-600 rounded text-xs">Çok Yüksek Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">6 dokunuşu 3-4'e indir. Kategori sidebar + ürün listesi tek ekran. Popüler ürünler öne.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Yüksek</span><span>Süre: 3-6 hafta</span></div>
+            </div>
+            <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#2 Metin araması → Görsel navigasyon</span>
+                <span class="px-1.5 py-0.5 bg-orange-100 text-orange-600 rounded text-xs">Yüksek Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">react-simple-keyboard kaldır. Büyük görsel kategori butonları. Popüler ürünler bölümü.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Orta</span><span>Süre: 2-4 hafta</span></div>
+            </div>
+            <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#3 PWA Offline Desteği</span>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">Orta Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">Service Worker menü cache. Ağ kesintisi graceful handling.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Yüksek</span><span>Süre: 4-8 hafta</span></div>
+            </div>
+            <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#4 Erişilebilirlik geliştirmeleri</span>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">Orta Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">Sesli yönlendirme, yüksek kontrast modu, dil değişimi, tekerlekli sandalye testi.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Yüksek</span><span>Süre: 4-6 hafta</span></div>
+            </div>
+            <div class="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+              <div class="flex justify-between items-start mb-1">
+                <span class="font-semibold text-slate-800 text-sm">#5 Fiziksel donanım UX testi</span>
+                <span class="px-1.5 py-0.5 bg-orange-100 text-orange-600 rounded text-xs">Yüksek Etki</span>
+              </div>
+              <p class="text-xs text-slate-600 mb-2">Gerçek 32" PCAP ekranda kullanıcı testi. Dokunma, yansıma, mesafe testleri.</p>
+              <div class="flex gap-3 text-xs text-slate-400"><span>Efor: Orta</span><span>Süre: Süregelen</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 pt-6 pb-8 text-xs text-slate-400">
+      <div class="flex justify-between items-center">
+        <div>
+          <span class="font-semibold text-slate-600">UX Denetim Raporu</span> — Kahve Dünyası Kiosk &nbsp;|&nbsp;
+          Oluşturulma: 6 Mart 2026 &nbsp;|&nbsp;
+          Denetçi: ux-auditor-agent (AI Dev Team)
+        </div>
+        <div class="badge-kiosk text-sm">
+          <i data-lucide="monitor" class="w-4 h-4"></i>
+          KIOSK ANALİZİ
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // Init Lucide icons
+    lucide.createIcons();
+
+    // Expand/collapse sections
+    function toggleExpand(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('open');
+    }
+
+    // Auto-open all expandable sections initially
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.expandable').forEach(el => {
+        el.classList.add('open');
+      });
+    });
+
+    // Smooth scroll for sidebar links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+{
+  "app": {
+    "name": "SunExpress Sun Mobile",
+    "ios": {
+      "bundle_id": "com.sunexpress.mobile",
+      "app_store_id": "REPLACE_WITH_APP_ID",
+      "provider_id": "REPLACE_WITH_PROVIDER_ID"
+    },
+    "android": {
+      "package_name": "com.sunexpress.mobile",
+      "project_id": "REPLACE_WITH_FIREBASE_PROJECT_ID"
+    }
+  },
+  "metrics": [
+    {
+      "id": "app_rating",
+      "name": "App Rating",
+      "description": "Ortalama kullanıcı puanı (1-5 arası)",
+      "unit": "score",
+      "decimal_places": 1,
+      "valid_range": { "min": 1.0, "max": 5.0 },
+      "sources": {
+        "ios": {
+          "api": "app_store_connect",
+          "endpoint": "/v1/apps/{app_id}/customerReviews",
+          "aggregation": "weighted_average"
+        },
+        "android": {
+          "api": "google_play_console",
+          "endpoint": "reviews.list",
+          "aggregation": "weighted_average"
+        }
+      }
+    },
+    {
+      "id": "crash_free_user",
+      "name": "Crash Free User",
+      "description": "Crash yaşamayan kullanıcı oranı (%)",
+      "unit": "percentage",
+      "decimal_places": 2,
+      "valid_range": { "min": 90.0, "max": 100.0 },
+      "sources": {
+        "ios": {
+          "api": "firebase_crashlytics",
+          "calculation": "(total_sessions - crash_sessions) / total_sessions * 100"
+        },
+        "android": {
+          "api": "firebase_crashlytics",
+          "calculation": "(total_sessions - crash_sessions) / total_sessions * 100"
+        }
+      }
+    },
+    {
+      "id": "weekly_downloads",
+      "name": "Download (Weekly)",
+      "description": "Haftalık toplam indirme sayısı",
+      "unit": "count",
+      "decimal_places": 0,
+      "display_format": "K",
+      "valid_range": { "min": 0, "max": 500000 },
+      "sources": {
+        "ios": {
+          "api": "app_store_connect",
+          "endpoint": "/v1/apps/{app_id}/analyticsReportRequests",
+          "metric_type": "installs"
+        },
+        "android": {
+          "api": "google_play_console",
+          "endpoint": "stats.getInstalls",
+          "metric_type": "newDeviceInstalls"
+        }
+      }
+    },
+    {
+      "id": "weekly_active_users",
+      "name": "Active User (Weekly)",
+      "description": "Haftalık aktif kullanıcı sayısı",
+      "unit": "count",
+      "decimal_places": 0,
+      "display_format": "K",
+      "valid_range": { "min": 0, "max": 5000000 },
+      "sources": {
+        "ios": {
+          "api": "app_store_connect",
+          "endpoint": "/v1/apps/{app_id}/analyticsReportRequests",
+          "metric_type": "activeDevices"
+        },
+        "android": {
+          "api": "google_play_console",
+          "endpoint": "stats.getActiveUsers",
+          "metric_type": "activeDevices7Day"
+        }
+      }
+    },
+    {
+      "id": "weekly_uninstalls",
+      "name": "Uninstall Count (Weekly)",
+      "description": "Haftalık uygulama silme sayısı",
+      "unit": "count",
+      "decimal_places": 0,
+      "display_format": "K",
+      "valid_range": { "min": 0, "max": 100000 },
+      "sources": {
+        "ios": {
+          "api": "app_store_connect",
+          "endpoint": "/v1/apps/{app_id}/analyticsReportRequests",
+          "metric_type": "uninstalls"
+        },
+        "android": {
+          "api": "google_play_console",
+          "endpoint": "stats.getUninstalls",
+          "metric_type": "dailyDeviceUninstalls"
+        }
+      }
+    }
+  ],
+  "collection": {
+    "window_weeks": 7,
+    "week_start_day": "monday",
+    "timezone": "Europe/Istanbul",
+    "data_delay_hours": {
+      "app_store_connect": 24,
+      "google_play_console": 48,
+      "firebase_crashlytics": 3
+    }
+  },
+  "display": {
+    "thousands_suffix": "K",
+    "percentage_symbol": "%",
+    "date_format": "DD MMM",
+    "date_range_format": "DD MMM - DD MMM"
+  }
+}

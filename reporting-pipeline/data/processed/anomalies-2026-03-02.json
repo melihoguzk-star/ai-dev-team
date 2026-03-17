@@ -1,0 +1,113 @@
+{
+  "week": "2026-03-02",
+  "generated_at": "2026-03-13T10:09:16.237617",
+  "total_anomalies": 4,
+  "critical_count": 3,
+  "warning_count": 1,
+  "anomalies": [
+    {
+      "column": "ios_rating",
+      "platform": "ios",
+      "metric": "rating",
+      "metric_label": "App Rating",
+      "series_mean": 2.9,
+      "series_std": 0.1291,
+      "last_z_score": -0.7746,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-02-16",
+          "value": 2.8,
+          "wow_pct": -6.67,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-23",
+          "value": 2.7,
+          "wow_pct": -3.57,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-03-02",
+          "value": 2.8,
+          "wow_pct": 3.7,
+          "flag": "warning",
+          "method": "threshold"
+        }
+      ]
+    },
+    {
+      "column": "android_rating",
+      "platform": "android",
+      "metric": "rating",
+      "metric_label": "App Rating",
+      "series_mean": 3.4514,
+      "series_std": 0.1719,
+      "last_z_score": -0.8809,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-02-16",
+          "value": 3.4,
+          "wow_pct": -6.34,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-23",
+          "value": 3.2,
+          "wow_pct": -5.88,
+          "flag": "critical",
+          "method": "threshold"
+        }
+      ]
+    },
+    {
+      "column": "ios_uninstalls",
+      "platform": "ios",
+      "metric": "uninstalls",
+      "metric_label": "Uninstalls",
+      "series_mean": 2007.1429,
+      "series_std": 385.0417,
+      "last_z_score": 0.7086,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-01-26",
+          "value": 2000.0,
+          "wow_pct": 45.99,
+          "flag": "warning",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-16",
+          "value": 2370.0,
+          "wow_pct": 32.4,
+          "flag": "warning",
+          "method": "threshold"
+        }
+      ]
+    },
+    {
+      "column": "android_uninstalls",
+      "platform": "android",
+      "metric": "uninstalls",
+      "metric_label": "Uninstalls",
+      "series_mean": 3857.1429,
+      "series_std": 720.78,
+      "last_z_score": 0.1982,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-01-26",
+          "value": 5300.0,
+          "wow_pct": 76.67,
+          "flag": "critical",
+          "method": "threshold"
+        }
+      ]
+    }
+  ]
+}

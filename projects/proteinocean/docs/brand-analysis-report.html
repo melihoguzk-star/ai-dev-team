@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProteinOcean — Marka Kimliği Analiz Raporu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .sidebar-link { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; font-size: 14px; color: #475569; text-decoration: none; transition: background 0.15s, color 0.15s; }
+    .sidebar-link:hover { background: #f0fdfa; color: #0f766e; }
+    .sidebar-link.active { background: #f0fdfa; color: #0f766e; font-weight: 500; }
+    @media print {
+      .sidebar, aside, nav, .sb-nav, .sb-logo, .sb-footer { display: none !important; }
+      .main, main, .content, .main-content { margin-left: 0 !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; max-width: 100% !important; }
+      body { display: block !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-slate-200 sticky top-0 h-screen overflow-y-auto flex-shrink-0">
+      <div class="p-5 border-b border-slate-100">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Analiz Raporu</div>
+        <div class="text-base font-bold text-slate-800">ProteinOcean</div>
+        <div class="text-xs text-slate-400 mt-0.5">2026-03-05</div>
+      </div>
+
+      <nav class="p-3 space-y-0.5">
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 pt-3 pb-1">ANALİZ</div>
+        <a href="#dashboard" class="sidebar-link active"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
+        <a href="#sources" class="sidebar-link"><i data-lucide="database" class="w-4 h-4"></i> Kaynaklar</a>
+        <a href="#colors" class="sidebar-link"><i data-lucide="palette" class="w-4 h-4"></i> Renk Analizi</a>
+        <a href="#typography" class="sidebar-link"><i data-lucide="type" class="w-4 h-4"></i> Tipografi</a>
+        <a href="#components" class="sidebar-link"><i data-lucide="square" class="w-4 h-4"></i> Bileşen Boyutları</a>
+        <a href="#layout" class="sidebar-link"><i data-lucide="ruler" class="w-4 h-4"></i> Layout & Spacing</a>
+        <a href="#buttons" class="sidebar-link"><i data-lucide="mouse-pointer-click" class="w-4 h-4"></i> Butonlar & Formlar</a>
+        <a href="#icons" class="sidebar-link"><i data-lucide="star" class="w-4 h-4"></i> İkonlar</a>
+
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 pt-4 pb-1">DOSYALAR</div>
+        <a href="brand-tokens.json" target="_blank" class="sidebar-link"><i data-lucide="file-json" class="w-4 h-4"></i> brand-tokens.json</a>
+        <a href="brand-style-guide.html" class="sidebar-link"><i data-lucide="book-open" class="w-4 h-4"></i> Stil Rehberi</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-8 max-w-5xl">
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="mb-12">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold text-slate-900">Marka Kimliği Analiz Raporu</h1>
+            <p class="text-slate-500 mt-1">ProteinOcean · iOS Native Uygulama · 2026-03-05</p>
+          </div>
+          <span class="bg-teal-50 text-teal-700 text-xs font-semibold px-3 py-1 rounded-full border border-teal-200">brand-analyzer v2</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="text-2xl font-bold text-slate-900">10</div>
+            <div class="text-xs text-slate-500 mt-1">Renk Token</div>
+            <div class="text-[10px] text-teal-600 font-medium mt-2 flex items-center gap-1"><i data-lucide="globe" class="w-3 h-3"></i> WEB</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="text-2xl font-bold text-slate-900">Montserrat</div>
+            <div class="text-xs text-slate-500 mt-1">Font Ailesi</div>
+            <div class="text-[10px] text-purple-600 font-medium mt-2 flex items-center gap-1"><i data-lucide="figma" class="w-3 h-3"></i> FIGMA</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="text-2xl font-bold text-slate-900">56px</div>
+            <div class="text-xs text-slate-500 mt-1">Buton Yüksekliği</div>
+            <div class="text-[10px] text-purple-600 font-medium mt-2 flex items-center gap-1"><i data-lucide="figma" class="w-3 h-3"></i> FIGMA</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="text-2xl font-bold text-slate-900">172×278</div>
+            <div class="text-xs text-slate-500 mt-1">Ürün Kartı (px)</div>
+            <div class="text-[10px] text-purple-600 font-medium mt-2 flex items-center gap-1"><i data-lucide="figma" class="w-3 h-3"></i> FIGMA</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KAYNAKLAR -->
+      <section id="sources" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2"><i data-lucide="database" class="w-5 h-5 text-teal-600"></i> Analiz Kaynakları</h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+
+          <!-- Web -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="bg-teal-100 text-teal-700 text-xs font-bold px-2 py-0.5 rounded">WEB</span>
+              <span class="text-sm font-semibold text-slate-700">proteinocean.com</span>
+            </div>
+            <div class="text-sm text-slate-600 mb-3">CSS sınıfları ve inline style'lardan renk paleti çıkarıldı.</div>
+            <div class="space-y-1 text-xs text-slate-500">
+              <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500"></i> Renk paleti — 10 token</div>
+              <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500"></i> Border & shadow değerleri</div>
+              <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500"></i> İkon eşlemeleri (web → SF Symbols)</div>
+            </div>
+          </div>
+
+          <!-- Figma -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded">FIGMA</span>
+              <span class="text-sm font-semibold text-slate-700">v35XdpoG6Pmv9eQABDcMHJ</span>
+            </div>
+            <div class="text-sm text-slate-600 mb-3">
+              <span class="bg-yellow-50 text-yellow-700 text-xs font-semibold px-2 py-0.5 rounded border border-yellow-200">KISMİ BAŞARI</span>
+              <span class="ml-2 text-xs text-slate-500">Starter plan — 6 çağrı/ay limiti</span>
+            </div>
+            <div class="space-y-1 text-xs text-slate-500">
+              <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500"></i> get_design_context — Montserrat font + CSS değişkenleri</div>
+              <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500"></i> metadata XML — frame px ölçümleri</div>
+              <div class="flex items-center gap-2"><i data-lucide="x-circle" class="w-3.5 h-3.5 text-red-400"></i> get_variable_defs — seçili layer gerekli</div>
+              <div class="flex items-center gap-2"><i data-lucide="x-circle" class="w-3.5 h-3.5 text-red-400"></i> get_screenshot — rate limit</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RENK ANALİZİ -->
+      <section id="colors" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="palette" class="w-5 h-5 text-teal-600"></i> Renk Paleti
+          <span class="bg-teal-100 text-teal-700 text-xs font-bold px-2 py-0.5 rounded ml-1">WEB</span>
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+          <!-- Primary -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20" style="background:#2126AB"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Primary</div>
+              <div class="font-mono text-xs text-slate-500">#2126AB</div>
+              <div class="text-xs text-slate-400 mt-1">Navigasyon, tab tint</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandPrimary</div>
+            </div>
+          </div>
+          <!-- Secondary -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20" style="background:#232DA8"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Secondary</div>
+              <div class="font-mono text-xs text-slate-500">#232DA8</div>
+              <div class="text-xs text-slate-400 mt-1">Fiyat vurgusu</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandSecondary</div>
+            </div>
+          </div>
+          <!-- Accent -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20" style="background:#1900FF"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Accent</div>
+              <div class="font-mono text-xs text-slate-500">#1900FF</div>
+              <div class="text-xs text-slate-400 mt-1">CTA border</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandAccent</div>
+            </div>
+          </div>
+          <!-- Error -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20" style="background:#DB2626"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Error</div>
+              <div class="font-mono text-xs text-slate-500">#DB2626</div>
+              <div class="text-xs text-slate-400 mt-1">İndirim badge, hata</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandError</div>
+            </div>
+          </div>
+          <!-- Warning -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20" style="background:#FF6600"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Warning</div>
+              <div class="font-mono text-xs text-slate-500">#FF6600</div>
+              <div class="text-xs text-slate-400 mt-1">Stok uyarısı, lansman</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandWarning</div>
+            </div>
+          </div>
+          <!-- Border -->
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="h-20 border-2" style="background:#E5E5E5; border-color:#E5E5E5"></div>
+            <div class="p-3">
+              <div class="font-semibold text-sm text-slate-800">Border</div>
+              <div class="font-mono text-xs text-slate-500">#E5E5E5</div>
+              <div class="text-xs text-slate-400 mt-1">Kart border, divider</div>
+              <div class="mt-1 text-[10px] text-slate-400 font-mono">Color.brandBorder</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text & BG -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Metin & Arka Plan</div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded border border-slate-200 flex-shrink-0" style="background:#070707"></div>
+              <div><div class="font-semibold">Text Primary</div><div class="font-mono text-slate-400">#070707</div></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded border border-slate-200 flex-shrink-0" style="background:#464646"></div>
+              <div><div class="font-semibold">Text Secondary</div><div class="font-mono text-slate-400">#464646 <span class="text-purple-500 text-[10px]">FIGMA</span></div></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded border border-slate-200 flex-shrink-0" style="background:#FFFFFF"></div>
+              <div><div class="font-semibold">Background</div><div class="font-mono text-slate-400">#FFFFFF</div></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded border border-slate-200 flex-shrink-0" style="background:#F8F8F8"></div>
+              <div><div class="font-semibold">BG Secondary</div><div class="font-mono text-slate-400">#F8F8F8 <span class="text-purple-500 text-[10px]">FIGMA</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TİPOGRAFİ -->
+      <section id="typography" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="type" class="w-5 h-5 text-teal-600"></i> Tipografi
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-4">
+          <div class="flex items-start gap-4 mb-5">
+            <div>
+              <div class="text-3xl font-bold text-slate-900" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">Montserrat</div>
+              <div class="text-sm text-slate-500 mt-1">SemiBold 600 · Medium 500 · Light 300</div>
+              <div class="text-xs text-purple-600 mt-1 font-medium">Figma get_design_context'ten doğrulandı: <code class="bg-purple-50 px-1 rounded">font-['Montserrat:SemiBold',sans-serif]</code></div>
+              <div class="text-xs text-slate-400 mt-1">Önceki tahmin (SF Pro/system-ui) yanlıştı — Figma ile düzeltildi.</div>
+            </div>
+          </div>
+
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="text-left text-xs text-slate-400 font-medium pb-2">Stil</th>
+                <th class="text-left text-xs text-slate-400 font-medium pb-2">Boyut</th>
+                <th class="text-left text-xs text-slate-400 font-medium pb-2">Ağırlık</th>
+                <th class="text-left text-xs text-slate-400 font-medium pb-2">Line Height</th>
+                <th class="text-left text-xs text-slate-400 font-medium pb-2">Kullanım</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              <tr class="py-2">
+                <td class="py-2 font-semibold text-slate-700">Nav Title</td>
+                <td class="py-2 font-mono text-slate-500">18px</td>
+                <td class="py-2 font-mono text-slate-500">600</td>
+                <td class="py-2 font-mono text-slate-500">24px</td>
+                <td class="py-2 text-xs text-slate-400">Navigasyon bar başlık</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-700">Section Header</td>
+                <td class="py-2 font-mono text-slate-500">16px</td>
+                <td class="py-2 font-mono text-slate-500">600</td>
+                <td class="py-2 font-mono text-slate-500">20px</td>
+                <td class="py-2 text-xs text-slate-400">Bölüm başlığı, kart başlığı</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-700">Body</td>
+                <td class="py-2 font-mono text-slate-500">14px</td>
+                <td class="py-2 font-mono text-slate-500">300</td>
+                <td class="py-2 font-mono text-slate-500">20px</td>
+                <td class="py-2 text-xs text-slate-400">Ürün açıklaması, genel metin</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-700">Caption</td>
+                <td class="py-2 font-mono text-slate-500">12px</td>
+                <td class="py-2 font-mono text-slate-500">500</td>
+                <td class="py-2 font-mono text-slate-500">16px</td>
+                <td class="py-2 text-xs text-slate-400">Badge, etiket</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-700">Price</td>
+                <td class="py-2 font-mono text-slate-500">16px</td>
+                <td class="py-2 font-mono text-slate-500">700</td>
+                <td class="py-2 font-mono text-slate-500">20px</td>
+                <td class="py-2 text-xs text-slate-400">Fiyat gösterimi</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+          <div class="font-semibold mb-1 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i> iOS Not</div>
+          Montserrat, iOS sistem fontu değildir. Uygulamaya bundle olarak eklenmeli veya Swift Package Manager ile yüklenmeli.
+          <code class="block mt-2 bg-amber-100 rounded px-2 py-1 font-mono text-xs">Font.custom("Montserrat-SemiBold", size: 18)</code>
+        </div>
+      </section>
+
+      <!-- BİLEŞEN BOYUTLARI -->
+      <section id="components" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="square" class="w-5 h-5 text-teal-600"></i> Bileşen Boyutları
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+
+          <!-- Product Card -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+              <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-400"></i> Ürün Kartı
+            </div>
+            <div class="flex gap-4 items-center">
+              <div class="border border-dashed border-slate-300 rounded-xl flex-shrink-0 flex flex-col" style="width:86px; height:139px;">
+                <div class="rounded-t-xl bg-slate-100 flex-shrink-0" style="height:80px;"></div>
+                <div class="p-2 flex-1">
+                  <div class="bg-slate-200 rounded h-2 mb-1 w-full"></div>
+                  <div class="bg-slate-200 rounded h-2 w-2/3"></div>
+                </div>
+              </div>
+              <div class="text-xs space-y-1.5 text-slate-600">
+                <div><span class="font-medium">Genişlik:</span> <code class="bg-slate-100 px-1 rounded font-mono">172px</code></div>
+                <div><span class="font-medium">Yükseklik:</span> <code class="bg-slate-100 px-1 rounded font-mono">278px</code></div>
+                <div><span class="font-medium">Görsel:</span> <code class="bg-slate-100 px-1 rounded font-mono">160px yüksek</code></div>
+                <div><span class="font-medium">Radius:</span> <code class="bg-slate-100 px-1 rounded font-mono">12px</code></div>
+                <div><span class="font-medium">Grid:</span> <code class="bg-slate-100 px-1 rounded font-mono">2 kolon, 12px gap</code></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+              <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-slate-400"></i> Butonlar
+            </div>
+            <div class="space-y-3 text-xs text-slate-600">
+              <div>
+                <div class="rounded-lg flex items-center justify-center mb-1.5" style="height:36px; background:#2126AB; color:white; font-weight:600; font-size:13px;">Primary Button</div>
+                <div class="flex gap-4">
+                  <span><span class="font-medium">H:</span> <code class="bg-slate-100 px-1 rounded font-mono">56px</code></span>
+                  <span><span class="font-medium">Radius:</span> <code class="bg-slate-100 px-1 rounded font-mono">8px</code></span>
+                  <span><span class="font-medium">Font:</span> <code class="bg-slate-100 px-1 rounded font-mono">16/600</code></span>
+                </div>
+              </div>
+              <div>
+                <div class="rounded-lg flex items-center justify-center mb-1.5 border-2 border-dashed" style="height:36px; border-color:#1900FF; color:#1900FF; font-weight:600; font-size:13px;">Secondary Button</div>
+                <div class="flex gap-4">
+                  <span><span class="font-medium">H:</span> <code class="bg-slate-100 px-1 rounded font-mono">56px</code></span>
+                  <span><span class="font-medium">Border:</span> <code class="bg-slate-100 px-1 rounded font-mono">dashed</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+              <i data-lucide="text-cursor" class="w-4 h-4 text-slate-400"></i> Input Alanı
+            </div>
+            <div class="border rounded-lg px-3 flex items-center mb-3" style="height:36px; border-color:#E5E5E5; color:#9B9B9B; font-size:13px;">Arama yapın...</div>
+            <div class="text-xs text-slate-600 flex gap-4">
+              <span><span class="font-medium">H:</span> <code class="bg-slate-100 px-1 rounded font-mono">50px</code></span>
+              <span><span class="font-medium">Padding:</span> <code class="bg-slate-100 px-1 rounded font-mono">16px</code></span>
+              <span><span class="font-medium">Radius:</span> <code class="bg-slate-100 px-1 rounded font-mono">8px</code></span>
+            </div>
+          </div>
+
+          <!-- Nav Bar -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+              <i data-lucide="layout" class="w-4 h-4 text-slate-400"></i> Nav Bar & Layout
+            </div>
+            <div class="text-xs text-slate-600 space-y-1.5">
+              <div><span class="font-medium">Nav bar toplam:</span> <code class="bg-slate-100 px-1 rounded font-mono">120px</code></div>
+              <div><span class="font-medium">Status bar:</span> <code class="bg-slate-100 px-1 rounded font-mono">54px</code></div>
+              <div><span class="font-medium">Navigation bar:</span> <code class="bg-slate-100 px-1 rounded font-mono">66px</code></div>
+              <div><span class="font-medium">Canvas genişliği:</span> <code class="bg-slate-100 px-1 rounded font-mono">393px</code></div>
+              <div><span class="font-medium">İçerik genişliği:</span> <code class="bg-slate-100 px-1 rounded font-mono">353px</code></div>
+              <div><span class="font-medium">Sayfa üst radius:</span> <code class="bg-slate-100 px-1 rounded font-mono">20px</code></div>
+              <div><span class="font-medium">Discount tag:</span> <code class="bg-slate-100 px-1 rounded font-mono">35×20px, r=6px</code></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAYOUT & SPACING -->
+      <section id="layout" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="ruler" class="w-5 h-5 text-teal-600"></i> Layout & Spacing
+          <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-xs">
+            <div class="bg-slate-50 rounded-lg p-3">
+              <div class="text-xl font-bold text-slate-800">20px</div>
+              <div class="text-slate-500 mt-1">Sayfa Padding</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3">
+              <div class="text-xl font-bold text-slate-800">12px</div>
+              <div class="text-slate-500 mt-1">Bileşen Gap</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3">
+              <div class="text-xl font-bold text-slate-800">16px</div>
+              <div class="text-slate-500 mt-1">Bölüm Gap</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3">
+              <div class="text-xl font-bold text-slate-800">44px</div>
+              <div class="text-slate-500 mt-1">Min Touch Target</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BUTONLAR -->
+      <section id="buttons" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="mouse-pointer-click" class="w-5 h-5 text-teal-600"></i> Butonlar & Formlar
+        </h2>
+
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Tür</th>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Yükseklik</th>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Radius</th>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Font</th>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Kaynak</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="px-4 py-3 font-medium">Primary Button</td>
+                <td class="px-4 py-3 font-mono text-slate-500">56px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">8px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">16/600</td>
+                <td class="px-4 py-3"><span class="bg-purple-100 text-purple-700 text-xs font-bold px-1.5 py-0.5 rounded">FIGMA</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Secondary Button</td>
+                <td class="px-4 py-3 font-mono text-slate-500">56px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">8px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">16/600</td>
+                <td class="px-4 py-3"><span class="bg-purple-100 text-purple-700 text-xs font-bold px-1.5 py-0.5 rounded">FIGMA</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Input / Search</td>
+                <td class="px-4 py-3 font-mono text-slate-500">50px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">8px</td>
+                <td class="px-4 py-3 font-mono text-slate-500">14/300</td>
+                <td class="px-4 py-3"><span class="bg-purple-100 text-purple-700 text-xs font-bold px-1.5 py-0.5 rounded">FIGMA</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- İKONLAR -->
+      <section id="icons" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="star" class="w-5 h-5 text-teal-600"></i> İkon Eşlemeleri (Web → SF Symbols)
+        </h2>
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">Web</th>
+                <th class="text-left text-xs text-slate-500 font-medium px-4 py-3">SF Symbols</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-mono text-xs">
+              <tr><td class="px-4 py-2">search</td><td class="px-4 py-2 text-slate-500">magnifyingglass</td></tr>
+              <tr><td class="px-4 py-2">user/account</td><td class="px-4 py-2 text-slate-500">person.fill</td></tr>
+              <tr><td class="px-4 py-2">cart/basket</td><td class="px-4 py-2 text-slate-500">cart.fill</td></tr>
+              <tr><td class="px-4 py-2">menu</td><td class="px-4 py-2 text-slate-500">line.3.horizontal</td></tr>
+              <tr><td class="px-4 py-2">filter</td><td class="px-4 py-2 text-slate-500">line.3.horizontal.decrease.circle</td></tr>
+              <tr><td class="px-4 py-2">sort</td><td class="px-4 py-2 text-slate-500">arrow.up.arrow.down</td></tr>
+              <tr><td class="px-4 py-2">grid-view</td><td class="px-4 py-2 text-slate-500">square.grid.2x2</td></tr>
+              <tr><td class="px-4 py-2">list-view</td><td class="px-4 py-2 text-slate-500">list.bullet</td></tr>
+              <tr><td class="px-4 py-2">heart</td><td class="px-4 py-2 text-slate-500">heart</td></tr>
+              <tr><td class="px-4 py-2">tag/discount</td><td class="px-4 py-2 text-slate-500">tag.fill</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

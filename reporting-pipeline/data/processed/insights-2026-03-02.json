@@ -1,0 +1,126 @@
+{
+  "week": "2026-03-02",
+  "generated_at": "2026-03-13T10:09:16.237774",
+  "total_insights": 7,
+  "by_priority": {
+    "critical": 2,
+    "important": 2,
+    "info": 3
+  },
+  "insights": [
+    {
+      "id": "INS-01",
+      "priority": "critical",
+      "category": "rating",
+      "platform": "ios",
+      "observation": "iOS App Store puanı 7 hafta içinde 3.0 → 2.8 değerine geriledi. Düşüş trendi güçlü (R²=0.7).",
+      "hypothesis": "Şubat ortasındaki güncelleme veya yoğun sezon trafiği UX sorunlarını artırmış olabilir. Düşük puan bırakan yorumlar incelenmeli.",
+      "action": "Son 3 haftanın 1-2 yıldızlı App Store yorumlarını analiz et. Crash-free rate ile zaman serisi korelasyonunu kontrol et. Acil UX fix sprint'i planla.",
+      "supporting_data": {
+        "trend_slope": -0.05,
+        "r_squared": 0.7,
+        "total_change_pct": -6.67
+      }
+    },
+    {
+      "id": "INS-02",
+      "priority": "important",
+      "category": "rating",
+      "platform": "android",
+      "observation": "Android puanı da 3.4 → 3.3 düştü. iOS ile eş zamanlı düşüş her iki platformda ortak bir sorunun işareti.",
+      "hypothesis": "Platform bağımsız bir ürün/akış sorunu mevcut olabilir. Ortak backend hatası veya kullanıcı deneyimi regresyonu.",
+      "action": "iOS ve Android rating düşüşlerinin hangi tarihte örtüştüğünü belirle. O tarihteki backend deploy'ları ve A/B test değişikliklerini incele.",
+      "supporting_data": {
+        "android_trend_slope": -0.0475,
+        "ios_trend_slope": -0.05,
+        "weeks_declining": "16 Şub'dan itibaren her iki platform"
+      }
+    },
+    {
+      "id": "INS-03",
+      "priority": "info",
+      "category": "growth",
+      "platform": "ios",
+      "observation": "iOS aktif kullanıcı sayısı 7 haftada 74K → 103K (%39 artış). Güçlü büyüme sinyali.",
+      "hypothesis": "Şubat sonu kampanya veya ASO iyileştirmelerinin etkisi. Download artışıyla destekleniyor.",
+      "action": "Bu büyüme ivmesini korumak için mevcut pazarlama kanallarını belirle ve bütçeyi artır. Retention curve'ü izleyerek yeni kullanıcıların tutulup tutulmadığını ölç.",
+      "supporting_data": {
+        "r_squared": 0.9042,
+        "first_value": 74000.0,
+        "last_value": 103000.0,
+        "change_pct": 39.19
+      }
+    },
+    {
+      "id": "INS-04",
+      "priority": "critical",
+      "category": "retention",
+      "platform": "android",
+      "observation": "Android uninstall sayısı 2026-01-26 haftasında 5,300 ile 7 haftalık ortalamanın çok üzerine çıktı (WoW: %76.67).",
+      "hypothesis": "Belirli bir güncelleme veya bildirim politikası değişikliği kitlesel uygulama silmeye yol açmış olabilir.",
+      "action": "26 Ocak haftasında Android'de yayına alınan sürüm notlarını ve force-update / permission değişikliklerini kontrol et. Silme sonrası survey / exit data varsa incele.",
+      "supporting_data": {
+        "spike_value": 5300.0,
+        "series_mean": 3857.1429,
+        "wow_pct": 76.67
+      }
+    },
+    {
+      "id": "INS-05",
+      "priority": "important",
+      "category": "correlation",
+      "platform": "ios",
+      "observation": "IOS rating ile uninstall arasında güçlü negatif korelasyon (r=-0.8617, p=0.0127).",
+      "hypothesis": "Rating düşüşü ile uninstall artışı birbirini tetikliyor. Memnuniyetsiz kullanıcılar hem düşük puan bırakıyor hem de siliyor.",
+      "action": "Puan bırakan ama daha sonra silen kullanıcı segmentini CRM'de tanımla. Bu kitleye hedefli geri kazanım kampanyası planla.",
+      "supporting_data": {
+        "platform": "ios",
+        "metric_1": "rating",
+        "metric_2": "uninstalls",
+        "r": -0.8617,
+        "p_value": 0.0127,
+        "significant": true,
+        "strength": "strong",
+        "direction": "negative"
+      }
+    },
+    {
+      "id": "INS-06",
+      "priority": "info",
+      "category": "growth",
+      "platform": "ios",
+      "observation": "IOS indirme ve aktif kullanıcı arasında güçlü pozitif korelasyon (r=0.814). Yeni indirmeler aktif kullanıcı tabanını büyütüyor.",
+      "hypothesis": "Onboarding akışı sağlıklı çalışıyor; indiren kullanıcılar aktif kalmaya devam ediyor.",
+      "action": "Cohort analiziyle D7 / D30 retention oranlarını doğrula. Retention güçlüyse büyüme bütçesini artırmak mantıklı.",
+      "supporting_data": {
+        "platform": "ios",
+        "metric_1": "downloads",
+        "metric_2": "active_users",
+        "r": 0.814,
+        "p_value": 0.0259,
+        "significant": true,
+        "strength": "strong",
+        "direction": "positive"
+      }
+    },
+    {
+      "id": "INS-07",
+      "priority": "info",
+      "category": "growth",
+      "platform": "android",
+      "observation": "ANDROID indirme ve aktif kullanıcı arasında güçlü pozitif korelasyon (r=0.7746). Yeni indirmeler aktif kullanıcı tabanını büyütüyor.",
+      "hypothesis": "Onboarding akışı sağlıklı çalışıyor; indiren kullanıcılar aktif kalmaya devam ediyor.",
+      "action": "Cohort analiziyle D7 / D30 retention oranlarını doğrula. Retention güçlüyse büyüme bütçesini artırmak mantıklı.",
+      "supporting_data": {
+        "platform": "android",
+        "metric_1": "downloads",
+        "metric_2": "active_users",
+        "r": 0.7746,
+        "p_value": 0.0409,
+        "significant": true,
+        "strength": "strong",
+        "direction": "positive"
+      }
+    }
+  ]
+}

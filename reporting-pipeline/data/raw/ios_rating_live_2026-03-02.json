@@ -1,0 +1,104 @@
+{
+  "app_name": "SunExpress",
+  "app_id": "6630384355",
+  "platform": "ios",
+  "metric": "rating",
+  "collection_date": "2026-03-13T10:35:37.244067+00:00",
+  "source": "app_store_rss",
+  "live": true,
+  "general": {
+    "overall": 2.75,
+    "total_count": 194,
+    "version": "1.0.9",
+    "app_name": "SunExpress Airlines"
+  },
+  "period": {
+    "start": "2026-01-12",
+    "end": "2026-03-08",
+    "granularity": "weekly"
+  },
+  "data": [
+    {
+      "week_start": "2026-01-12",
+      "week_end": "2026-01-18",
+      "value": null,
+      "review_count": 2,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-01-19",
+      "week_end": "2026-01-25",
+      "value": null,
+      "review_count": 3,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-01-26",
+      "week_end": "2026-02-01",
+      "value": null,
+      "review_count": 3,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-02-02",
+      "week_end": "2026-02-08",
+      "value": null,
+      "review_count": 1,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-02-09",
+      "week_end": "2026-02-15",
+      "value": null,
+      "review_count": 4,
+      "histogram": null,
+      "status": "insufficient_data"
+    },
+    {
+      "week_start": "2026-02-16",
+      "week_end": "2026-02-22",
+      "value": 1.17,
+      "review_count": 12,
+      "histogram": [
+        11,
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-23",
+      "week_end": "2026-03-01",
+      "value": 1.56,
+      "review_count": 9,
+      "histogram": [
+        6,
+        1,
+        2,
+        0,
+        0
+      ],
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-03-02",
+      "week_end": "2026-03-08",
+      "value": 1.0,
+      "review_count": 9,
+      "histogram": [
+        9,
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "ok"
+    }
+  ]
+}

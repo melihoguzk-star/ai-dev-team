@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProteinOcean — Rakip Analizi & Benchmark | Loodos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root {
+  --bg:#F8FAFC;--bg-alt:#F1F5F9;--card:#FFFFFF;--primary:#0D9488;--primary-dk:#0F766E;--primary-lt:#CCFBF1;
+  --text:#0F172A;--text-2:#475569;--text-3:#94A3B8;--border:#E2E8F0;
+  --danger:#EF4444;--danger-bg:#FEF2F2;--warning:#F59E0B;--warning-bg:#FFFBEB;--success:#10B981;
+  --info:#3B82F6;--info-bg:#EFF6FF;--sidebar-w:268px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.08);--radius:12px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.sidebar{width:var(--sidebar-w);background:#FFFFFF;border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:2px}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
+.sb-brand{display:flex;align-items:center;gap:10px}
+.sb-mark{width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;letter-spacing:-0.5px;flex-shrink:0}
+.sb-name{font-size:15px;font-weight:800;color:var(--text)}.sb-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+.sb-divider{height:1px;background:var(--border);margin:6px 0}
+.sb-nav{padding:12px 10px;flex:1}
+.sb-sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);padding:8px 8px 4px;margin-top:4px}
+.sb-sec-hdr{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;color:var(--text);font-size:12.5px;font-weight:700;transition:background 0.12s;margin-bottom:1px;user-select:none}
+.sb-sec-hdr:hover{background:var(--bg-alt)}
+.sb-num{width:20px;height:20px;background:var(--primary);color:#fff;border-radius:5px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-item{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 22px;border-radius:7px;cursor:pointer;text-decoration:none;color:var(--text-2);font-size:12px;font-weight:400;transition:all 0.12s;margin-bottom:1px}
+.sb-item:hover{background:var(--bg-alt);color:var(--text)}
+.sb-item.active{background:#F0FDFA;color:var(--primary);font-weight:600}
+.sb-item .dot{width:5px;height:5px;border-radius:50%;background:var(--text-3);flex-shrink:0;transition:background 0.12s}
+.sb-item.active .dot{background:var(--primary)}
+.sb-footer{padding:14px 16px;border-top:1px solid var(--border)}
+.sb-footer-txt{font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:5px}
+.sb-footer-loodos{font-size:12px;font-weight:700;color:var(--primary);margin-top:4px}
+
+.main{margin-left:var(--sidebar-w);flex:1}
+.topbar{background:#FFFFFF;border-bottom:1px solid var(--border);padding:12px 40px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between}
+.tb-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.tb-chips{display:flex;gap:6px}
+.chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid}
+.chip-teal{background:#F0FDFA;color:var(--primary);border-color:#99F6E4}
+.chip-blue{background:#EFF6FF;color:#2563EB;border-color:#BFDBFE}
+.chip-slate{background:#F8FAFC;color:#475569;border-color:#CBD5E1}
+
+.page{padding:36px 40px 80px;max-width:1100px}
+
+.hero{background:linear-gradient(135deg,#F0FDFA 0%,#FFFFFF 60%,#EFF6FF 100%);border:1px solid #A7F3D0;border-radius:16px;padding:36px 40px;margin-bottom:36px;display:flex;gap:28px;align-items:flex-start}
+.hero-emblem{width:60px;height:60px;background:var(--primary);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hero-title{font-size:26px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero-title em{font-style:normal;color:var(--primary)}
+.hero-sub{font-size:14px;color:var(--text-2);max-width:620px}
+.hero-meta{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap}
+.hero-meta-item{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:5px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:40px}
+.stat-card{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm)}
+.stat-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.stat-value{font-size:30px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-desc{font-size:12px;color:var(--text-3);line-height:1.4}
+.c-teal{color:var(--primary)}.c-amber{color:#D97706}.c-blue{color:#2563EB}.c-purple{color:#7C3AED}.c-danger{color:#EF4444}
+
+.section-block{margin-bottom:52px;scroll-margin-top:75px}
+.section-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-badge{width:38px;height:38px;background:var(--primary);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0;margin-top:2px}
+.section-hdr h2{font-size:20px;font-weight:800;color:var(--text)}
+.section-hdr .sh-sub{font-size:13px;color:var(--text-2);margin-top:3px}
+.subsec-hdr{font-size:14.5px;font-weight:700;color:var(--text);margin:28px 0 14px;display:flex;align-items:center;gap:8px;scroll-margin-top:75px}
+.subsec-hdr::before{content:'';width:3px;height:18px;background:var(--primary);border-radius:2px}
+
+.tbl-wrap{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:20px}
+table.stack{width:100%;border-collapse:collapse;font-size:13px}
+table.stack th{background:#F8FAFC;padding:10px 16px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-3);border-bottom:2px solid var(--border)}
+table.stack td{padding:13px 16px;border-bottom:1px solid #F1F5F9;vertical-align:middle}
+table.stack tr:last-child td{border-bottom:none}
+table.stack tr:hover td{background:#FAFAFA}
+
+.layer-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.lb-tr{background:#F0FDFA;color:#0F766E}.lb-gl{background:#EFF6FF;color:#2563EB}
+
+.eval-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid}
+.et-iyi{background:#F0FDFA;color:#0F766E;border-color:#99F6E4}
+.et-orta{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.et-zayif{background:#FEF2F2;color:#991B1B;border-color:#FECACA}
+.et-yok{background:#F8FAFC;color:#64748B;border-color:#CBD5E1}
+
+/* FEATURE MATRIX */
+.matrix-wrap{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto;box-shadow:var(--shadow-sm);margin-bottom:20px}
+table.matrix{width:100%;border-collapse:collapse;font-size:12px;min-width:900px}
+table.matrix th{background:#F8FAFC;padding:10px 12px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-3);border-bottom:2px solid var(--border);white-space:nowrap}
+table.matrix th:first-child{text-align:left;min-width:200px}
+table.matrix td{padding:10px 12px;border-bottom:1px solid #F1F5F9;text-align:center;vertical-align:middle}
+table.matrix td:first-child{text-align:left;font-weight:600;color:var(--text)}
+table.matrix tr:last-child td{border-bottom:none}
+table.matrix tr:hover td{background:#FAFAFA}
+.check{color:#10B981;font-weight:800;font-size:14px}.cross{color:#CBD5E1;font-size:14px}.partial{color:#F59E0B;font-weight:700;font-size:13px}
+
+/* COMPETITOR CARDS */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.comp-card{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+.comp-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;background:#F8FAFC;border-bottom:1px solid var(--border)}
+.comp-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;flex-shrink:0}
+.comp-name{font-size:14px;font-weight:700;color:var(--text)}
+.comp-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.comp-body{padding:14px 20px}
+.comp-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F1F5F9;font-size:12px}
+.comp-row:last-child{border-bottom:none}
+.comp-row-label{color:var(--text-3);font-weight:500}
+.comp-row-value{color:var(--text);font-weight:600}
+.comp-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.5}
+
+/* GAP CARDS */
+.gap-card{background:#FEF2F2;border:1px solid #FECACA;border-left:4px solid #EF4444;border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px}
+.gap-icon{width:36px;height:36px;background:#EF4444;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.gap-title{font-size:13.5px;font-weight:700;color:#991B1B;margin-bottom:3px}
+.gap-desc{font-size:12.5px;color:#7F1D1D}
+.gap-priority{font-size:11px;font-weight:700;color:#B91C1C;margin-top:3px}
+
+/* ROADMAP */
+.roadmap-phase{background:#FFFFFF;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.roadmap-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.roadmap-badge{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;color:#fff}
+.rb-short{background:var(--primary)}.rb-mid{background:#3B82F6}.rb-long{background:#7C3AED}
+.roadmap-title{font-size:14px;font-weight:700;color:var(--text)}
+.roadmap-timeline{margin-left:auto;font-size:11px;color:var(--text-3);font-weight:600}
+.roadmap-body{padding:14px 20px}
+.roadmap-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9}
+.roadmap-item:last-child{border-bottom:none}
+.roadmap-num{width:22px;height:22px;background:var(--bg-alt);border-radius:50%;font-size:11px;font-weight:700;color:var(--text-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.roadmap-item-title{font-size:13px;font-weight:600;color:var(--text)}
+.roadmap-item-desc{font-size:12px;color:var(--text-2);margin-top:2px}
+.roadmap-item-impact{font-size:10px;font-weight:700;padding:1px 7px;border-radius:3px;margin-top:4px;display:inline-block}
+.ri-high{background:#FEF2F2;color:#991B1B}.ri-mid{background:#FFFBEB;color:#92400E}.ri-low{background:#F0FDFA;color:#0F766E}
+
+/* STR CARD */
+.str-card{background:#F0FDFA;border:1px solid #A7F3D0;border-left:4px solid var(--primary);border-radius:var(--radius);padding:16px 20px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px}
+.str-icon{width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.str-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:3px}
+.str-desc{font-size:12.5px;color:var(--text-2)}
+.str-metric{font-size:11px;font-weight:700;color:var(--primary);margin-top:3px}
+
+.info-box{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:var(--radius);padding:14px 18px;font-size:13px;color:#1E3A8A;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+
+.nav-bar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;margin-top:40px;border-top:1px solid var(--border)}
+.nav-link{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;padding:8px 16px;border-radius:8px;border:1px solid #99F6E4;background:#F0FDFA;transition:all 0.15s}
+.nav-link:hover{background:var(--primary);color:#fff}
+@media print {
+  .sidebar, aside, nav, .sb-nav, .sb-logo, .sb-footer { display: none !important; }
+  .main, main, .content, .main-content { margin-left: 0 !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; max-width: 100% !important; }
+  body { display: block !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="sb-mark">L</div>
+      <div>
+        <div class="sb-name">Loodos</div>
+        <div class="sb-sub">ProteinOcean Analiz</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec-label">Rakip & Benchmark</div>
+    <div class="sb-sec-hdr"><span class="sb-num">1</span> Turkiye Rakipleri</div>
+    <a class="sb-item active" href="#tr-rakipler"><span class="dot"></span>Rakip Profilleri</a>
+    <a class="sb-item" href="#tr-tablo"><span class="dot"></span>Karsilastirma</a>
+    <div class="sb-divider" style="margin:10px 0;"></div>
+    <div class="sb-sec-hdr"><span class="sb-num">2</span> Global Benchmark</div>
+    <a class="sb-item" href="#global"><span class="dot"></span>Referans Uygulamalar</a>
+    <a class="sb-item" href="#best-practices"><span class="dot"></span>En Iyi Pratikler</a>
+    <div class="sb-divider" style="margin:10px 0;"></div>
+    <div class="sb-sec-hdr"><span class="sb-num">3</span> Feature Matrisi</div>
+    <a class="sb-item" href="#feature-matrix"><span class="dot"></span>Ozellik Karsilastirma</a>
+    <a class="sb-item" href="#gap"><span class="dot"></span>Gap Analizi</a>
+    <div class="sb-divider" style="margin:10px 0;"></div>
+    <div class="sb-sec-hdr"><span class="sb-num">4</span> Feature Roadmap</div>
+    <a class="sb-item" href="#roadmap-short"><span class="dot"></span>Kisa Vade (0-3 ay)</a>
+    <a class="sb-item" href="#roadmap-mid"><span class="dot"></span>Orta Vade (3-9 ay)</a>
+    <a class="sb-item" href="#roadmap-long"><span class="dot"></span>Uzun Vade (9-18 ay)</a>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-footer-txt"><i data-lucide="calendar" style="width:12px;height:12px;"></i> Mart 2026 — Gizli</div>
+    <div class="sb-footer-loodos">loodos.com</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-title">
+      <i data-lucide="target" style="width:16px;height:16px;color:#0D9488;"></i>
+      ProteinOcean — Rakip Analizi & Feature Roadmap
+    </div>
+    <div class="tb-chips">
+      <span class="chip chip-teal">Loodos</span>
+      <span class="chip chip-slate">Gizli</span>
+      <span class="chip chip-blue">Mart 2026</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-emblem">&#127942;</div>
+      <div>
+        <h1 class="hero-title">Rakip Analizi &<br><em>Feature Roadmap Onerisi</em></h1>
+        <p class="hero-sub">Turkiye ve global pazardaki rakip uygulamalar incelendi. ProteinOcean'in mevcut konumu, rakiplere gore gap'ler ve stratejik feature roadmap onerisi bu raporda sunulmaktadir.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><i data-lucide="users" style="width:13px;height:13px;color:#0D9488;"></i> 5 Turkiye + 4 Global rakip</div>
+          <div class="hero-meta-item"><i data-lucide="git-compare" style="width:13px;height:13px;color:#0D9488;"></i> 18 ozellik karsilastirmasi</div>
+          <div class="hero-meta-item"><i data-lucide="calendar" style="width:13px;height:13px;color:#0D9488;"></i> Mart 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="users" style="width:13px;height:13px;"></i> Incelenen Rakip</div>
+        <div class="stat-value c-teal">9</div>
+        <div class="stat-desc">5 Turkiye + 4 Global</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> Kritik Gap</div>
+        <div class="stat-value c-danger">7</div>
+        <div class="stat-desc">Rakiplerde olup ProteinOcean'da olmayan ozellikler</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="trending-up" style="width:13px;height:13px;"></i> Roadmap Onerisi</div>
+        <div class="stat-value c-blue">15</div>
+        <div class="stat-desc">3 fazda toplam feature onerisi</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="star" style="width:13px;height:13px;"></i> Hedef Puan</div>
+        <div class="stat-value c-purple">4.7+</div>
+        <div class="stat-desc">Supplementler.com seviyesini yakalama hedefi</div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 1: TURKIYE RAKIPLERI ===== -->
+    <div class="section-block" id="bolum1">
+      <div class="section-hdr">
+        <div class="section-badge">1</div>
+        <div>
+          <h2>Turkiye Pazari Rakip Analizi</h2>
+          <div class="sh-sub">Turkiye spor beslenme e-ticaretindeki ana rakipler ve mobil uygulama durumlari</div>
+        </div>
+      </div>
+
+      <div id="tr-rakipler" class="subsec-hdr">1a - Rakip Profilleri</div>
+
+      <div class="comp-grid">
+        <!-- Supplementler -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#E11D48;">S</div>
+            <div>
+              <div class="comp-name">Supplementler.com</div>
+            </div>
+            <div class="comp-badge" style="background:#F0FDFA;color:#0F766E;">Pazar Lideri</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.79 / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Degerlendirme</span><span class="comp-row-value">20.064</span></div>
+            <div class="comp-row"><span class="comp-row-label">Son Versiyon</span><span class="comp-row-value">v6.9.7</span></div>
+            <div class="comp-row"><span class="comp-row-label">Platform</span><span class="comp-row-value">iOS + Android</span></div>
+            <div class="comp-row"><span class="comp-row-label">Odeme</span><span class="comp-row-value">Kredi Karti, Havale, Kapida</span></div>
+            <div class="comp-desc">Turkiye'nin en buyuk supplement e-ticaret sitesi. Genis urun yelpazesi, agresif fiyatlandirma, guclü loyalty programi. Mobil uygulama kalitesi yuksek, native his veriyor. Hizli kargo ve musteri hizmetleri ile one cikiyor.</div>
+          </div>
+        </div>
+
+        <!-- Vitaminler -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#7C3AED;">V</div>
+            <div>
+              <div class="comp-name">Vitaminler.com</div>
+            </div>
+            <div class="comp-badge" style="background:#FFFBEB;color:#92400E;">Guclu Rakip</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.77 / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Degerlendirme</span><span class="comp-row-value">4.838</span></div>
+            <div class="comp-row"><span class="comp-row-label">Son Versiyon</span><span class="comp-row-value">v2.24.7</span></div>
+            <div class="comp-row"><span class="comp-row-label">Platform</span><span class="comp-row-value">iOS + Android</span></div>
+            <div class="comp-row"><span class="comp-row-label">Odeme</span><span class="comp-row-value">Kredi Karti, Havale</span></div>
+            <div class="comp-desc">Vitamin ve takviye odakli genis urun yelpazesi. Saglikli yasam segmentinde guclu konumlandirma. Kullanici deneyimi basarili, duzenli guncellenen mobil uygulama.</div>
+          </div>
+        </div>
+
+        <!-- Myprotein TR -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#2563EB;">M</div>
+            <div>
+              <div class="comp-name">Myprotein TR</div>
+            </div>
+            <div class="comp-badge" style="background:#EFF6FF;color:#2563EB;">Global Oyuncu</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.85 / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Degerlendirme</span><span class="comp-row-value">7.672 (global)</span></div>
+            <div class="comp-row"><span class="comp-row-label">Platform</span><span class="comp-row-value">iOS + Android (global app)</span></div>
+            <div class="comp-row"><span class="comp-row-label">Odeme</span><span class="comp-row-value">Kredi Karti, Apple Pay</span></div>
+            <div class="comp-row"><span class="comp-row-label">Ozel</span><span class="comp-row-value">Abonelik, Loyalty, AI Oneri</span></div>
+            <div class="comp-desc">THG grubu markasi, global operasyon. Turkiye'de myprotein.com/tr olarak hizmet veriyor. Kendi uretimi, agresif kampanyalar ve influencer stratejisi ile genis kitleye ulasıyor. Uygulama kalitesi en iyi sinifinda.</div>
+          </div>
+        </div>
+
+        <!-- Trendyol -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#F97316;">T</div>
+            <div>
+              <div class="comp-name">Trendyol (Supplement)</div>
+            </div>
+            <div class="comp-badge" style="background:#FFF7ED;color:#C2410C;">Marketplace</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.7+ / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Degerlendirme</span><span class="comp-row-value">2M+ (platform)</span></div>
+            <div class="comp-row"><span class="comp-row-label">Supplement Satici</span><span class="comp-row-value">100+ magaza</span></div>
+            <div class="comp-row"><span class="comp-row-label">Avantaj</span><span class="comp-row-value">Genis kullanici tabani, hizli kargo</span></div>
+            <div class="comp-row"><span class="comp-row-label">Dezavantaj</span><span class="comp-row-value">Marka deneyimi kontrolsuz</span></div>
+            <div class="comp-desc">Turkiye'nin en buyuk e-ticaret platformu. Supplement kategorisi hizla buyuyor. ProteinOcean zaten Trendyol'da satici olabilir — ancak kendi uygulamasında direkt musteri iliskisi daha degerli.</div>
+          </div>
+        </div>
+
+        <!-- Decathlon -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#0284C7;">D</div>
+            <div>
+              <div class="comp-name">Decathlon TR (Beslenme)</div>
+            </div>
+            <div class="comp-badge" style="background:#F8FAFC;color:#475569;">Dolayli Rakip</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.6+ / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Beslenme Urunu</span><span class="comp-row-value">Sinirli (kendi markasi)</span></div>
+            <div class="comp-row"><span class="comp-row-label">Avantaj</span><span class="comp-row-value">Fiziksel magaza + online</span></div>
+            <div class="comp-row"><span class="comp-row-label">Dezavantaj</span><span class="comp-row-value">Supplement uzmanligi yok</span></div>
+            <div class="comp-row"><span class="comp-row-label">Strateji</span><span class="comp-row-value">Spor ekipmani odakli</span></div>
+            <div class="comp-desc">Dolayli rakip. Kendi markasi altinda temel beslenme urunleri sunuyor. Supplement derinligi yok ancak spor yapan genis kitleye erisim avantaji var. Omnichannel deneyim guclu.</div>
+          </div>
+        </div>
+
+        <!-- HIQ -->
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#059669;">H</div>
+            <div>
+              <div class="comp-name">HIQ Nutrition</div>
+            </div>
+            <div class="comp-badge" style="background:#F0FDFA;color:#0F766E;">Yukselen Rakip</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">App Store Puani</span><span class="comp-row-value" style="color:#10B981;">4.71 / 5</span></div>
+            <div class="comp-row"><span class="comp-row-label">Degerlendirme</span><span class="comp-row-value">5.600</span></div>
+            <div class="comp-row"><span class="comp-row-label">Platform</span><span class="comp-row-value">iOS + Android</span></div>
+            <div class="comp-row"><span class="comp-row-label">Ozel</span><span class="comp-row-value">Kendi uretimi, D2C</span></div>
+            <div class="comp-row"><span class="comp-row-label">Strateji</span><span class="comp-row-value">Premium segmen, bilimsel yaklasum</span></div>
+            <div class="comp-desc">Kendi uretim tesisi olan D2C supplement markasi. Bilimsel icerikleri ve premium konumlandirmasi ile ProteinOcean'a benzer bir profil ciziyor. Mobil uygulama kalitesi iyi.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TURKIYE KARSILASTIRMA TABLOSU -->
+      <div id="tr-tablo" class="subsec-hdr">1b - Turkiye Pazari Karsilastirma Tablosu</div>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Kriter</th>
+              <th style="color:var(--primary);">ProteinOcean</th>
+              <th>Supplementler</th>
+              <th>Vitaminler</th>
+              <th>Myprotein TR</th>
+              <th>HIQ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">App Store Puani</td>
+              <td><span style="font-weight:800;color:#EF4444;">3.19</span></td>
+              <td><span style="font-weight:800;color:#10B981;">4.79</span></td>
+              <td><span style="font-weight:800;color:#10B981;">4.77</span></td>
+              <td><span style="font-weight:800;color:#10B981;">4.85</span></td>
+              <td><span style="font-weight:800;color:#10B981;">4.71</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Degerlendirme Sayisi</td>
+              <td><span style="font-weight:700;color:#EF4444;">84</span></td>
+              <td><span style="font-weight:700;color:#10B981;">20.064</span></td>
+              <td><span style="font-weight:700;">4.838</span></td>
+              <td><span style="font-weight:700;">7.672</span></td>
+              <td><span style="font-weight:700;">5.600</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Uygulama Tipi</td>
+              <td>Hybrid/WebView</td>
+              <td>Native</td>
+              <td>Native</td>
+              <td>Native (Flutter)</td>
+              <td>Native</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Kendi Uretimi</td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span> (Multi-brand)</td>
+              <td><span class="cross">&#10007;</span> (Multi-brand)</td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Loyalty Programi</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Abonelik Modeli</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Apple Pay</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 2: GLOBAL BENCHMARK ===== -->
+    <div class="section-block" id="bolum2">
+      <div class="section-hdr">
+        <div class="section-badge">2</div>
+        <div>
+          <h2>Global Benchmark</h2>
+          <div class="sh-sub">Dunya genelindeki en basarili supplement/beslenme uygulamalari</div>
+        </div>
+      </div>
+
+      <div id="global" class="subsec-hdr">2a - Referans Uygulamalar</div>
+
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#2563EB;">MP</div>
+            <div><div class="comp-name">Myprotein (Global)</div></div>
+            <div class="comp-badge" style="background:#EFF6FF;color:#2563EB;">Best-in-Class</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">Puan / Oy</span><span class="comp-row-value">4.85 / 7.672</span></div>
+            <div class="comp-row"><span class="comp-row-label">One Cikan</span><span class="comp-row-value">Abonelik, Loyalty, Referral</span></div>
+            <div class="comp-row"><span class="comp-row-label">Teknoloji</span><span class="comp-row-value">Flutter (cross-platform)</span></div>
+            <div class="comp-desc">Abonelik ile %5 ek indirim, her 100 GBP alisveriiste puan kazanimi, referral programi, makro hesaplayici, tarif bolumu. Kisisellestirilmis urun onerileri AI destekli.</div>
+          </div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#059669;">iH</div>
+            <div><div class="comp-name">iHerb</div></div>
+            <div class="comp-badge" style="background:#F0FDFA;color:#0F766E;">Marketplace Lideri</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">Puan / Oy</span><span class="comp-row-value">4.83 / 2.030 (TR)</span></div>
+            <div class="comp-row"><span class="comp-row-label">One Cikan</span><span class="comp-row-value">Arama, Filtre, UGC Review</span></div>
+            <div class="comp-row"><span class="comp-row-label">Teknoloji</span><span class="comp-row-value">Native (Swift + Kotlin)</span></div>
+            <div class="comp-desc">30.000+ urun, gelismis filtreleme (sertifikasyon, diyet tipi, alerjen), kullanici yorumlari ile sosyal kanit, urun karsilastirma, barkod tarama. Loyalty programi ve otomatik siparis ozelligi.</div>
+          </div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#DC2626;">BB</div>
+            <div><div class="comp-name">Bodybuilding.com</div></div>
+            <div class="comp-badge" style="background:#FEF2F2;color:#991B1B;">Icerik + Ticaret</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">Puan / Oy</span><span class="comp-row-value">4.57 / 29.136</span></div>
+            <div class="comp-row"><span class="comp-row-label">One Cikan</span><span class="comp-row-value">Workout + Shop entegrasyonu</span></div>
+            <div class="comp-row"><span class="comp-row-label">Teknoloji</span><span class="comp-row-value">Native (iOS + Android)</span></div>
+            <div class="comp-desc">Antrenman programi + supplement alisverisi entegrasyonu. "Bu antrenmana uygun supplementler" onerisi. Community ozellikleri, forum, ilerleme takibi. Icerik pazarlama ile satis entegre.</div>
+          </div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-hdr">
+            <div class="comp-icon" style="background:#7C3AED;">GNC</div>
+            <div><div class="comp-name">GNC LiveWell</div></div>
+            <div class="comp-badge" style="background:#F5F3FF;color:#7C3AED;">Omnichannel</div>
+          </div>
+          <div class="comp-body">
+            <div class="comp-row"><span class="comp-row-label">Puan / Oy</span><span class="comp-row-value">4.47 / 10.033</span></div>
+            <div class="comp-row"><span class="comp-row-label">One Cikan</span><span class="comp-row-value">Magaza + Online, Auto-Deliver</span></div>
+            <div class="comp-row"><span class="comp-row-label">Teknoloji</span><span class="comp-row-value">Native (iOS + Android)</span></div>
+            <div class="comp-desc">Fiziksel magaza entegrasyonu (store locator, in-store pickup), Auto-Deliver abonelik (%10 indirim), myGNC Rewards sadakat programi, urun Quiz ("bana uygun supplement") ozelligi.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EN IYI PRATIKLER -->
+      <div id="best-practices" class="subsec-hdr">2b - Global En Iyi Pratikler</div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="repeat" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Abonelik / Auto-Replenish Modeli</div>
+          <div class="str-desc">Myprotein ve GNC'nin uyguladigi otomatik yenileme modeli. Kullanici supplement'ini periyodik olarak (aylik/6 haftalik) otomatik satin alir, %5-10 indirim kazanir. LTV'yi %40-60 artirdigu raporlanmaktadir.</div>
+          <div class="str-metric">Myprotein: Abonelik ile %5 ek indirim / GNC: Auto-Deliver ile %10</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Kisisellestirilmis Urun Onerisi (AI)</div>
+          <div class="str-desc">iHerb ve Myprotein'in kullanici davranisina dayali AI oneri sistemi. Alisveris gecmisi, goruntuleme, sepet verisi ve demografik bilgiye gore kisisellestirilmis urun one cikarma. Donusum oranini %15-25 artirmaktadir.</div>
+          <div class="str-metric">Ortalama sepet buyuklugu artisi: %20-35</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="clipboard-list" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Supplement Quiz / Goal-Based Shopping</div>
+          <div class="str-desc">GNC "Find Your Fit" quiz'i ve Bodybuilding.com hedef bazli filtreleme. Kullanici fitness hedefini (kas kazanimi, yag yakimi, dayaniklilik) secer, buna uygun urun paketi onerilir. Yeni kullanici onboarding'inde kritik.</div>
+          <div class="str-metric">Quiz tamamlama → Satin alma orani: %30-45</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="activity" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Fitness App Entegrasyonu</div>
+          <div class="str-desc">Bodybuilding.com'un antrenman + supplement entegrasyonu referans model. Apple Health, Strava, Garmin Connect ile entegrasyon sayesinde kullanicinin antrenman verisine gore supplement onerisi. "Post-workout shake" zamanlama bildirimi.</div>
+          <div class="str-metric">Entegre uygulamalarda retention: +25-40%</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="award" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Gamification & Loyalty</div>
+          <div class="str-desc">Supplementler.com ve Myprotein'in puan bazli loyalty programlari. Her alisverisin puan kazandirmasi, seviye sistemi (Bronze/Silver/Gold), ozel kampanya erisimi, ucretsiz urun kazanma. Community engagement ile destekleniyor.</div>
+          <div class="str-metric">Loyalty uyeleri ortalama %2.5x daha fazla harcama yapıyor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 3: FEATURE MATRISI ===== -->
+    <div class="section-block" id="bolum3">
+      <div class="section-hdr">
+        <div class="section-badge">3</div>
+        <div>
+          <h2>Feature Karsilastirma Matrisi & Gap Analizi</h2>
+          <div class="sh-sub">18 ozellik uzerinden detayli rakip karsilastirmasi</div>
+        </div>
+      </div>
+
+      <div id="feature-matrix" class="subsec-hdr">3a - Ozellik Karsilastirma Matrisi</div>
+
+      <div class="info-box">
+        <i data-lucide="info" style="width:16px;height:16px;"></i>
+        <div><strong>Okuma Kilavuzu:</strong> <span class="check">&#10003;</span> = Mevcut &nbsp; <span class="partial">~</span> = Kismi &nbsp; <span class="cross">&#10007;</span> = Yok. ProteinOcean'in mevcut web + mobil uygulama durumu degerlendirilmistir.</div>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Ozellik</th>
+              <th style="color:var(--primary);">ProteinOcean</th>
+              <th>Supplementler</th>
+              <th>Vitaminler</th>
+              <th>Myprotein</th>
+              <th>iHerb</th>
+              <th>GNC</th>
+              <th>BB.com</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Native Mobil Uygulama</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Push Notification</td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Loyalty / Puan Programi</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+            </tr>
+            <tr>
+              <td>Abonelik / Auto-Replenish</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Kisisellestirilmis Oneri (AI)</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Supplement Quiz / Goal Shopping</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Barkod Tarama</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Apple Pay</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Fitness App Entegrasyonu</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Influencer / Affiliate Program</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Sosyal Paylasim</td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Chatbot / Canli Destek</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+            </tr>
+            <tr>
+              <td>Makro / Kalori Hesaplayici</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Toplu / Paket Siparis</td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Urun Karsilastirma</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Besin Degeri Filtreleme</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="partial">~</span></td>
+              <td><span class="partial">~</span></td>
+            </tr>
+            <tr>
+              <td>Widget / Live Activity</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AR Urun Deneme</td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+              <td><span class="cross">&#10007;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- GAP ANALİZİ -->
+      <div id="gap" class="subsec-hdr">3b - Gap Analizi (Oncelik Siralamasina Gore)</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">ProteinOcean'da olmayip rakiplerin cogunlugunda bulunan ozellikler, is etkisine gore siralanmistir.</p>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="smartphone" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">1. Native Mobil Uygulama</div>
+          <div class="gap-desc">Tum rakipler native veya yuksek kaliteli cross-platform (Flutter) uygulama sunuyor. ProteinOcean'in hybrid/WebView yaklasimi 3.19 puanla sectordeki en dusuk kullanici memnuniyetine sahip.</div>
+          <div class="gap-priority">Oncelik: KRITIK — Temel rekabet gucunu etkiliyor</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="award" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">2. Loyalty / Sadakat Programi</div>
+          <div class="gap-desc">6 rakipten 5'inde aktif loyalty programi var. Puan kazanma, seviye sistemi, ozel kampanyalar. ProteinOcean'da hicbir sadakat mekanizmasi yok — tekrar alisveris motivasyonu dusuk.</div>
+          <div class="gap-priority">Oncelik: YUKSEK — Retention ve LTV'yi dogrudan etkiliyor</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">3. AI Kisisellestirilmis Oneri</div>
+          <div class="gap-desc">Myprotein, iHerb ve Bodybuilding.com AI tabanli urun onerisi sunuyor. ProteinOcean'da hicbir kisisellestime yok — tum kullanicilar ayni icerigi goruyor.</div>
+          <div class="gap-priority">Oncelik: YUKSEK — Sepet buyuklugu ve donusum oranini etkiliyor</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="credit-card" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">4. Apple Pay / Hizli Odeme</div>
+          <div class="gap-desc">4 global rakipte Apple Pay mevcut. Tek tikla odeme, checkout surtusnmesini %60-70 azaltiyor. ProteinOcean'da sadece geleneksel kredi karti + havale secenegi var.</div>
+          <div class="gap-priority">Oncelik: YUKSEK — Checkout abandonment'i dogrudan artiriyor</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="repeat" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">5. Abonelik / Otomatik Yenileme</div>
+          <div class="gap-desc">Myprotein, iHerb ve GNC abonelik modeli sunuyor. Supplement kullanicilari aylik/periyodik alim yapar — bu model LTV'yi %40-60 artiriyor. Turkiye pazarinda henuz yaygin degil = firsat.</div>
+          <div class="gap-priority">Oncelik: YUKSEK — Turkiye'de ilk uygulayan avantaj kazanir</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="message-circle" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">6. Chatbot / Canli Destek</div>
+          <div class="gap-desc">5 rakipte chatbot veya canli destek var. Supplement alisverisinde kullanici soru sorar ("hangi protein bana uygun?"). ProteinOcean'da sadece iletisim formu var.</div>
+          <div class="gap-priority">Oncelik: ORTA — Degerli ama temel ozelliklerin ardindan gelmeli</div>
+        </div>
+      </div>
+
+      <div class="gap-card">
+        <div class="gap-icon"><i data-lucide="users" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="gap-title">7. Influencer / Affiliate Programi</div>
+          <div class="gap-desc">4 rakipte aktif influencer/affiliate programi var. Spor beslenme sektorunde influencer pazarlama kritik bir kanal. ProteinOcean'da yapisal bir affiliate programi gorulmuyor.</div>
+          <div class="gap-priority">Oncelik: ORTA — Kullanici kazanimi ve marka bilinirligini artiriyor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 4: FEATURE ROADMAP ===== -->
+    <div class="section-block" id="bolum4">
+      <div class="section-hdr">
+        <div class="section-badge">4</div>
+        <div>
+          <h2>Feature Roadmap Onerisi</h2>
+          <div class="sh-sub">3 fazda stratejik ozellik gelistirme plani</div>
+        </div>
+      </div>
+
+      <!-- KISA VADE -->
+      <div id="roadmap-short" class="roadmap-phase">
+        <div class="roadmap-hdr">
+          <span class="roadmap-badge rb-short">FAZ 1</span>
+          <span class="roadmap-title">Kisa Vade — Quick Wins</span>
+          <span class="roadmap-timeline">0 – 3 Ay</span>
+        </div>
+        <div class="roadmap-body">
+          <div class="roadmap-item">
+            <div class="roadmap-num">1</div>
+            <div>
+              <div class="roadmap-item-title">Native iOS Uygulamasi (SwiftUI)</div>
+              <div class="roadmap-item-desc">Hybrid uygulamayi tamamen native SwiftUI ile yeniden yazma. iOS 17+, MVVM + @Observable, NavigationStack, TabBar navigasyon. Performance-first yaklasum.</div>
+              <span class="roadmap-item-impact ri-high">Kritik Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">2</div>
+            <div>
+              <div class="roadmap-item-title">Apple Pay Entegrasyonu</div>
+              <div class="roadmap-item-desc">Tek tikla odeme ile checkout surtusnmesini ortadan kaldirma. PassKit framework entegrasyonu.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">3</div>
+            <div>
+              <div class="roadmap-item-title">Gelismis Arama & Filtreleme</div>
+              <div class="roadmap-item-desc">Aroma, gramaj, fiyat araligi, besin degeri bazli filtreleme. Fuzzy search, autocomplete, arama gecmisi. Algolia veya custom search engine.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">4</div>
+            <div>
+              <div class="roadmap-item-title">Rich Push Notification</div>
+              <div class="roadmap-item-desc">Firebase + APNs ile gorsel, deep link, aksiyon butonlu bildirimler. Sepet hatirlatma, kampanya, stok uyarisi.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">5</div>
+            <div>
+              <div class="roadmap-item-title">Face ID / Touch ID Giris</div>
+              <div class="roadmap-item-desc">Biometric authentication ile hizli ve guvenli giris. Keychain entegrasyonu.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORTA VADE -->
+      <div id="roadmap-mid" class="roadmap-phase">
+        <div class="roadmap-hdr">
+          <span class="roadmap-badge rb-mid">FAZ 2</span>
+          <span class="roadmap-title">Orta Vade — Rekabet Gucu</span>
+          <span class="roadmap-timeline">3 – 9 Ay</span>
+        </div>
+        <div class="roadmap-body">
+          <div class="roadmap-item">
+            <div class="roadmap-num">6</div>
+            <div>
+              <div class="roadmap-item-title">Loyalty / Sadakat Programi</div>
+              <div class="roadmap-item-desc">Puan kazanma (her 1 TL = 1 puan), seviye sistemi (Bronze/Silver/Gold/Platinum), ozel kampanyalar, ucretsiz kargo esikleri. Gamification elementleri.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">7</div>
+            <div>
+              <div class="roadmap-item-title">Abonelik Modeli (ProteinBox)</div>
+              <div class="roadmap-item-desc">Aylik/6 haftalik otomatik siparis. Kullanicinin sectige urunler periyodik gonderim. %5-10 abonelik indirimi. Esnek iptyal/erteleme.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">8</div>
+            <div>
+              <div class="roadmap-item-title">AI Urun Oneri Motoru</div>
+              <div class="roadmap-item-desc">Alisveris gecmisi, goruntuleme, sepet verisi ve kullanici profili bazli kisisellestirilmis oneiler. Core ML ile on-device inference.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">9</div>
+            <div>
+              <div class="roadmap-item-title">Supplement Quiz & Hedef Bazli Alisveris</div>
+              <div class="roadmap-item-desc">"Bana uygun supplement" quiz'i. Fitness hedefi, vucut tipi, antrenman sikligina gore paket onerisi. Yeni kullanici onboarding flow'unda entegre.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">10</div>
+            <div>
+              <div class="roadmap-item-title">In-App Chat / Beslenme Danismanligi</div>
+              <div class="roadmap-item-desc">Canli destek chatbot + beslenme uzmani danismanlik servisi. Urun secimi konusunda rehberlik. AI chatbot ile 7/24 temel destek.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UZUN VADE -->
+      <div id="roadmap-long" class="roadmap-phase">
+        <div class="roadmap-hdr">
+          <span class="roadmap-badge rb-long">FAZ 3</span>
+          <span class="roadmap-title">Uzun Vade — Farklilastirici</span>
+          <span class="roadmap-timeline">9 – 18 Ay</span>
+        </div>
+        <div class="roadmap-body">
+          <div class="roadmap-item">
+            <div class="roadmap-num">11</div>
+            <div>
+              <div class="roadmap-item-title">Apple Health & Fitness Entegrasyonu</div>
+              <div class="roadmap-item-desc">HealthKit ile kalori, makro, antrenman verisi senkronizasyonu. Antrenman sonrasi supplement onerisi, gunluk protein takibi, hedef bazli hatirlatmalar.</div>
+              <span class="roadmap-item-impact ri-high">Yuksek Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">12</div>
+            <div>
+              <div class="roadmap-item-title">Makro Hesaplayici & Beslenme Takip</div>
+              <div class="roadmap-item-desc">Gunluk protein/karbonhidrat/yag takibi, kalori hesaplama, urun besin degeri tarayici. MyFitnessPal benzeri ozellik seti icinde ProteinOcean urunlerini on plana cikarma.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">13</div>
+            <div>
+              <div class="roadmap-item-title">Influencer / Affiliate Platformu</div>
+              <div class="roadmap-item-desc">Uygulama ici influencer vitrin'i, ozel indirim kodlari, komisyon takip paneli. Sporcular ve fitness influencer'lari icin self-service affiliate kayit.</div>
+              <span class="roadmap-item-impact ri-mid">Orta Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">14</div>
+            <div>
+              <div class="roadmap-item-title">Community & Sosyal Ozellikler</div>
+              <div class="roadmap-item-desc">Kullanici profilleri, ilerleme paylasimi, taric/stack paylasimi, folowing/like sistemi. "Bu stack'i 1500 kisi kullaniyor" sosyal kanit. Kullanici tarafindan olusturulan icerik (UGC).</div>
+              <span class="roadmap-item-impact ri-low">Orta-Dusuk Etki</span>
+            </div>
+          </div>
+          <div class="roadmap-item">
+            <div class="roadmap-num">15</div>
+            <div>
+              <div class="roadmap-item-title">Widget & Live Activity</div>
+              <div class="roadmap-item-desc">iOS home screen widget (gunun kampanyasi, protein takibi), kargo takip Live Activity, Siri Shortcuts ("ProteinOcean'dan son siparisimi tekrarla"). Sectorde ilk olma firsati.</div>
+              <span class="roadmap-item-impact ri-low">Farklilasuirici</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-bar">
+      <a href="01-engineering-analysis.html" class="nav-link">
+        <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Onceki: Engineering Analizi
+      </a>
+      <a href="index.html" class="nav-link">
+        <i data-lucide="home" style="width:14px;height:14px;"></i> Ana Menu
+      </a>
+      <a href="03-industry-expertise.html" class="nav-link">
+        Sonraki: Sektor Analizi <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

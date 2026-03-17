@@ -23,6 +23,38 @@ Analiz tamamlandığında şu istatistikleri raporla:
 
 ---
 
+## Faz 1.5: Marka Kimliği Analizi
+
+```
+brand-analyzer subagent'ını kullan.
+
+Şu dosyayı oku:
+1. ~/ai-dev-team/analysis/web-analysis-report.html (web analiz raporu)
+
+Ayrıca [URL] adresine WebFetch ile eriş ve CSS dosyalarını analiz et.
+
+Web sitesinin marka kimliğini derinlemesine analiz et:
+- Renk paleti (primary, secondary, accent, background, text, status)
+- Tipografi (font ailesi, ağırlıklar, boyut skalası)
+- Spacing ve grid sistemi
+- Border radius ve shadow değerleri
+- İkon seti ve stili
+- Buton ve form stilleri
+- Genel marka tonu
+
+Çıktıları şu dosyalara kaydet:
+- ~/ai-dev-team/docs/brand-tokens.json (makine okunur token seti)
+- ~/ai-dev-team/docs/brand-style-guide.html (görsel stil rehberi)
+
+Analiz tamamlandığında şu özeti sun:
+- Tespit edilen ana renk ve marka tonu
+- Seçilen tipografi ailesi ve iOS karşılığı
+- Tespit edilen ikon kütüphanesi
+- Güven skoru (CSS'den mi çıkarıldı, tahmini mi?)
+```
+
+---
+
 ## Faz 2: Mimari Tasarım
 
 ```
@@ -99,6 +131,7 @@ uiux-translator subagent'ını kullan.
 1. ~/ai-dev-team/design/components/ dizinindeki tüm component spec'ler
 2. ~/ai-dev-team/docs/ba-document.md (BA dokümanı — ekran listesi ve akışlar)
 3. ~/ai-dev-team/docs/architecture-decisions.md (iOS mimari kararları)
+4. ~/ai-dev-team/docs/brand-tokens.json (marka token'ları — renkler, tipografi, spacing, border, shadow)
 
 Web tasarımını iOS Human Interface Guidelines'a uyumlu native tasarıma dönüştür:
 1. Component Hierarchy — ağaç yapısı (her web bileşeni → SwiftUI karşılığı)
@@ -156,13 +189,18 @@ Kodu ~/ai-dev-team/ios/ dizinine kaydet.
 
 ### Faz 6c: iOS UI Katmanı
 
+> **Platform notu:** `~/ai-dev-team/docs/tech-decisions.json` dosyasını oku.
+> - `"platform": "ios-native"` → **swift-expert** subagent'ını kullan
+> - `"platform": "flutter"` veya `"platform": "react-native"` → **mobile-developer** subagent'ını kullan
+
 ```
-mobile-developer subagent'ını kullan.
+[PLATFORMA GÖRE: swift-expert VEYA mobile-developer] subagent'ını kullan.
 
 Şu dosyaları oku:
 1. ~/ai-dev-team/docs/ios-design-spec.md (ekran listesi, navigasyon, component detayları)
-2. ~/ai-dev-team/design/tokens.json (design tokens)
-3. ~/ai-dev-team/ios/ dizinindeki mevcut core modüller (swift-expert çıktısı)
+2. ~/ai-dev-team/docs/brand-tokens.json (marka token'ları — renk, tipografi, spacing)
+3. ~/ai-dev-team/design/tokens.json (design tokens)
+4. ~/ai-dev-team/ios/ dizinindeki mevcut core modüller (swift-expert çıktısı)
 
 iOS uygulamasının UI katmanını geliştir:
 - SwiftUI view'ları (ios-design-spec'teki ekran listesine uygun)

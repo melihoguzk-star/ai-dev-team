@@ -1,0 +1,113 @@
+{
+  "app_name": "SunExpress",
+  "platform": "android",
+  "metric": "rating",
+  "collection_date": "2026-03-13T12:52:28.575334+00:00",
+  "source": "google_play_scraper",
+  "live": true,
+  "data": {
+    "global_average": 3.03,
+    "total_ratings_count": 13416,
+    "current_version": "1.0.9",
+    "by_country": {
+      "tr": {
+        "rating": 3.42,
+        "count": 559
+      },
+      "de": {
+        "rating": 2.73,
+        "count": 559
+      },
+      "gb": {
+        "rating": 2.04,
+        "count": 559
+      },
+      "nl": {
+        "rating": 3.55,
+        "count": 559
+      },
+      "at": {
+        "rating": 3.7,
+        "count": 559
+      },
+      "ch": {
+        "rating": 3.59,
+        "count": 559
+      },
+      "be": {
+        "rating": 3.78,
+        "count": 559
+      },
+      "fr": {
+        "rating": 3.35,
+        "count": 559
+      },
+      "se": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "dk": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "fi": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "cz": {
+        "rating": 1.4,
+        "count": 559
+      },
+      "kw": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "bh": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "qa": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "it": {
+        "rating": 3.2,
+        "count": 559
+      },
+      "hr": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "sk": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "si": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "ba": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "me": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "xk": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "mk": {
+        "rating": 3.0,
+        "count": 559
+      },
+      "al": {
+        "rating": 3.0,
+        "count": 559
+      }
+    },
+    "countries_with_data": 24,
+    "countries_without_data": 29
+  }
+}
