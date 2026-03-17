@@ -1,0 +1,8 @@
+week_start,week_end,ios_rating,android_rating,ios_crash_free_user,android_crash_free_user,ios_downloads,android_downloads,ios_active_users,android_active_users,ios_uninstalls,android_uninstalls,ios_rating_source,android_rating_source,ios_crash_free_user_source,android_crash_free_user_source,ios_downloads_source,android_downloads_source,ios_active_users_source,android_active_users_source,ios_uninstalls_source,android_uninstalls_source,ios_rating_ma4,android_rating_ma4,ios_crash_free_user_ma4,android_crash_free_user_ma4,ios_downloads_ma4,android_downloads_ma4,ios_active_users_ma4,android_active_users_ma4,ios_uninstalls_ma4,android_uninstalls_ma4
+2026-01-19,2026-01-25,-,2.62,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,-,2.62,-,-,-,-,-,-,-,-
+2026-01-26,2026-02-01,-,3.18,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,-,2.90,-,-,-,-,-,-,-,-
+2026-02-02,2026-02-08,-,2.17,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,-,2.66,-,-,-,-,-,-,-,-
+2026-02-09,2026-02-15,-,2.54,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,-,2.63,-,-,-,-,-,-,-,-
+2026-02-16,2026-02-22,1.11,1.46,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,1.11,2.34,-,-,-,-,-,-,-,-
+2026-02-23,2026-03-01,1.41,2.29,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,1.26,2.12,-,-,-,-,-,-,-,-
+2026-03-02,2026-03-08,1.00,2.04,-,-,-,-,-,-,-,-,live,live,empty,empty,empty,empty,empty,empty,empty,empty,1.17,2.08,-,-,-,-,-,-,-,-

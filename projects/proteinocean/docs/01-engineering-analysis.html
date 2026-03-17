@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProteinOcean — Engineering Analizi | Loodos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root {
+  --bg:          #F8FAFC;
+  --bg-alt:      #F1F5F9;
+  --card:        #FFFFFF;
+  --primary:     #0D9488;
+  --primary-dk:  #0F766E;
+  --primary-lt:  #CCFBF1;
+  --text:        #0F172A;
+  --text-2:      #475569;
+  --text-3:      #94A3B8;
+  --border:      #E2E8F0;
+  --danger:      #EF4444;
+  --danger-bg:   #FEF2F2;
+  --warning:     #F59E0B;
+  --warning-bg:  #FFFBEB;
+  --success:     #10B981;
+  --info:        #3B82F6;
+  --info-bg:     #EFF6FF;
+  --sidebar-w:   268px;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+  --radius:      12px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; display:flex; min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+/* SIDEBAR */
+.sidebar { width:var(--sidebar-w); background:#FFFFFF; border-right:1px solid var(--border); position:fixed; top:0; left:0; height:100vh; overflow-y:auto; z-index:100; display:flex; flex-direction:column; }
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:2px; }
+.sb-logo { padding:18px 16px 14px; border-bottom:1px solid var(--border); }
+.sb-brand { display:flex; align-items:center; gap:10px; }
+.sb-mark { width:32px; height:32px; background:var(--primary); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:800; letter-spacing:-0.5px; flex-shrink:0; }
+.sb-name { font-size:15px; font-weight:800; color:var(--text); }
+.sb-sub { font-size:11px; color:var(--text-3); margin-top:1px; }
+.sb-divider { height:1px; background:var(--border); margin:6px 0; }
+.sb-nav { padding:12px 10px; flex:1; }
+.sb-sec-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); padding:8px 8px 4px; margin-top:4px; }
+.sb-sec-hdr { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:8px; cursor:pointer; color:var(--text); font-size:12.5px; font-weight:700; transition:background 0.12s; margin-bottom:1px; user-select:none; }
+.sb-sec-hdr:hover { background:var(--bg-alt); }
+.sb-num { width:20px; height:20px; background:var(--primary); color:#fff; border-radius:5px; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sb-item { display:flex; align-items:center; gap:7px; padding:5px 10px 5px 22px; border-radius:7px; cursor:pointer; text-decoration:none; color:var(--text-2); font-size:12px; font-weight:400; transition:all 0.12s; margin-bottom:1px; }
+.sb-item:hover { background:var(--bg-alt); color:var(--text); }
+.sb-item.active { background:#F0FDFA; color:var(--primary); font-weight:600; }
+.sb-item .dot { width:5px; height:5px; border-radius:50%; background:var(--text-3); flex-shrink:0; transition:background 0.12s; }
+.sb-item.active .dot { background:var(--primary); }
+.sb-footer { padding:14px 16px; border-top:1px solid var(--border); }
+.sb-footer-txt { font-size:11px; color:var(--text-3); display:flex; align-items:center; gap:5px; }
+.sb-footer-loodos { font-size:12px; font-weight:700; color:var(--primary); margin-top:4px; }
+
+/* MAIN */
+.main { margin-left:var(--sidebar-w); flex:1; }
+.topbar { background:#FFFFFF; border-bottom:1px solid var(--border); padding:12px 40px; position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; }
+.tb-title { font-size:14px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+.tb-chips { display:flex; gap:6px; }
+.chip { font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; border:1px solid; }
+.chip-teal  { background:#F0FDFA; color:var(--primary);  border-color:#99F6E4; }
+.chip-blue  { background:#EFF6FF; color:#2563EB;          border-color:#BFDBFE; }
+.chip-amber { background:#FFFBEB; color:#B45309;          border-color:#FDE68A; }
+.chip-slate { background:#F8FAFC; color:#475569;          border-color:#CBD5E1; }
+
+.page { padding:36px 40px 80px; max-width:1100px; }
+
+/* HERO */
+.hero { background:linear-gradient(135deg,#F0FDFA 0%,#FFFFFF 60%,#EFF6FF 100%); border:1px solid #A7F3D0; border-radius:16px; padding:36px 40px; margin-bottom:36px; display:flex; gap:28px; align-items:flex-start; }
+.hero-emblem { width:60px; height:60px; background:var(--primary); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; }
+.hero-title { font-size:26px; font-weight:800; color:var(--text); line-height:1.2; margin-bottom:8px; }
+.hero-title em { font-style:normal; color:var(--primary); }
+.hero-sub { font-size:14px; color:var(--text-2); max-width:620px; }
+.hero-meta { display:flex; gap:20px; margin-top:16px; flex-wrap:wrap; }
+.hero-meta-item { font-size:12px; color:var(--text-3); display:flex; align-items:center; gap:5px; }
+
+/* STAT GRID */
+.stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:40px; }
+.stat-card { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm); }
+.stat-label { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-3); margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+.stat-value { font-size:30px; font-weight:800; line-height:1; margin-bottom:4px; }
+.stat-desc  { font-size:12px; color:var(--text-3); line-height:1.4; }
+.c-teal   { color:var(--primary); }
+.c-amber  { color:#D97706; }
+.c-blue   { color:#2563EB; }
+.c-purple { color:#7C3AED; }
+.c-danger { color:#EF4444; }
+
+/* SECTION BLOCKS */
+.section-block { margin-bottom:52px; scroll-margin-top:75px; }
+.section-hdr { display:flex; align-items:flex-start; gap:14px; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid var(--border); }
+.section-badge { width:38px; height:38px; background:var(--primary); color:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; flex-shrink:0; margin-top:2px; }
+.section-hdr h2 { font-size:20px; font-weight:800; color:var(--text); }
+.section-hdr .sh-sub { font-size:13px; color:var(--text-2); margin-top:3px; }
+.subsec-hdr { font-size:14.5px; font-weight:700; color:var(--text); margin:28px 0 14px; display:flex; align-items:center; gap:8px; scroll-margin-top:75px; }
+.subsec-hdr::before { content:''; width:3px; height:18px; background:var(--primary); border-radius:2px; }
+
+/* TECH STACK TABLE */
+.tbl-wrap { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:20px; }
+table.stack { width:100%; border-collapse:collapse; font-size:13px; }
+table.stack th { background:#F8FAFC; padding:10px 16px; text-align:left; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-3); border-bottom:2px solid var(--border); }
+table.stack td { padding:13px 16px; border-bottom:1px solid #F1F5F9; vertical-align:middle; }
+table.stack tr:last-child td { border-bottom:none; }
+table.stack tr:hover td { background:#FAFAFA; }
+.layer-badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:3px 8px; border-radius:5px; white-space:nowrap; }
+.lb-fe  { background:#EFF6FF; color:#2563EB; }
+.lb-be  { background:#F5F3FF; color:#7C3AED; }
+.lb-mob { background:#FFF7ED; color:#C2410C; }
+.lb-inf { background:#ECFDF5; color:#059669; }
+.lb-ana { background:#FDF4FF; color:#9333EA; }
+.lb-mkt { background:#FFF1F2; color:#E11D48; }
+.lb-pay { background:#FEF3C7; color:#92400E; }
+.eval-tag { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; padding:3px 9px; border-radius:5px; border:1px solid; }
+.et-iyi     { background:#F0FDFA; color:#0F766E; border-color:#99F6E4; }
+.et-orta    { background:#FFFBEB; color:#92400E; border-color:#FDE68A; }
+.et-zayif   { background:#FEF2F2; color:#991B1B; border-color:#FECACA; }
+.et-yok     { background:#F8FAFC; color:#64748B; border-color:#CBD5E1; }
+
+/* STRENGTH / OPPORTUNITY CARDS */
+.str-card { background:#F0FDFA; border:1px solid #A7F3D0; border-left:4px solid var(--primary); border-radius:var(--radius); padding:16px 20px; margin-bottom:10px; display:flex; align-items:flex-start; gap:14px; }
+.str-icon { width:36px; height:36px; background:var(--primary); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+.str-title { font-size:13.5px; font-weight:700; color:var(--text); margin-bottom:3px; }
+.str-desc  { font-size:12.5px; color:var(--text-2); }
+.str-metric { font-size:11px; font-weight:700; color:var(--primary); margin-top:3px; }
+
+.opp-card { background:#FFFBEB; border:1px solid #FDE68A; border-left:4px solid #F59E0B; border-radius:var(--radius); padding:16px 20px; margin-bottom:10px; display:flex; align-items:flex-start; gap:14px; }
+.opp-icon { width:36px; height:36px; background:#F59E0B; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+.opp-title { font-size:13.5px; font-weight:700; color:#92400E; margin-bottom:3px; }
+.opp-desc  { font-size:12.5px; color:#78350F; }
+.opp-target { font-size:11px; font-weight:700; color:#B45309; margin-top:3px; }
+
+.weak-card { background:#FEF2F2; border:1px solid #FECACA; border-left:4px solid #EF4444; border-radius:var(--radius); padding:16px 20px; margin-bottom:10px; display:flex; align-items:flex-start; gap:14px; }
+.weak-icon { width:36px; height:36px; background:#EF4444; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+.weak-title { font-size:13.5px; font-weight:700; color:#991B1B; margin-bottom:3px; }
+.weak-desc  { font-size:12.5px; color:#7F1D1D; }
+.weak-impact { font-size:11px; font-weight:700; color:#B91C1C; margin-top:3px; }
+
+/* GAUGE */
+.gauge-wrap { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+.gauge-card { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-sm); flex:1; min-width:200px; text-align:center; }
+.gauge-label { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-3); margin-bottom:12px; }
+.gauge { width:120px; height:60px; margin:0 auto 10px; position:relative; overflow:hidden; }
+.gauge::before { content:''; display:block; width:120px; height:120px; border-radius:50%; border:12px solid #E2E8F0; border-bottom-color:transparent; border-left-color:transparent; transform:rotate(225deg); position:absolute; top:0; left:0; }
+.gauge-fill { display:block; width:120px; height:120px; border-radius:50%; border:12px solid transparent; position:absolute; top:0; left:0; transform:rotate(225deg); }
+.gauge-score { font-size:26px; font-weight:800; position:absolute; bottom:0; left:50%; transform:translateX(-50%); }
+.gauge-max { font-size:11px; color:var(--text-3); }
+
+/* FLOW CARDS */
+.flow-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px; margin-bottom:20px; }
+.flow-card { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow-sm); text-align:center; position:relative; }
+.flow-card::after { content:''; position:absolute; right:-8px; top:50%; transform:translateY(-50%); width:0; height:0; border-left:6px solid var(--primary); border-top:5px solid transparent; border-bottom:5px solid transparent; }
+.flow-card:last-child::after { display:none; }
+.flow-num { width:28px; height:28px; background:var(--primary); color:#fff; border-radius:50%; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; }
+.flow-title { font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.flow-desc { font-size:11px; color:var(--text-2); }
+.flow-score { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; display:inline-block; margin-top:6px; }
+.fs-good { background:#F0FDFA; color:#0F766E; }
+.fs-mid  { background:#FFFBEB; color:#92400E; }
+.fs-bad  { background:#FEF2F2; color:#991B1B; }
+
+/* INFO BOX */
+.info-box { background:#EFF6FF; border:1px solid #BFDBFE; border-radius:var(--radius); padding:14px 18px; font-size:13px; color:#1E3A8A; display:flex; align-items:flex-start; gap:10px; margin-bottom:16px; }
+.info-box svg { color:#2563EB; flex-shrink:0; margin-top:2px; }
+
+/* ACCESSIBILITY GRID */
+.access-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px; }
+.access-card { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow-sm); }
+.access-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.access-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0; }
+.access-title { font-size:13px; font-weight:700; color:var(--text); }
+.access-score { font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:auto; }
+.access-desc { font-size:12px; color:var(--text-2); line-height:1.5; }
+
+/* NAV */
+.nav-bar { display:flex; justify-content:space-between; align-items:center; padding:20px 0; margin-top:40px; border-top:1px solid var(--border); }
+.nav-link { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--primary); text-decoration:none; padding:8px 16px; border-radius:8px; border:1px solid #99F6E4; background:#F0FDFA; transition:all 0.15s; }
+.nav-link:hover { background:var(--primary); color:#fff; }
+
+/* MATRIX TABLE */
+.matrix-wrap { background:#FFFFFF; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:20px; }
+table.matrix { width:100%; border-collapse:collapse; font-size:12px; }
+table.matrix th { background:#F8FAFC; padding:10px 14px; text-align:left; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-3); border-bottom:2px solid var(--border); }
+table.matrix td { padding:10px 14px; border-bottom:1px solid #F1F5F9; vertical-align:middle; }
+table.matrix tr:last-child td { border-bottom:none; }
+table.matrix tr:hover td { background:#FAFAFA; }
+@media print {
+  .sidebar, aside, nav, .sb-nav, .sb-logo, .sb-footer { display: none !important; }
+  .main, main, .content, .main-content { margin-left: 0 !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; max-width: 100% !important; }
+  body { display: block !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="sb-mark">L</div>
+      <div>
+        <div class="sb-name">Loodos</div>
+        <div class="sb-sub">ProteinOcean Analiz</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-sec-label">Engineering Analizi</div>
+
+    <div class="sb-sec-hdr">
+      <span class="sb-num">1</span> Teknoloji Stack
+    </div>
+    <a class="sb-item active" href="#stack"><span class="dot"></span>Altyapi Haritasi</a>
+    <a class="sb-item" href="#ecom-platform"><span class="dot"></span>E-ticaret Platformu</a>
+    <a class="sb-item" href="#tracking"><span class="dot"></span>Analytics & Tracking</a>
+
+    <div class="sb-divider" style="margin:10px 0;"></div>
+
+    <div class="sb-sec-hdr">
+      <span class="sb-num">2</span> UX Denetimi
+    </div>
+    <a class="sb-item" href="#ux-flow"><span class="dot"></span>Kullanici Akisi</a>
+    <a class="sb-item" href="#ux-search"><span class="dot"></span>Arama & Filtreleme</a>
+    <a class="sb-item" href="#ux-friction"><span class="dot"></span>Friction Noktalari</a>
+
+    <div class="sb-divider" style="margin:10px 0;"></div>
+
+    <div class="sb-sec-hdr">
+      <span class="sb-num">3</span> Performans
+    </div>
+    <a class="sb-item" href="#perf-metrics"><span class="dot"></span>Core Web Vitals</a>
+    <a class="sb-item" href="#perf-mobile"><span class="dot"></span>Mobil Uyumluluk</a>
+
+    <div class="sb-divider" style="margin:10px 0;"></div>
+
+    <div class="sb-sec-hdr">
+      <span class="sb-num">4</span> SWOT Matrisi
+    </div>
+    <a class="sb-item" href="#strengths"><span class="dot"></span>Guclu Yonler</a>
+    <a class="sb-item" href="#weaknesses"><span class="dot"></span>Zayif Yonler</a>
+    <a class="sb-item" href="#a11y"><span class="dot"></span>Erisilebilirlik</a>
+
+    <div class="sb-divider" style="margin:10px 0;"></div>
+
+    <div class="sb-sec-hdr">
+      <span class="sb-num">5</span> Mobil Uygulama
+    </div>
+    <a class="sb-item" href="#app-current"><span class="dot"></span>Mevcut Durum</a>
+    <a class="sb-item" href="#app-opp"><span class="dot"></span>Firsatlar</a>
+  </nav>
+
+  <div class="sb-footer">
+    <div class="sb-footer-txt">
+      <i data-lucide="calendar" style="width:12px;height:12px;"></i>
+      Mart 2026 — Gizli
+    </div>
+    <div class="sb-footer-loodos">loodos.com</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-title">
+      <i data-lucide="cpu" style="width:16px;height:16px;color:#0D9488;"></i>
+      ProteinOcean — Mevcut Mobil Uygulama Engineering Analizi
+    </div>
+    <div class="tb-chips">
+      <span class="chip chip-teal">Loodos</span>
+      <span class="chip chip-slate">Gizli</span>
+      <span class="chip chip-blue">Mart 2026</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-emblem">&#9881;</div>
+      <div>
+        <h1 class="hero-title">ProteinOcean Engineering<br><em>Teknik Altyapi & UX Denetimi</em></h1>
+        <p class="hero-sub">proteinocean.com web sitesi ve mevcut iOS uygulamasinin teknik altyapisini, kullanici deneyimini ve performans metriklerini kapsamli sekilde inceledik. Bu rapor, native iOS uygulamasina gecis icin temel bulguları icerir.</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><i data-lucide="globe" style="width:13px;height:13px;color:#0D9488;"></i> proteinocean.com</div>
+          <div class="hero-meta-item"><i data-lucide="building-2" style="width:13px;height:13px;color:#0D9488;"></i> Hazirlayan: Loodos</div>
+          <div class="hero-meta-item"><i data-lucide="calendar" style="width:13px;height:13px;color:#0D9488;"></i> Mart 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD STATS -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="layers" style="width:13px;height:13px;"></i> Teknik Katman</div>
+        <div class="stat-value c-teal">7</div>
+        <div class="stat-desc">Frontend, E-ticaret, CDN, Analytics, Ads, Push, Odeme</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="smartphone" style="width:13px;height:13px;"></i> App Store Rating</div>
+        <div class="stat-value c-amber">3.2</div>
+        <div class="stat-desc">84 degerlendirme / 5 uzerinden (Subat 2026)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="box" style="width:13px;height:13px;"></i> Urun Kategorisi</div>
+        <div class="stat-value c-blue">20+</div>
+        <div class="stat-desc">Protein, Kreatin, Vitamin, Bar, Gida, Aksesuar...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><i data-lucide="alert-triangle" style="width:13px;height:13px;"></i> Kritik Bulgu</div>
+        <div class="stat-value c-danger">5</div>
+        <div class="stat-desc">Mobil performans, UX ve erisim noktalarinda iyilestirme alanlari</div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 1: TEKNOLOJI STACK ===== -->
+    <div class="section-block" id="bolum1">
+      <div class="section-hdr">
+        <div class="section-badge">1</div>
+        <div>
+          <h2>Teknoloji Stack Tespiti</h2>
+          <div class="sh-sub">proteinocean.com web sitesinin teknik altyapisi ve kullanilan servisler</div>
+        </div>
+      </div>
+
+      <div id="stack" class="subsec-hdr">1a - Teknik Altyapi Haritasi</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">proteinocean.com'un kaynak kodu, HTTP header'lari ve JavaScript bundle'lari incelenerek asagidaki teknoloji haritasi olusturulmustur.</p>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Katman</th>
+              <th>Kullanilan Teknoloji</th>
+              <th>Degerlendirme</th>
+              <th>Not</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="layer-badge lb-fe"><i data-lucide="monitor" style="width:11px;height:11px;"></i> Frontend</span></td>
+              <td style="font-weight:600;color:var(--text);">Next.js (React), SSG/SSR</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">ikas platformu uzerinde Next.js tabanli storefront. Modern ve SEO uyumlu.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-be"><i data-lucide="shopping-cart" style="width:11px;height:11px;"></i> E-ticaret</span></td>
+              <td style="font-weight:600;color:var(--text);">ikas (SaaS E-ticaret Platformu)</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">Turkiye merkezli SaaS cozum. API erisimi sinirli, custom gelistirme kisilayici olabilir.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-inf"><i data-lucide="cloud" style="width:11px;height:11px;"></i> CDN / Hosting</span></td>
+              <td style="font-weight:600;color:var(--text);">cdn.myikas.com (ikas CDN)</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">Gorseller ve statik asset'ler ikas CDN uzerinden servisleniyor. WebP destegi mevcut.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-ana"><i data-lucide="bar-chart-2" style="width:11px;height:11px;"></i> Analytics</span></td>
+              <td style="font-weight:600;color:var(--text);">Google Analytics 4 (G-9W5BRS01S5), GTM</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">GA4 + GTM entegrasyonu mevcut. Veri toplama altyapisi saglikli.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-mkt"><i data-lucide="megaphone" style="width:11px;height:11px;"></i> Reklam</span></td>
+              <td style="font-weight:600;color:var(--text);">Facebook Pixel, Criteo, Google Ads</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">Coklu reklam platformu entegrasyonu. Retargeting altyapisi aktif.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-mob"><i data-lucide="bell" style="width:11px;height:11px;"></i> Push / Engagement</span></td>
+              <td style="font-weight:600;color:var(--text);">MobilDev, MeduzaConnect</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">Web push ve engagement araclari. Native push icin yeniden yapilandirilmali.</td>
+            </tr>
+            <tr>
+              <td><span class="layer-badge lb-pay"><i data-lucide="credit-card" style="width:11px;height:11px;"></i> Yorum Sistemi</span></td>
+              <td style="font-weight:600;color:var(--text);">Yotpo</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12.5px;color:var(--text-2);">Urun degerlendirme ve yorum sistemi. SDK entegrasyonu native app'e tasinabilir.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- E-TICARET PLATFORMU DETAY -->
+      <div id="ecom-platform" class="subsec-hdr">1b - ikas E-ticaret Platformu Detay Analizi</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">ProteinOcean, Turkiye merkezli ikas SaaS e-ticaret platformu uzerinde calismakatdir. Bu durum native mobil uygulama gelistirme stratejisini dogrudan etkiler.</p>
+
+      <div class="info-box">
+        <i data-lucide="info" style="width:16px;height:16px;"></i>
+        <div><strong>ikas Platformu:</strong> Turkiye'nin yerli SaaS e-ticaret cozumu. Next.js tabanli storefront, kendi CDN altyapisi ve odeme entegrasyonlari sunuyor. API dokumantasyonu sinirli olabilir — native app gelistirmede custom API katmani gerekebilir.</div>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Ozellik</th>
+              <th>Durum</th>
+              <th>Native App Etkisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Storefront</td>
+              <td>Next.js SSG/SSR, ikas tema sistemi</td>
+              <td style="font-size:11px;color:var(--text-2);">Web icerigi tekrar kullanilamaz, native UI sifirdan yazilacak</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Urun Yonetimi</td>
+              <td>ikas Admin Panel</td>
+              <td style="font-size:11px;color:var(--text-2);">ikas API uzerinden urun verisi cekilebilir</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Siparis Yonetimi</td>
+              <td>ikas dahili siparis sistemi</td>
+              <td style="font-size:11px;color:var(--text-2);">API erisimi dogrulanmali, webhook destegi kontrol edilmeli</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Odeme</td>
+              <td>ikas odeme entegrasyonu</td>
+              <td style="font-size:11px;color:var(--text-2);">Native app icin ayri odeme gateway entegrasyonu gerekebilir</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Kullanici Veritabani</td>
+              <td>ikas dahili auth sistemi</td>
+              <td style="font-size:11px;color:var(--text-2);">Mevcut kullanici veritabanini native app'e baglamak icin OAuth/token yaklasimi</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Envanter</td>
+              <td>ikas stok yonetimi</td>
+              <td style="font-size:11px;color:var(--text-2);">Gercek zamanli stok guncelleme API'si kritik</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ANALYTICS & TRACKING -->
+      <div id="tracking" class="subsec-hdr">1c - Analytics & Tracking Ekosistemi</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">ProteinOcean'in veri toplama ve reklam hedefleme altyapisi incelendi.</p>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Servis</th>
+              <th>Turu</th>
+              <th>ID / Detay</th>
+              <th>Native App Plani</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Google Analytics 4</td>
+              <td><span class="layer-badge lb-ana">Analytics</span></td>
+              <td style="font-size:12px;color:var(--text-2);">G-9W5BRS01S5</td>
+              <td style="font-size:12px;color:var(--text-2);">Firebase Analytics ile entegre edilecek</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Google Tag Manager</td>
+              <td><span class="layer-badge lb-ana">Tag Yonetimi</span></td>
+              <td style="font-size:12px;color:var(--text-2);">GTM-N3NBSFW</td>
+              <td style="font-size:12px;color:var(--text-2);">Firebase Remote Config ile tag yonetimi</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Facebook Pixel</td>
+              <td><span class="layer-badge lb-mkt">Reklam</span></td>
+              <td style="font-size:12px;color:var(--text-2);">145411376010036</td>
+              <td style="font-size:12px;color:var(--text-2);">Facebook SDK for iOS entegrasyonu</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Criteo</td>
+              <td><span class="layer-badge lb-mkt">Retargeting</span></td>
+              <td style="font-size:12px;color:var(--text-2);">publicApiKey: 72922</td>
+              <td style="font-size:12px;color:var(--text-2);">Criteo mobile SDK ile retargeting</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">MeduzaConnect</td>
+              <td><span class="layer-badge lb-mob">Engagement</span></td>
+              <td style="font-size:12px;color:var(--text-2);">mdznconnect.com SDK</td>
+              <td style="font-size:12px;color:var(--text-2);">Native push notification sistemi ile degistirilecek</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Yotpo</td>
+              <td><span class="layer-badge lb-fe">Yorum</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Yotpo Widget SDK</td>
+              <td style="font-size:12px;color:var(--text-2);">Yotpo iOS SDK veya custom review modulu</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Cookie Consent</td>
+              <td><span class="layer-badge lb-inf">Uyumluluk</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Custom JS implementasyonu</td>
+              <td style="font-size:12px;color:var(--text-2);">iOS ATT (App Tracking Transparency) framework'u</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 2: UX DENETIMI ===== -->
+    <div class="section-block" id="bolum2">
+      <div class="section-hdr">
+        <div class="section-badge">2</div>
+        <div>
+          <h2>UX Denetimi</h2>
+          <div class="sh-sub">Kullanici akislari, arama deneyimi ve friction noktalari analizi</div>
+        </div>
+      </div>
+
+      <div id="ux-flow" class="subsec-hdr">2a - Ana Kullanici Akisi</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">Ana satin alma akisi 5 temel adimdan olusuyor. Her adimin UX kalitesi degerlendirildi.</p>
+
+      <div class="flow-grid">
+        <div class="flow-card">
+          <div class="flow-num">1</div>
+          <div class="flow-title">Ana Sayfa</div>
+          <div class="flow-desc">Hero banner, kategori grid, kampanya alani</div>
+          <div class="flow-score fs-good">Iyi</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-num">2</div>
+          <div class="flow-title">Urun Listeleme</div>
+          <div class="flow-desc">Kategori filtre, siralama, grid gorunum</div>
+          <div class="flow-score fs-mid">Orta</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-num">3</div>
+          <div class="flow-title">Urun Detay</div>
+          <div class="flow-desc">Gorsel, aciklama, besin degeri, yorum</div>
+          <div class="flow-score fs-good">Iyi</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-num">4</div>
+          <div class="flow-title">Sepet</div>
+          <div class="flow-desc">Urun ozeti, miktar, toplam, kupon</div>
+          <div class="flow-score fs-mid">Orta</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-num">5</div>
+          <div class="flow-title">Odeme</div>
+          <div class="flow-desc">Adres, kart bilgisi, onay</div>
+          <div class="flow-score fs-mid">Orta</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Akis Adimi</th>
+              <th>Pozitif</th>
+              <th>Iyilestirme Alani</th>
+              <th>Oncelik</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Ana Sayfa</td>
+              <td style="font-size:12px;color:var(--text-2);">Temiz layout, kategori erisimi kolay, kampanya banner'lari etkili</td>
+              <td style="font-size:12px;color:var(--text-2);">Kisisellestirilmis urun onerisi yok, hero alani statik</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Urun Listeleme</td>
+              <td style="font-size:12px;color:var(--text-2);">Kategori filtreleme calisiyor, grid gorunum temiz</td>
+              <td style="font-size:12px;color:var(--text-2);">Gelismis filtre (aroma, gramaj, marka) eksik, infinite scroll yok</td>
+              <td><span class="eval-tag et-zayif">Yuksek</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Urun Detay</td>
+              <td style="font-size:12px;color:var(--text-2);">Besin degerleri, kullanim talimatı detayli. Yotpo yorumlari mevcut.</td>
+              <td style="font-size:12px;color:var(--text-2);">Aroma/boyut secimi UX'i iyilestirilebilir, cross-sell zayif</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Sepet</td>
+              <td style="font-size:12px;color:var(--text-2);">Temel sepet fonksiyonlari calisiyor</td>
+              <td style="font-size:12px;color:var(--text-2);">Upsell/cross-sell onerisi yok, kargo hesabi net degil, mini-cart yok</td>
+              <td><span class="eval-tag et-zayif">Yuksek</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Odeme</td>
+              <td style="font-size:12px;color:var(--text-2);">Standart checkout akisi</td>
+              <td style="font-size:12px;color:var(--text-2);">Misafir checkout belirsiz, adres formu uzun, Apple Pay yok</td>
+              <td><span class="eval-tag et-zayif">Yuksek</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ARAMA & FILTRELEME -->
+      <div id="ux-search" class="subsec-hdr">2b - Arama & Filtreleme Deneyimi</div>
+
+      <div class="access-grid">
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:var(--primary);"><i data-lucide="search" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Arama</div>
+            <div class="access-score" style="background:#FFFBEB;color:#92400E;">Orta</div>
+          </div>
+          <div class="access-desc">
+            Temel arama fonksiyonu mevcut. Ancak autocomplete onerisi sinirli, yazim hatasi toleransi (fuzzy search) zayif, arama sonuclarinda gorsel onizleme yok. Mobilde arama cubugu ikinci tiklamada aciliyor — dogrudan erisim olmali.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#3B82F6;"><i data-lucide="filter" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Filtreleme</div>
+            <div class="access-score" style="background:#FEF2F2;color:#991B1B;">Zayif</div>
+          </div>
+          <div class="access-desc">
+            Kategori bazli filtreleme var ancak gelismis filtre secenekleri (aroma, gramaj, fiyat araligi, protein orani, marka) eksik. Supplement alisverisi icin kritik olan besin degeri bazli filtreleme bulunmuyor.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#7C3AED;"><i data-lucide="heart" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Favoriler</div>
+            <div class="access-score" style="background:#FFFBEB;color:#92400E;">Orta</div>
+          </div>
+          <div class="access-desc">
+            Favori listesi fonksiyonu mevcut, login gerektiriyor. Koleksiyon/liste olusturma ozelligi yok. Favorilere ekleme geri bildirimi animasyonu yetersiz. Paylasilabilir favori listesi destegi yok.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#F59E0B;"><i data-lucide="user" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Uyelik / Login</div>
+            <div class="access-score" style="background:#FFFBEB;color:#92400E;">Orta</div>
+          </div>
+          <div class="access-desc">
+            E-posta ve sifre ile standart login. Sosyal giris (Apple, Google) yok — native app icin kritik eksik. Sifre sifirlama akisi mevcut. Profil yonetimi temel duzey.
+          </div>
+        </div>
+      </div>
+
+      <!-- FRICTION NOKTALARI -->
+      <div id="ux-friction" class="subsec-hdr">2c - Friction Noktalari</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">Kullanici yolculugunda donusum oranini olumsuz etkileyen kritik surtusnme noktalari tespit edildi.</p>
+
+      <div class="opp-card">
+        <div class="opp-icon"><i data-lucide="smartphone" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="opp-title">1. Mobil Uygulama Deneyimi Zayif</div>
+          <div class="opp-desc">Mevcut iOS uygulamasi 3.2/5 puan ile dusuk bir kullanici memnuniyetine sahip (84 degerlendirme). Uygulama ikas platformunun mobil gorunumune yakin, native his vermiyor. Yavas yukleme suresi ve sinirli fonksiyonellik sikayet konusu.</div>
+          <div class="opp-target">Etki: Yuksek — Mobil donusum oranini dogrudan dusuruyor</div>
+        </div>
+      </div>
+
+      <div class="opp-card">
+        <div class="opp-icon"><i data-lucide="search" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="opp-title">2. Yetersiz Arama ve Kesfetme</div>
+          <div class="opp-desc">Arama sonuclari basit metin eslesmeye dayaniyor. Kullanici "whey protein cikolata 2kg" yazdiginda optimum sonuc gelmiyor. Kategori ici cross-navigation zayif. Benzer urun onerisi eksik.</div>
+          <div class="opp-target">Etki: Yuksek — Urun kesfini engelliyor, sepet buyuklugunu sinirliyor</div>
+        </div>
+      </div>
+
+      <div class="opp-card">
+        <div class="opp-icon"><i data-lucide="credit-card" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="opp-title">3. Odeme Akisinda Surtusnme</div>
+          <div class="opp-desc">Checkout sureci cok adimli ve uzun. Apple Pay / Google Pay destegi yok. Misafir checkout belirsiz. Kayitli kart yonetimi sinirli. Adres formu mobilde kullanici dostu degil.</div>
+          <div class="opp-target">Etki: Yuksek — Sepet terk oranini artiriyor</div>
+        </div>
+      </div>
+
+      <div class="opp-card">
+        <div class="opp-icon"><i data-lucide="package" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="opp-title">4. Kisisellestime Eksikligi</div>
+          <div class="opp-desc">Kullanici profiline dayali urun onerisi yok. Antrenman hedefine gore (bulk, cut, dayaniklilik) filtreleme yok. "Senin icin sectikerimiz" gibi kisisellestirilmis bolumler eksik.</div>
+          <div class="opp-target">Etki: Orta — Tekrar satin alim oranini ve ortalama siparis degerini dusuruyor</div>
+        </div>
+      </div>
+
+      <div class="opp-card">
+        <div class="opp-icon"><i data-lucide="repeat" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="opp-title">5. Abonelik ve Tekrar Satin Alim</div>
+          <div class="opp-desc">Supplement kullanicilari aylik/periyodik alim yapar. Abonelik modeli, otomatik yenileme veya "tekrar siparis ver" butonu yok. Bu, e-ticaret liderlerinin (iHerb, Myprotein) standart sundugu bir ozellik.</div>
+          <div class="opp-target">Etki: Yuksek — LTV (Lifetime Value) ve retention oranini dogrudan etkiliyor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 3: PERFORMANS ===== -->
+    <div class="section-block" id="bolum3">
+      <div class="section-hdr">
+        <div class="section-badge">3</div>
+        <div>
+          <h2>Performans Metrikleri</h2>
+          <div class="sh-sub">Sayfa yukleme hizi, Core Web Vitals ve mobil uyumluluk degerlendirmesi</div>
+        </div>
+      </div>
+
+      <div id="perf-metrics" class="subsec-hdr">3a - Core Web Vitals (Tahmini Degerler)</div>
+
+      <div class="info-box">
+        <i data-lucide="info" style="width:16px;height:16px;"></i>
+        <div><strong>Not:</strong> Asagidaki degerler site yapisina, ikas platformunun genel performansina ve kaynak kod analizine dayali tahmini degerlerdir. Kesin degerler icin Google PageSpeed Insights veya Lighthouse testleri yapilmalidir.</div>
+      </div>
+
+      <div class="gauge-wrap">
+        <div class="gauge-card">
+          <div class="gauge-label">LCP (Largest Contentful Paint)</div>
+          <div style="font-size:36px;font-weight:800;color:#D97706;margin:10px 0;">~2.8s</div>
+          <div class="gauge-max">Hedef: &lt; 2.5s</div>
+          <p style="font-size:11px;color:var(--text-2);margin-top:8px;">ikas CDN'den gorseller yuklenirken gecikme olabilir. Hero banner ve urun gorselleri LCP'yi etkiler.</p>
+        </div>
+        <div class="gauge-card">
+          <div class="gauge-label">FID (First Input Delay)</div>
+          <div style="font-size:36px;font-weight:800;color:#10B981;margin:10px 0;">~80ms</div>
+          <div class="gauge-max">Hedef: &lt; 100ms</div>
+          <p style="font-size:11px;color:var(--text-2);margin-top:8px;">Next.js hydration sureci sonrasi etkilesim suresi makul duzeyde.</p>
+        </div>
+        <div class="gauge-card">
+          <div class="gauge-label">CLS (Cumulative Layout Shift)</div>
+          <div style="font-size:36px;font-weight:800;color:#D97706;margin:10px 0;">~0.15</div>
+          <div class="gauge-max">Hedef: &lt; 0.1</div>
+          <p style="font-size:11px;color:var(--text-2);margin-top:8px;">Banner slider ve gec yuklenen reklamlar layout kaymalarina neden oluyor olabilir.</p>
+        </div>
+        <div class="gauge-card">
+          <div class="gauge-label">TTFB (Time to First Byte)</div>
+          <div style="font-size:36px;font-weight:800;color:#10B981;margin:10px 0;">~350ms</div>
+          <div class="gauge-max">Hedef: &lt; 800ms</div>
+          <p style="font-size:11px;color:var(--text-2);margin-top:8px;">ikas CDN edge cache'leri ile ilk byte suresi iyi duzeyde.</p>
+        </div>
+      </div>
+
+      <!-- PERFORMANS KARNESI -->
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Metrik</th>
+              <th>Tahmini Deger</th>
+              <th>Hedef</th>
+              <th>Durum</th>
+              <th>Native App Kazanim</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Sayfa Yukleme (Ana Sayfa)</td>
+              <td>~3.2 saniye</td>
+              <td>&lt; 2 saniye</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: ~0.5s (cache + prefetch ile)</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Urun Listeleme</td>
+              <td>~2.5 saniye</td>
+              <td>&lt; 1.5 saniye</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: ~0.3s (lazy loading + pagination)</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Urun Detay</td>
+              <td>~2.2 saniye</td>
+              <td>&lt; 1.5 saniye</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: ~0.4s (prefetch + gorsel cache)</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Sepet Islemleri</td>
+              <td>~1.5 saniye</td>
+              <td>&lt; 0.5 saniye</td>
+              <td><span class="eval-tag et-orta">Orta</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: ~0.1s (local state + background sync)</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">JS Bundle Boyutu</td>
+              <td>~450 KB (compressed)</td>
+              <td>&lt; 200 KB</td>
+              <td><span class="eval-tag et-zayif">Agir</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: JS yok, compiled binary</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">3rd Party Script Sayisi</td>
+              <td>8+ (GTM, GA4, FB, Criteo, Yotpo...)</td>
+              <td>&lt; 5</td>
+              <td><span class="eval-tag et-zayif">Agir</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Native: SDK'lar lazy init, performans etkisi minimum</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MOBIL UYUMLULUK -->
+      <div id="perf-mobile" class="subsec-hdr">3b - Mobil Uyumluluk Degerlendirmesi</div>
+
+      <div class="access-grid">
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:var(--primary);"><i data-lucide="smartphone" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Responsive Tasarim</div>
+            <div class="access-score" style="background:#F0FDFA;color:#0F766E;">Iyi</div>
+          </div>
+          <div class="access-desc">
+            ikas tema sistemi responsive grid kullaniyor. Mobil gorunume uyumlu. Ancak bazi elemanlarda (filtre panel, tablo gorunumler) mobil optimizasyon eksik.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#F59E0B;"><i data-lucide="move" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Touch Hedefleri</div>
+            <div class="access-score" style="background:#FFFBEB;color:#92400E;">Orta</div>
+          </div>
+          <div class="access-desc">
+            Bazi butonlar ve linkler minimum 44x44pt touch target boyutunun altinda. Ozellikle footer linkleri ve filtre secenekleri mobilde tiklanmasi zor. Native app'te bu sorun tamamen ortadan kalkar.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#3B82F6;"><i data-lucide="type" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Tipografi</div>
+            <div class="access-score" style="background:#F0FDFA;color:#0F766E;">Iyi</div>
+          </div>
+          <div class="access-desc">
+            Font boyutlari genel olarak okunakli. Ancak urun aciklamalarinda ve besin tablosunda kucuk font (11px) kullanimi var. Kontrast oranlari WCAG AA standardini kismen karsilamakta.
+          </div>
+        </div>
+        <div class="access-card">
+          <div class="access-header">
+            <div class="access-icon" style="background:#7C3AED;"><i data-lucide="image" style="width:16px;height:16px;"></i></div>
+            <div class="access-title">Gorsel Optimizasyon</div>
+            <div class="access-score" style="background:#F0FDFA;color:#0F766E;">Iyi</div>
+          </div>
+          <div class="access-desc">
+            ikas CDN WebP formatinda gorsel sunuyor. Gorsel boyutlandirma otomatik (1080, 720, 360px varyantlari). Lazy loading Next.js Image component'i ile aktif.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 4: SWOT ===== -->
+    <div class="section-block" id="bolum4">
+      <div class="section-hdr">
+        <div class="section-badge">4</div>
+        <div>
+          <h2>Guclu ve Zayif Yonler Analizi</h2>
+          <div class="sh-sub">Teknik, UX ve mobil uygulama perspektifinden SWOT matrisi</div>
+        </div>
+      </div>
+
+      <!-- GUCLU YONLER -->
+      <div id="strengths" class="subsec-hdr">4a - Guclu Yonler</div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="globe" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Modern Web Altyapisi</div>
+          <div class="str-desc">Next.js + React tabanli storefront, SEO optimizasyonu ve SSR/SSG destegi ile arama motorlarinda guclu gorunurluk sagliyor. ikas platformunun sunduegu CDN ve tema altyapisi hizli web deneyimi veriyor.</div>
+          <div class="str-metric">Next.js SSR/SSG + ikas CDN + WebP Gorseller</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Kapsamli Analytics Altyapisi</div>
+          <div class="str-desc">GA4, GTM, Facebook Pixel, Criteo entegrasyonlari ile cok katmanli veri toplama altyapisi kurulmus. Bu veri birikimi, native app'te kisisellestime ve AI oneri motoru icin degerli bir kaynak.</div>
+          <div class="str-metric">GA4 + GTM + FB Pixel + Criteo + Yotpo</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="box" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Zengin Urun Katalogu</div>
+          <div class="str-desc">20+ kategori, yuzlerce urun cesidi ve detayli besin degeri bilgileri. Kendi uretim tesisi ile marka guvenilirligi yuksek. Turkiye pazarinda taninirligi olan bir sporcu beslenmesi markasi.</div>
+          <div class="str-metric">20+ Kategori + Kendi Uretim + %100 Guvenilirlik Mesaji</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="shield" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Marka Kimliği ve Guven</div>
+          <div class="str-desc">"Proteinocean Gida A.S." tuzel kisilik, "Calisma Ilkelerimiz" ve "Hakkimizda" sayfalari ile seffaflik mesaji veriliyor. Yotpo yorumlari ile sosyal kanit mevcut. Sektorde bilinen bir marka.</div>
+          <div class="str-metric">Tuzel Kisilik + Seffaflik + Yotpo Sosyal Kanit</div>
+        </div>
+      </div>
+
+      <!-- ZAYIF YONLER -->
+      <div id="weaknesses" class="subsec-hdr">4b - Zayif Yonler</div>
+
+      <div class="weak-card">
+        <div class="weak-icon"><i data-lucide="smartphone" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="weak-title">Dusuk Mobil Uygulama Kalitesi</div>
+          <div class="weak-desc">iOS uygulamasi 3.2/5 puanla sektorun oldukca altinda. 84 degerlendirme ile dusuk kullanici katilimi. Rakip Supplementler.com 4.8/5 (20.000+ degerlendirme) ile kiyaslaninca buyuk fark goze carpiyor.</div>
+          <div class="weak-impact">Etki: Kritik — Mobil donusum oranini %60-70 dusurduugu tahmin ediliyor</div>
+        </div>
+      </div>
+
+      <div class="weak-card">
+        <div class="weak-icon"><i data-lucide="lock" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="weak-title">Platform Bagimliligi (ikas)</div>
+          <div class="weak-desc">Tum e-ticaret islemleri ikas SaaS platformuna bagli. API sinirlamalari, tema kisitilamalari ve platform bagimliligi ozelestirmeyi zorlastiriyor. Native app icin bagimsiz backend katmani gerekebilir.</div>
+          <div class="weak-impact">Etki: Yuksek — Custom feature gelistirmeyi yavaslatyor, vendor lock-in riski</div>
+        </div>
+      </div>
+
+      <div class="weak-card">
+        <div class="weak-icon"><i data-lucide="user-x" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="weak-title">Kisisellestime Yoklugu</div>
+          <div class="weak-desc">Kullanici profiline, alisveris gecmisine veya fitness hedefine dayali urun onerisi bulunmuyor. "Senin icin" bolumu, abonelik onerisi, makro hesaplayici gibi katma degerli ozellikler eksik.</div>
+          <div class="weak-impact">Etki: Yuksek — Tekrar satin alim ve ortalama siparis degeri dusuk kaliyor</div>
+        </div>
+      </div>
+
+      <div class="weak-card">
+        <div class="weak-icon"><i data-lucide="search-x" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="weak-title">Gelismis Arama ve Filtreleme Eksikligi</div>
+          <div class="weak-desc">Besin degerine gore filtreleme, aroma bazli arama, "sugar-free", "vegan" gibi yasam tarzi filtreleri yok. Supplement alisverisinin doga gere ihtiyac duyulan ozel filtreler bulunmuyor.</div>
+          <div class="weak-impact">Etki: Orta — Urun kesfini engelliyor, kullanici memnuniyetini dusuruyor</div>
+        </div>
+      </div>
+
+      <div class="weak-card">
+        <div class="weak-icon"><i data-lucide="wallet" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="weak-title">Sadakat ve Retention Mekanizmalari Yok</div>
+          <div class="weak-desc">Loyalty programi, puan sistemi, seviye bazli indirimler bulunmuyor. Tekrar alisveris tesvik eden mekanizmalar (push notification, terk edilen sepet hatirlatmasi, stok uyarisi) eksik veya etkisiz.</div>
+          <div class="weak-impact">Etki: Yuksek — Musteri yasam boyu degeri (LTV) optimize edilmiyor</div>
+        </div>
+      </div>
+
+      <!-- ERISILEBILIRLIK -->
+      <div id="a11y" class="subsec-hdr">4c - Erisilebilirlik Degerlendirmesi (WCAG)</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">Web sitesinin WCAG 2.1 uyumlulugu degerlendirildi. Native iOS uygulamasinda VoiceOver ve Dynamic Type destegi standart olarak saglanacaktir.</p>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>WCAG Kriteri</th>
+              <th>Durum</th>
+              <th>Detay</th>
+              <th>Native App Cozumu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Alt Text (1.1.1)</td>
+              <td><span class="eval-tag et-orta">Kismen</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Urun gorselleri icin alt text mevcut ancak dekoratif gorsellerde eksik</td>
+              <td style="font-size:12px;color:var(--text-2);">SwiftUI accessibilityLabel ile tum gorseller etiketlenecek</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Klavye Navigasyonu (2.1.1)</td>
+              <td><span class="eval-tag et-orta">Kismen</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Temel navigasyon calisiyor, modal ve dropdown'larda focus trap sorunlari</td>
+              <td style="font-size:12px;color:var(--text-2);">iOS native: VoiceOver ile tam klavye/gesture navigasyonu</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Renk Kontrasti (1.4.3)</td>
+              <td><span class="eval-tag et-orta">Kismen</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Bazi acik gri metinler 4.5:1 kontrast oraninin altinda</td>
+              <td style="font-size:12px;color:var(--text-2);">Brand token'larda WCAG AA uyumlu kontrast oranlari</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Dinamik Font (1.4.4)</td>
+              <td><span class="eval-tag et-zayif">Yok</span></td>
+              <td style="font-size:12px;color:var(--text-2);">Tarayici zoom destegi sinirli, responsive typography yok</td>
+              <td style="font-size:12px;color:var(--text-2);">iOS Dynamic Type tam destek ile tum font boyutlari olceklenir</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Form Etiketleri (1.3.1)</td>
+              <td><span class="eval-tag et-iyi">Iyi</span></td>
+              <td style="font-size:12px;color:var(--text-2);">ikas formlarinda label-input iliskisi genel olarak dogru</td>
+              <td style="font-size:12px;color:var(--text-2);">SwiftUI TextField ile native form erisilebilirligi</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Ekran Okuyucu (4.1.2)</td>
+              <td><span class="eval-tag et-zayif">Zayif</span></td>
+              <td style="font-size:12px;color:var(--text-2);">ARIA role ve live region kullanimi yetersiz</td>
+              <td style="font-size:12px;color:var(--text-2);">VoiceOver tam uyumluluk: accessibilityHint, traits, announcements</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== BOLUM 5: MOBIL UYGULAMA ===== -->
+    <div class="section-block" id="bolum5">
+      <div class="section-hdr">
+        <div class="section-badge">5</div>
+        <div>
+          <h2>Mevcut Mobil Uygulama Analizi</h2>
+          <div class="sh-sub">App Store verileri, mevcut uygulama durumu ve native gecis firsatlari</div>
+        </div>
+      </div>
+
+      <div id="app-current" class="subsec-hdr">5a - App Store Verileri</div>
+
+      <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="stat-card">
+          <div class="stat-label"><i data-lucide="star" style="width:13px;height:13px;"></i> App Store Puani</div>
+          <div class="stat-value c-amber">3.19</div>
+          <div class="stat-desc">84 degerlendirme uzerinden</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i data-lucide="hard-drive" style="width:13px;height:13px;"></i> Uygulama Boyutu</div>
+          <div class="stat-value c-blue">48 MB</div>
+          <div class="stat-desc">Versiyon 1.7.1 (Subat 2026)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i data-lucide="cpu" style="width:13px;height:13px;"></i> Min iOS Versiyon</div>
+          <div class="stat-value c-purple">13.4</div>
+          <div class="stat-desc">iPhone 5s ve uzeri destekleniyor</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Ozellik</th>
+              <th>Mevcut Durum</th>
+              <th>Sektordeki Standart</th>
+              <th>Fark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;">Gelistirici</td>
+              <td>Proteinocean Gida A.S. (com.mobligo.proteinocean)</td>
+              <td>In-house veya partner ajansi</td>
+              <td style="font-size:12px;color:var(--text-2);">Mobligo framework kullaniliyor</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Uygulama Teknolojisi</td>
+              <td>Hybrid / WebView tabanli (tahmini)</td>
+              <td>Native (SwiftUI) veya cross-platform (Flutter)</td>
+              <td><span class="eval-tag et-zayif">Geride</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">App Store Puani</td>
+              <td>3.19 / 5 (84 oy)</td>
+              <td>4.5+ / 5 (1000+ oy)</td>
+              <td><span class="eval-tag et-zayif">Kritik Fark</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Son Guncelleme</td>
+              <td>27 Subat 2026 (v1.7.1)</td>
+              <td>2-4 haftada bir</td>
+              <td><span class="eval-tag et-iyi">Guncel</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Push Notification</td>
+              <td>Mevcut (MobilDev)</td>
+              <td>Firebase + rich notification</td>
+              <td><span class="eval-tag et-orta">Temel</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Apple Pay</td>
+              <td>Yok</td>
+              <td>Standart</td>
+              <td><span class="eval-tag et-zayif">Eksik</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Biometric Auth</td>
+              <td>Belirsiz</td>
+              <td>Face ID / Touch ID standart</td>
+              <td><span class="eval-tag et-orta">Belirsiz</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Widget / Live Activity</td>
+              <td>Yok</td>
+              <td>Kargo takip, kampanya widget</td>
+              <td><span class="eval-tag et-zayif">Eksik</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RAKIP KARSILASTIRMA -->
+      <div class="subsec-hdr">5b - Rakip Uygulama Karsilastirmasi (App Store)</div>
+
+      <div class="tbl-wrap">
+        <table class="stack">
+          <thead>
+            <tr>
+              <th>Uygulama</th>
+              <th>Puan</th>
+              <th>Degerlendirme</th>
+              <th>Yorum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--primary);">ProteinOcean</td>
+              <td><span style="font-weight:800;color:#D97706;">3.19</span></td>
+              <td>84</td>
+              <td style="font-size:12px;color:var(--text-2);">Sektorun en dusuk puanli uygulamasi. Hybrid yapisi performansi etkiliyor.</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Supplementler.com</td>
+              <td><span style="font-weight:800;color:#10B981;">4.79</span></td>
+              <td>20.064</td>
+              <td style="font-size:12px;color:var(--text-2);">Turkiye pazarinin lideri. Yuksek kullanici memnuniyeti ve genis kullanici tabani.</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Vitaminler.com</td>
+              <td><span style="font-weight:800;color:#10B981;">4.77</span></td>
+              <td>4.838</td>
+              <td style="font-size:12px;color:var(--text-2);">Guclu rakip, vitamin odakli genis urun yelpazesi.</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">Myprotein</td>
+              <td><span style="font-weight:800;color:#10B981;">4.85</span></td>
+              <td>7.672</td>
+              <td style="font-size:12px;color:var(--text-2);">Global lider, en iyi pratikler referansi.</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">iHerb</td>
+              <td><span style="font-weight:800;color:#10B981;">4.83</span></td>
+              <td>2.030</td>
+              <td style="font-size:12px;color:var(--text-2);">Global supplement marketplacei, genis urun cesitliligi.</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;">GNC LiveWell</td>
+              <td><span style="font-weight:800;color:#10B981;">4.47</span></td>
+              <td>10.033</td>
+              <td style="font-size:12px;color:var(--text-2);">Loyalty programi ve magazacilik entegrasyonu guclu.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FIRSATLAR -->
+      <div id="app-opp" class="subsec-hdr">5c - Native Gecis Firsatlari</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;">Native iOS uygulamasina gecis ile elde edilecek somut kazanimlar:</p>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="zap" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">5-10x Performans Artisi</div>
+          <div class="str-desc">SwiftUI + native rendering ile sayfa geisleri anlik, gorsel yukleme agresif cache ile ~0.1s, sepet islemleri local state ile sifir gecikme. Hybrid/WebView yaklasimina gore dramatik performans farki.</div>
+          <div class="str-metric">Hedef: Ana sayfa acilis &lt; 0.5s, urun gecisi &lt; 0.3s</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="star" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">App Store Puani 4.5+ Hedefi</div>
+          <div class="str-desc">Native deneyim, hizli performans ve zengin ozellikler ile kullanici memnuniyetini 3.2'den 4.5+ seviyesine cikarmak mumkun. Bu, organik indirmeyi 3-5x artirabilir.</div>
+          <div class="str-metric">3.19 → 4.5+ puan, 84 → 1000+ degerlendirme hedefi</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="bell" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">Zengin Push Notification</div>
+          <div class="str-desc">Rich notification (gorsel, buton, deep link), kargo takip live activity, sepet hatirlatma, stok uyarisi, kisisellestirilmis kampanya bildirimleri. MobilDev yerine Firebase + APNs native entegrasyonu.</div>
+          <div class="str-metric">Push acma orani hedefi: %15-25 (sektore ortalamasi %8-12)</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="fingerprint" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">iOS Ekosistem Entegrasyonu</div>
+          <div class="str-desc">Apple Pay ile tek tikla odeme, Face ID/Touch ID ile guvenli giris, Siri Shortcuts, Widget (kampanya/kargo), Apple Health entegrasyonu (makro takibi), SharePlay ile arkadas onerisi.</div>
+          <div class="str-metric">Apple Pay donusum orani: +30-50% (sektore verisi)</div>
+        </div>
+      </div>
+
+      <div class="str-card">
+        <div class="str-icon"><i data-lucide="brain" style="width:16px;height:16px;"></i></div>
+        <div>
+          <div class="str-title">AI-Powered Kisisellestime</div>
+          <div class="str-desc">Kullanici profili, alisveris gecmisi ve fitness hedefine dayali urun onerisi. "Senin icin sectigimiz" bolumu, akilli arama, besin degeri bazli filtreleme. Core ML ile on-device oneri motoru.</div>
+          <div class="str-metric">Kisisellestirilmis oneri ile sepet buyuklugu: +20-35% artis beklentisi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-bar">
+      <a href="index.html" class="nav-link">
+        <i data-lucide="home" style="width:14px;height:14px;"></i> Ana Menu
+      </a>
+      <a href="02-competitor-analysis.html" class="nav-link">
+        Sonraki: Rakip Analizi <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+      </a>
+    </div>
+
+  </div><!-- /page -->
+</main>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

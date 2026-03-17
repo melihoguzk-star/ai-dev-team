@@ -1,0 +1,241 @@
+{
+  "_meta": {
+    "project": "ProteinOcean",
+    "generated": "2026-03-05",
+    "generator": "brand-analyzer",
+    "sources": {
+      "colors": {
+        "type": "web",
+        "url": "https://proteinocean.com",
+        "method": "css-extraction",
+        "confidence": "YÜKSEK — inline style ve Tailwind sınıflarından doğrudan çıkarıldı"
+      },
+      "components": {
+        "type": "figma",
+        "file": "v35XdpoG6Pmv9eQABDcMHJ",
+        "node": "1959-4391",
+        "method": "get_design_context + metadata-xml frame measurement",
+        "status": "partial — 1 API çağrısı başarılı, Starter plan rate limit (6 çağrı/ay) aşıldı",
+        "confidence": "YÜKSEK — frame px değerleri metadata XML'den ölçüldü"
+      },
+      "typography": {
+        "type": "figma",
+        "method": "get_design_context CSS sınıf çıkarımı",
+        "status": "confirmed",
+        "confidence": "YÜKSEK — font-['Montserrat:SemiBold',sans-serif] doğrulandı"
+      }
+    }
+  },
+  "colors": {
+    "_source": "web — https://proteinocean.com",
+    "primary": {
+      "hex": "#2126AB",
+      "rgb": "rgb(33, 38, 171)",
+      "usage": "Navigasyon tint, tab tint, primary CTA"
+    },
+    "secondary": {
+      "hex": "#232DA8",
+      "rgb": "rgb(35, 45, 168)",
+      "usage": "Fiyat vurgusu, kampanya metin linkleri"
+    },
+    "accent": {
+      "hex": "#1900FF",
+      "rgb": "rgb(25, 0, 255)",
+      "usage": "CTA buton border (dashed), buton metin rengi"
+    },
+    "background": {
+      "primary": "#FFFFFF",
+      "secondary": "#F8F8F8",
+      "card": "#FFFFFF",
+      "_note_secondary": "F8F8F8 Figma --background/100 değişkeninden alındı (web F4F4F4 yerine Figma öncelikli)"
+    },
+    "text": {
+      "primary": "#070707",
+      "secondary": "#464646",
+      "tertiary": "#9B9B9B",
+      "inverse": "#FFFFFF",
+      "_note_secondary": "#464646 Figma --neutral/gray-800 değişkeninden alındı"
+    },
+    "status": {
+      "success": "#16A34A",
+      "error": "#DB2626",
+      "warning": "#FF6600",
+      "info": "#2126AB"
+    },
+    "border": "#E5E5E5",
+    "divider": "#E5E5E5",
+    "_extra": {
+      "footer_bg": "#222222",
+      "footer_text": "#9B9B9B",
+      "launch_badge_bg": "#FF6600",
+      "discount_badge_bg": "#DB2626",
+      "search_bg": "#F8F8F8",
+      "search_button_bg": "#444444",
+      "variant_selected_border": "#2126AB"
+    }
+  },
+  "typography": {
+    "_source": "figma — frame 2694:11210 get_design_context",
+    "fontFamily": {
+      "primary": "Montserrat",
+      "fallback": "sans-serif",
+      "weights_used": [300, 500, 600],
+      "ios_usage": "Font.custom(\"Montserrat-SemiBold\", size: 18)",
+      "_note": "Figma'dan doğrulandı: font-['Montserrat:SemiBold',sans-serif] ve font-['Montserrat:Light',sans-serif]. Önceki SF Pro tahmini yanlıştı."
+    },
+    "scale": {
+      "navTitle":      { "size": 18, "weight": 600, "lineHeight": 24, "source": "figma" },
+      "sectionHeader": { "size": 16, "weight": 600, "lineHeight": 20, "source": "figma" },
+      "body":          { "size": 14, "weight": 300, "lineHeight": 20, "source": "figma" },
+      "caption":       { "size": 12, "weight": 500, "lineHeight": 16 },
+      "price":         { "size": 16, "weight": 700, "lineHeight": 20 },
+      "h1":            { "size": 32, "weight": 700, "lineHeight": 40 },
+      "h2":            { "size": 24, "weight": 700, "lineHeight": 32 },
+      "h3":            { "size": 20, "weight": 600, "lineHeight": 28 }
+    }
+  },
+  "spacing": {
+    "_source": "figma",
+    "base": 4,
+    "pagePadding": 20,
+    "componentGap": 12,
+    "cardPadding": 12,
+    "sectionGap": 16,
+    "touchMinimum": 44,
+    "scale": {
+      "xs":  4,
+      "sm":  8,
+      "md":  16,
+      "lg":  24,
+      "xl":  32,
+      "2xl": 48
+    }
+  },
+  "borders": {
+    "_source": "figma",
+    "radius": {
+      "page":   20,
+      "card":   12,
+      "button": 8,
+      "input":  8,
+      "badge":  6,
+      "pill":   9999
+    },
+    "width": {
+      "thin":   1,
+      "medium": 2
+    }
+  },
+  "shadows": {
+    "sm": "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)",
+    "md": "0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06)",
+    "lg": "0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05)"
+  },
+  "components": {
+    "_source": "figma — metadata XML frame measurement",
+    "button": {
+      "primary": {
+        "height": 56,
+        "horizontalPadding": 20,
+        "borderRadius": 8,
+        "backgroundColor": "#2126AB",
+        "textColor": "#FFFFFF",
+        "fontSize": 16,
+        "fontWeight": 600,
+        "_source": "figma frame ölçümü"
+      },
+      "secondary": {
+        "height": 56,
+        "horizontalPadding": 20,
+        "borderRadius": 8,
+        "backgroundColor": "transparent",
+        "borderColor": "#1900FF",
+        "borderStyle": "dashed",
+        "textColor": "#1900FF",
+        "fontSize": 16,
+        "fontWeight": 600,
+        "_source": "figma frame ölçümü"
+      }
+    },
+    "input": {
+      "height": 50,
+      "horizontalPadding": 16,
+      "borderRadius": 8,
+      "borderColor": "#E5E5E5",
+      "backgroundColor": "#FFFFFF",
+      "placeholderColor": "#464646",
+      "_source": "figma frame ölçümü"
+    },
+    "searchInput": {
+      "height": 50,
+      "borderRadius": 8,
+      "backgroundColor": "#F8F8F8",
+      "_source": "figma frame ölçümü"
+    },
+    "productCard": {
+      "width": 172,
+      "height": 278,
+      "borderRadius": 12,
+      "imageHeight": 160,
+      "layout": "2-column-grid",
+      "gridSpacing": 12,
+      "_source": "figma frame ölçümü"
+    },
+    "discountTag": {
+      "width": 35,
+      "height": 20,
+      "borderRadius": 6,
+      "backgroundColor": "#DB2626",
+      "textColor": "#FFFFFF",
+      "_source": "figma frame ölçümü"
+    },
+    "navBar": {
+      "totalHeight": 120,
+      "statusBarHeight": 54,
+      "navigationBarHeight": 66,
+      "_source": "figma frame ölçümü"
+    }
+  },
+  "layout": {
+    "_source": "figma",
+    "canvasWidth": 393,
+    "contentWidth": 353,
+    "horizontalPadding": 20,
+    "pageTopRadius": 20,
+    "gridColumns": 2,
+    "gridSpacing": 12
+  },
+  "icons": {
+    "library": "sf-symbols",
+    "style": "filled",
+    "mappings": [
+      { "web": "search",       "ios": "magnifyingglass" },
+      { "web": "user/account", "ios": "person.fill" },
+      { "web": "cart/basket",  "ios": "cart.fill" },
+      { "web": "menu",         "ios": "line.3.horizontal" },
+      { "web": "chevron-down", "ios": "chevron.down" },
+      { "web": "filter",       "ios": "line.3.horizontal.decrease.circle" },
+      { "web": "sort",         "ios": "arrow.up.arrow.down" },
+      { "web": "grid-view",    "ios": "square.grid.2x2" },
+      { "web": "list-view",    "ios": "list.bullet" },
+      { "web": "heart",        "ios": "heart" },
+      { "web": "tag/discount", "ios": "tag.fill" },
+      { "web": "truck",        "ios": "shippingbox" },
+      { "web": "check",        "ios": "checkmark.circle.fill" },
+      { "web": "info",         "ios": "info.circle" }
+    ]
+  },
+  "ios": {
+    "minTarget": "iOS 17.0",
+    "colorExtension": "ProteinOceanApp.swift → extension Color",
+    "fontNote": "Montserrat fontunu bundle'a ekle veya SPM paketi kullan. Font.custom(\"Montserrat-SemiBold\", size: 18)",
+    "tokenFile": "ProteinOceanApp.swift"
+  },
+  "_confidence": {
+    "colors":     "YÜKSEK — web sitesinden inline style ve Tailwind sınıfları ile doğrulandı",
+    "typography": "YÜKSEK — Figma get_design_context CSS sınıflarından doğrulandı (Montserrat)",
+    "components": "YÜKSEK — Figma metadata XML frame px ölçümleri",
+    "spacing":    "ORTA — Tailwind 4px grid + Figma padding değerleri",
+    "shadows":    "ORTA — Tailwind varsayılanı, Figma'da ayrı doğrulanmadı"
+  }
+}

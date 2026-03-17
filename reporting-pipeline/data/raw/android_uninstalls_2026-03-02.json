@@ -1,0 +1,20 @@
+{
+  "app_name": "SunExpress Sun Mobile",
+  "platform": "android",
+  "metric": "uninstalls",
+  "collection_date": "2026-03-09T09:00:00+03:00",
+  "period": {
+    "start": "2026-01-19",
+    "end": "2026-03-08",
+    "granularity": "weekly"
+  },
+  "data": [
+    { "week_start": "2026-01-19", "week_end": "2026-01-25", "value": 3000 },
+    { "week_start": "2026-01-26", "week_end": "2026-02-01", "value": 5300 },
+    { "week_start": "2026-02-02", "week_end": "2026-02-08", "value": 3600 },
+    { "week_start": "2026-02-09", "week_end": "2026-02-15", "value": 3400 },
+    { "week_start": "2026-02-16", "week_end": "2026-02-22", "value": 3800 },
+    { "week_start": "2026-02-23", "week_end": "2026-03-01", "value": 3900 },
+    { "week_start": "2026-03-02", "week_end": "2026-03-08", "value": 4000 }
+  ]
+}

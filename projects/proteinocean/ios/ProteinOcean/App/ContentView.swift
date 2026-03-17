@@ -8,11 +8,13 @@ struct ContentView: View {
                     Label("Kategoriler", systemImage: "square.grid.2x2")
                 }
 
-            ProductListView(title: "Tum Urunler", categoryId: nil)
+            ProductListView(title: "Tüm Ürünler", categoryId: nil)
                 .tabItem {
-                    Label("Urunler", systemImage: "bag")
+                    Label("Ürünler", systemImage: "bag")
                 }
         }
-        .tint(.blue)
+        .tint(Color.brandPrimary)
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(Color.brandBackground, for: .tabBar)
     }
 }

@@ -1,0 +1,96 @@
+{
+  "week": "2026-03-09",
+  "generated_at": "2026-03-13T16:09:54.042759",
+  "total_anomalies": 2,
+  "critical_count": 2,
+  "warning_count": 0,
+  "anomalies": [
+    {
+      "column": "ios_rating",
+      "platform": "ios",
+      "metric": "rating",
+      "metric_label": "App Rating",
+      "series_mean": 1.1733,
+      "series_std": 0.2122,
+      "last_z_score": -0.8168,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-02-16",
+          "value": 1.11,
+          "wow_pct": null,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-23",
+          "value": 1.41,
+          "wow_pct": 27.03,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-03-02",
+          "value": 1.0,
+          "wow_pct": -29.08,
+          "flag": "critical",
+          "method": "threshold"
+        }
+      ]
+    },
+    {
+      "column": "android_rating",
+      "platform": "android",
+      "metric": "rating",
+      "metric_label": "App Rating",
+      "series_mean": 2.3286,
+      "series_std": 0.5352,
+      "last_z_score": -0.5391,
+      "iqr_outlier": false,
+      "weeks": [
+        {
+          "week_start": "2026-01-19",
+          "value": 2.62,
+          "wow_pct": null,
+          "flag": "warning",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-02",
+          "value": 2.17,
+          "wow_pct": -31.76,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-09",
+          "value": 2.54,
+          "wow_pct": 17.05,
+          "flag": "warning",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-16",
+          "value": 1.46,
+          "wow_pct": -42.52,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-02-23",
+          "value": 2.29,
+          "wow_pct": 56.85,
+          "flag": "critical",
+          "method": "threshold"
+        },
+        {
+          "week_start": "2026-03-02",
+          "value": 2.04,
+          "wow_pct": -10.92,
+          "flag": "critical",
+          "method": "threshold"
+        }
+      ]
+    }
+  ]
+}

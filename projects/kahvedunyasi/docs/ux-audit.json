@@ -1,0 +1,788 @@
+{
+  "site_url": "https://kahvedunyasi.robotpos.com/kiosk/kahvedunyasi/70/",
+  "audit_date": "2026-03-06",
+  "platform": "kiosk",
+  "auditor": "ux-auditor-agent",
+  "tech_stack": "Next.js (App Router, RSC streaming) + Tailwind CSS v3 + react-simple-keyboard",
+  "hardware": "32 inç PCAP kapasitif dokunmatik ekran, 80 mm termal yazıcı, RobotPOS self-servis kiosk terminali",
+  "overall_score": 56,
+  "grade": "ORTA",
+  "score_breakdown": {
+    "flow_score_raw": 5.5,
+    "flow_weighted": 24.75,
+    "uiux_score_raw": 5.4,
+    "uiux_weighted": 18.9,
+    "performance_score_raw": 6.2,
+    "performance_weighted": 12.4,
+    "total": 56.05,
+    "weights": {
+      "flow": "45% (kiosk ağırlığı)",
+      "uiux": "35% (kiosk ağırlığı)",
+      "performance": "20% (kiosk ağırlığı)"
+    }
+  },
+  "access_note": "Sayfa dışarıdan 404 döndürüyor — kiosk yalnızca mağaza içi ağda (lokal/VPN) erişilebilir. Analiz CSS kaynak dosyaları (Tailwind v3 + react-simple-keyboard), RobotPOS ürün dokümantasyonu, Kahve Dünyası marka profili ve kiosk sektörü benchmark'ları kullanılarak gerçekleştirildi.",
+  "user_flows": [
+    {
+      "id": "flow-1",
+      "name": "Ana Ekrandan Ürün Siparişi Tamamlama",
+      "description": "Kullanıcı kiosk başına gelir, çekici ekrandan geçer, ürünü seçer ve siparişi oluşturur.",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Attract screen — kiosk boşta, döngüsel animasyon/reklam gösterimi",
+          "screen": "Çekici Ekran",
+          "tap_count": 0,
+          "friction": false,
+          "notes": "CSS'de blob animasyonu (7 saniyelik keyframe loop) mevcut — attract screen destekleniyor"
+        },
+        {
+          "step": 2,
+          "action": "Ekrana dokunarak başlat / Dil seçimi",
+          "screen": "Karşılama Ekranı",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "İlk dokunuş tetikleyici olarak makul"
+        },
+        {
+          "step": 3,
+          "action": "Kategori seçimi (Sıcak İçecekler / Soğuk İçecekler / Pastane vb.)",
+          "screen": "Kategori Menüsü",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "Kahve Dünyası ürün grupları: Kahve, Çikolatalı İçecekler, Soğuk İçecekler, Pastane. CSS grid yapısı 2-4 kolona uygun."
+        },
+        {
+          "step": 4,
+          "action": "Ürün seçimi (ürün kartına dokunma)",
+          "screen": "Ürün Listesi",
+          "tap_count": 1,
+          "friction": true,
+          "friction_detail": "Ürün görselleri ve fiyatları kiosk mesafesinde (1-2m) okunabilir olmalı. CSS text-xs (12px) ile text-sm (14px) sınıfları kiosk için yetersiz — minimum 24px body text gerekli."
+        },
+        {
+          "step": 5,
+          "action": "Ürün detay / Özelleştirme (boyut, şeker, süt tipi, ekstralar) — ayrı ekran veya modal",
+          "screen": "Ürün Detay / Özelleştirme",
+          "tap_count": 1,
+          "friction": true,
+          "friction_detail": "Özelleştirme seçenekleri fazlaysa (Türk kahvesi: az/orta/çok şekerli, boyut, ek ürün) birden fazla dokunuş gerekebilir. Dokunma hedefi kontrolü gerekli."
+        },
+        {
+          "step": 6,
+          "action": "Sepete Ekle butonu",
+          "screen": "Ürün Detay",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "CSS'de button height .h-14 (56px) tanımlı — kiosk minimumunu karşılıyor"
+        },
+        {
+          "step": 7,
+          "action": "Siparişe devam / Ödemeye git",
+          "screen": "Sepet",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "Sepet özeti ve CTA yeterince belirgin olmalı"
+        }
+      ],
+      "total_taps": 6,
+      "kiosk_ideal_taps": 4,
+      "tap_gap": "+2 (ideali aşıyor)",
+      "friction_points": [
+        "Ürün listesinde font boyutu kiosk mesafesi için küçük (CSS: text-xs/text-sm)",
+        "Özelleştirme ekranı ek dokunuş gerektiriyor — akışı 4 dokunuşun üzerine çekiyor",
+        "Kategori → Ürün → Detay → Sepet → Ödeme = 5+ adım"
+      ],
+      "dropoff_risks": [
+        "Özelleştirme ekranı karmaşıksa (çok seçenek) kullanıcı vazgeçebilir",
+        "Font boyutu küçükse arama süresi uzar, sıra oluşur",
+        "Timeout mekanizması yoksa veya süre kısaysa oturum kaybolabilir"
+      ],
+      "score": 5,
+      "improvement_suggestions": [
+        "Kategori + ürün seçimini tek ekrana sıkıştır (sidebar kategori + içerik alanı)",
+        "En popüler ürünleri ana ekranda öne çıkar (1 dokunuşla sipariş)",
+        "Özelleştirme için bottom sheet yerine büyük butonlu inline seçim kullan"
+      ]
+    },
+    {
+      "id": "flow-2",
+      "name": "Ürün Özelleştirme Akışı (Boyut, Şeker, Ekstralar)",
+      "description": "Kullanıcı bir kahve ürünü seçtikten sonra boyut, şeker miktarı, süt tipi ve ek ürün seçeneklerini belirler.",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Ürün kartına dokunma",
+          "screen": "Ürün Listesi",
+          "tap_count": 1,
+          "friction": false
+        },
+        {
+          "step": 2,
+          "action": "Boyut seçimi (S / M / L)",
+          "screen": "Özelleştirme Ekranı",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "CSS button height 50px (kiosk minimumunu karşılıyor: 48px)"
+        },
+        {
+          "step": 3,
+          "action": "Şeker tercihi seçimi (Az / Orta / Çok / Şekersiz)",
+          "screen": "Özelleştirme Ekranı",
+          "tap_count": 1,
+          "friction": false
+        },
+        {
+          "step": 4,
+          "action": "Ekstra seçeneği (isteğe bağlı: çikolata sos, krema vb.)",
+          "screen": "Özelleştirme Ekranı",
+          "tap_count": 1,
+          "friction": true,
+          "friction_detail": "Opsiyonel seçenekler anlaşılır işaretlenmezse kullanıcı kafası karışabilir. 'Zorunlu' ve 'İsteğe bağlı' grupları görsel olarak ayrılmalı."
+        },
+        {
+          "step": 5,
+          "action": "Onayla / Sepete Ekle",
+          "screen": "Özelleştirme Ekranı",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "CTA butonu ekranın alt kısmında büyük olmalı — başparmak erişim alanında"
+        }
+      ],
+      "total_taps": 5,
+      "kiosk_ideal_taps": 4,
+      "tap_gap": "+1",
+      "friction_points": [
+        "Zorunlu ve opsiyonel seçeneklerin görsel ayrımı belirsiz olabilir",
+        "react-simple-keyboard entegrasyonu metin girişi gerektiren alanlarda kiosk deneyimini yavaşlatır",
+        "Özelleştirme seçenekleri scroll gerektiriyorsa kaybolan içerik riski var"
+      ],
+      "dropoff_risks": [
+        "Uzun özelleştirme listesi kullanıcıyı bunaltabilir",
+        "Scroll gerektiren sayfa kiosk kullanımında gözden kaçabilir",
+        "Yanlış seçim yapıldığında geri alma kolay değilse hata frustrasyonu"
+      ],
+      "score": 6,
+      "improvement_suggestions": [
+        "Özelleştirme seçeneklerini hiyerarşik grupla (Temel → Opsiyonel)",
+        "Toggle/chip bileşenleri kullan — büyük, kolay dokunulabilir",
+        "Seçilen tercihleri anlık olarak özet alanda göster (alt bar)",
+        "Sayfayı scroll'suz tasarla — tüm seçenekler görünür olsun"
+      ]
+    },
+    {
+      "id": "flow-3",
+      "name": "Ödeme Akışı",
+      "description": "Kullanıcı sepeti onaylar ve ödeme yöntemini seçerek işlemi tamamlar.",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Sepet özeti inceleme / Siparişi gözden geçir",
+          "screen": "Sepet",
+          "tap_count": 0,
+          "friction": false,
+          "notes": "Sipariş listesi net, büyük yazıyla gösterilmeli"
+        },
+        {
+          "step": 2,
+          "action": "Ödemeye Geç butonu",
+          "screen": "Sepet",
+          "tap_count": 1,
+          "friction": false
+        },
+        {
+          "step": 3,
+          "action": "Ödeme yöntemi seçimi (Kredi kartı / Temassız / QR)",
+          "screen": "Ödeme Yöntemi",
+          "tap_count": 1,
+          "friction": false,
+          "notes": "RobotPOS kiosk: kredi kartı + temassız ödeme destekli (nakit YOK — kiosk modelinde genelde)"
+        },
+        {
+          "step": 4,
+          "action": "Kart takma / temassız ödeme — harici POS terminali",
+          "screen": "Ödeme Terminali",
+          "tap_count": 0,
+          "friction": true,
+          "friction_detail": "Kart terminali ile kiosk ekranı arasında kullanıcı yönlendirmesi kritik. 'Kartınızı okutun' mesajı büyük ve net olmalı."
+        },
+        {
+          "step": 5,
+          "action": "Ödeme onayı / Sipariş numarası gösterimi",
+          "screen": "Onay Ekranı",
+          "tap_count": 0,
+          "friction": false,
+          "notes": "Sipariş numarası büyük, okunabilir gösterilmeli"
+        },
+        {
+          "step": 6,
+          "action": "Fiş seçeneği (Fiş yazdır / E-fiş / Fişsiz)",
+          "screen": "Onay Ekranı",
+          "tap_count": 1,
+          "friction": true,
+          "friction_detail": "Fiş seçeneği zorunlu bir adım oluşturmamalı — varsayılan 'fişsiz' olarak ayarlanabilir, opsiyonel olarak sunulabilir."
+        },
+        {
+          "step": 7,
+          "action": "Oturum sonu — ekran sıfırlama / Yeni müşteriye hazır",
+          "screen": "Çekici Ekran",
+          "tap_count": 0,
+          "friction": false,
+          "notes": "Otomatik sıfırlama süresi belirli olmalı (örn. 30 saniye)"
+        }
+      ],
+      "total_taps": 3,
+      "kiosk_ideal_taps": 3,
+      "tap_gap": "0 (ideal)",
+      "friction_points": [
+        "Kart terminali ve ekran arası geçiş sırasında yönlendirme eksikliği",
+        "Fiş seçimi ekstra adım oluşturuyor — akış yavaşlıyor",
+        "Ödeme sonrası oturum sıfırlama süresi belirsiz"
+      ],
+      "dropoff_risks": [
+        "Ödeme sırasında timeout olursa sepet kaybı (kullanıcı deneyimi kırılganlığı)",
+        "Kart hatası mesajları anlaşılır değilse müşteri panikleyebilir",
+        "Onay ekranından sonra oturum sıfırlanmazsa kişisel veri riski"
+      ],
+      "score": 6,
+      "improvement_suggestions": [
+        "Ödeme terminali yönlendirmesini animasyonlu ve büyük ikonlarla güçlendir",
+        "Fiş seçimini opsiyonel yap — varsayılan fişsiz",
+        "Sipariş numarasını hem ekranda hem fiş/SMS ile ilet",
+        "Ödeme sonrası 20 saniyelik geri sayım ile otomatik sıfırlama"
+      ]
+    },
+    {
+      "id": "flow-4",
+      "name": "Kategori Filtreleme ve Arama Akışı",
+      "description": "Kullanıcı belirli bir ürünü bulmak için kategorileri veya arama fonksiyonunu kullanır.",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Kategori tab/buton seçimi",
+          "screen": "Ana Menü",
+          "tap_count": 1,
+          "friction": false
+        },
+        {
+          "step": 2,
+          "action": "Alt kategori seçimi (varsa)",
+          "screen": "Kategori Listesi",
+          "tap_count": 1,
+          "friction": true,
+          "friction_detail": "Kahve Dünyası'nın geniş ürün yelpazesi (Kahve, Çikolata, Pastane, Soğuk İçecekler) birden fazla alt kategoriye yol açabilir. Kiosk'ta derin navigasyon sorunludur."
+        },
+        {
+          "step": 3,
+          "action": "Metin arama (react-simple-keyboard — ekran klavyesi)",
+          "screen": "Arama",
+          "tap_count": 5,
+          "friction": true,
+          "friction_detail": "react-simple-keyboard entegrasyonu mevcut (CSS'de .simple-keyboard, button height 50px, numeric layout 60px). Ekran klavyesi ile metin girişi kiosk'ta yavaş ve hatalı. Bu büyük bir UX sorunu — kiosk'ta arama minimize edilmeli."
+        }
+      ],
+      "total_taps": 7,
+      "kiosk_ideal_taps": 2,
+      "tap_gap": "+5 (kritik aşım)",
+      "friction_points": [
+        "Metin tabanlı arama kiosk platformunda kritik friction noktası",
+        "react-simple-keyboard ile metin girişi yavaş ve hata eğilimli",
+        "Derin kategori hiyerarşisi dokunuş sayısını artırıyor",
+        "Arama sonuçlarına ulaşmak 7+ dokunuş gerektiriyor"
+      ],
+      "dropoff_risks": [
+        "Ekran klavyesi kullanıcıları vazgeçirebilir",
+        "Yanlış spelling/tahmin sonuçları boş sayfa — dead end",
+        "Uzun ürün listesinde scroll yorgunluğu"
+      ],
+      "score": 5,
+      "improvement_suggestions": [
+        "Metin araması kaldır, kategoriler ve görsel filtrelerle değiştir",
+        "Ürünleri büyük görseller ve kısa isimlerle kategorize et",
+        "Popüler ürünler / Önerilen bölümü ekle — en az 2 dokunuşla ulaşım",
+        "Görsel filtre butonları kullan (büyük ikonlar: Sıcak / Soğuk / Pastane)"
+      ]
+    }
+  ],
+  "uiux_quality": {
+    "visual_hierarchy": {
+      "score": 6,
+      "findings": [
+        {
+          "level": "Orta",
+          "finding": "CSS'de shadow-xl ve gradient efektleri var — CTA butonları görsel olarak ayrışabiliyor",
+          "impact": "Olumlu: CTA'lar belirgin"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "text-xs (12px) ve text-sm (14px) sınıfları kiosk için yetersiz — 1-2 metre mesafeden okunamaz. Kiosk minimum: 24px body, 32px başlık.",
+          "impact": "Kritik okunabilirlik sorunu"
+        },
+        {
+          "level": "Orta",
+          "finding": "glass-effect (backdrop-filter: blur) parlak ortamlarda yansıma ve okunabilirlik sorununa yol açabilir",
+          "impact": "Mağaza aydınlatmasına bağlı risk"
+        },
+        {
+          "level": "Düşük",
+          "finding": "primary rengi CSS değişkeni olarak tanımlı (142 76% 36% — yeşil ton) — marka rengi olan Kahve Dünyası kurumsal renkleriyle uyumu sorgulanabilir",
+          "impact": "Marka tutarlılığı riski"
+        }
+      ]
+    },
+    "consistency": {
+      "score": 6,
+      "findings": [
+        {
+          "level": "Düşük",
+          "finding": "Tailwind CSS sistem renk değişkenleri tutarlı kullanılıyor (--primary, --secondary, --destructive)",
+          "impact": "Olumlu: Renk sistemi tutarlı"
+        },
+        {
+          "level": "Orta",
+          "finding": "react-simple-keyboard ayrı CSS dosyasından geliyor (Helvetica/Arial fontları) — uygulama genelindeki font sistemiyle uyumsuz",
+          "impact": "Klavye görünümü uyumsuz"
+        },
+        {
+          "level": "Orta",
+          "finding": "Button height .h-14 (56px) ve .inputHeight (50px) farklı — dokunma hedeflerinde tutarsızlık",
+          "impact": "Dokunma deneyimi tutarsız"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Disabled butonlar opacity-50 ile işleniyor — kiosk parlak ortamda yetersiz kontrast",
+          "impact": "Devre dışı durum belirsizliği"
+        }
+      ]
+    },
+    "accessibility": {
+      "score": 4,
+      "findings": [
+        {
+          "level": "Kritik",
+          "finding": "Font boyutları kiosk standardının altında: CSS'de text-xs (12px), text-sm (14px) sınıfları kullanılıyor. Kiosk standardı: minimum 24px body, 32px başlık.",
+          "impact": "Mağaza içi okunabilirlik kritik derecede düşük"
+        },
+        {
+          "level": "Kritik",
+          "finding": "Sistem renk değişkenleri (--primary: 142 76% 36%) WCAG AAA (7:1 kontrast) seviyesi doğrulaması yapılamamış — özellikle glass-effect üzerindeki metinler risk altında",
+          "impact": "Görme güçlüğü olan kullanıcılar için erişilemez"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Timeout/inaktivite mekanizması hakkında CSS'de geri sayım animasyonu veya uyarı komponenti görülmüyor",
+          "impact": "Kullanıcı yönlendirmesi eksik"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Sesli yönlendirme (screen reader/audio feedback) desteği belirsiz",
+          "impact": "İşitme/görme engelli kullanıcılar için erişilemez"
+        },
+        {
+          "level": "Orta",
+          "finding": "Tekerlekli sandalye erişimi için alt buton yerleşimi — 32\" ekranda alt %30'a yerleştirilen butonlar erişilebilir, ancak CTA'ların tam konumu doğrulanamadı",
+          "impact": "Erişilebilirlik bilinmiyor"
+        },
+        {
+          "level": "Orta",
+          "finding": "Çoklu dil desteği (EN/TR) menü erişiminin kolay olup olmadığı belirsiz",
+          "impact": "Turistler / yabancı müşteriler için sorun"
+        }
+      ]
+    },
+    "micro_interactions": {
+      "score": 6,
+      "findings": [
+        {
+          "level": "Düşük",
+          "finding": "CSS'de hover:scale-[1.01] ve active:scale-[0.99] transform animasyonları mevcut — dokunma geri bildirimi var",
+          "impact": "Olumlu: Temel dokunma feedback'i sağlanmış"
+        },
+        {
+          "level": "Orta",
+          "finding": "animate-pulse ve animate-bounce sınıfları mevcut — loading state desteği var ancak uygulanma kalitesi bilinmiyor",
+          "impact": "Loading state mevcut"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Geçiş animasyonları (transition-duration: 150ms, 200ms, 300ms) web standardında ama kiosk için 500ms altı hedefi değerlendirme gerektirir",
+          "impact": "Geçiş hızı yeterli görünüyor"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Hata mesajları için CSS'de destructive (--destructive renk) mevcut ancak font boyutu ve mesaj formatı bilinmiyor — kiosk'ta hata mesajları büyük ve net olmalı",
+          "impact": "Hata durumu UX'i belirsiz"
+        },
+        {
+          "level": "Orta",
+          "finding": "Blob animasyonu (7 saniyelik döngü) attract screen için var — ancak performans etkisi (GPU) izlenmeli",
+          "impact": "Sürekli animasyon CPU/GPU yükü"
+        }
+      ]
+    },
+    "information_architecture": {
+      "score": 5,
+      "findings": [
+        {
+          "level": "Yüksek",
+          "finding": "Kahve Dünyası'nın geniş ürün yelpazesi (Kahve, Çikolata, Pastane, Aksesuar) kiosk'ta doğru kategori hiyerarşisi gerektiriyor. Derin navigasyon kiosk'ta sorun.",
+          "impact": "Kategori yapısı dokunuş sayısını artırabilir"
+        },
+        {
+          "level": "Yüksek",
+          "finding": "Multi-tenant yapı ([tenantId]/[branchId]) branch bazlı menü farklılıklarını destekliyor — ancak kiosk'ta tek bir branch odaklı sade yapı gerekirken genel uygulama karmaşıklığı devralınmış olabilir",
+          "impact": "Gereksiz karmaşıklık riski"
+        },
+        {
+          "level": "Orta",
+          "finding": "Arama fonksiyonu (react-simple-keyboard) kiosk'ta navigasyon alternatifi olarak tasarlanmış — ancak bu kiosk UX best practice'e aykırı",
+          "impact": "Kullanıcı yanlış yönlendirilebilir"
+        },
+        {
+          "level": "Düşük",
+          "finding": "Next.js App Router ile dinamik route yapısı modern ve modüler — iyileştirme için altyapı uygun",
+          "impact": "Olumlu: İyi altyapı"
+        }
+      ]
+    }
+  },
+  "performance": {
+    "lcp": {
+      "value": "~2.8s (tahmini)",
+      "target": "2.5s",
+      "status": "Orta",
+      "notes": "Next.js RSC streaming mimarisi LCP'yi etkileyebilir. İlk içerik yükü (ürün görselleri) ağ latansına bağlı.",
+      "recommendation": "Ürün görsellerini Next.js Image bileşeni ile optimize et, LCP unsuruna priority=true ekle. CDN kullanımını doğrula."
+    },
+    "fid_inp": {
+      "value": "~100-150ms (tahmini)",
+      "target": "200ms",
+      "status": "İyi",
+      "notes": "React dokunma event'leri genellikle hızlı. react-simple-keyboard klavye renderı INP'yi etkileyebilir.",
+      "recommendation": "Klavye bileşenini lazy load et — sadece gerektiğinde yükle."
+    },
+    "cls": {
+      "value": "~0.05-0.1 (tahmini)",
+      "target": "0.1",
+      "status": "İyi",
+      "notes": "Tailwind tabanlı sabit layout CLS'yi minimize eder. Ancak ürün görsel yüklemelerinde kayma riski var.",
+      "recommendation": "Ürün görselleri için aspect-ratio ve placeholder boyutları tanımla."
+    },
+    "ttfb": {
+      "value": "~200-400ms (tahmini)",
+      "target": "600ms",
+      "status": "İyi",
+      "notes": "Lokal ağda çalışan kiosk — TTFB düşük olmalı. Ancak API çağrıları (ürün menüsü) ek gecikme ekleyebilir.",
+      "recommendation": "Menü verilerini statik olarak önceden yükle (SSG/ISR) veya kiosk başlangıcında cache'le."
+    },
+    "fcp": {
+      "value": "~1.5s (tahmini)",
+      "target": "1.8s",
+      "status": "İyi",
+      "notes": "Next.js SSR/streaming ile erken içerik çizimi destekleniyor.",
+      "recommendation": "Critical CSS inline'la, font preload ekle."
+    },
+    "speed_index": {
+      "value": "~3.0s (tahmini)",
+      "target": "3.4s",
+      "status": "İyi",
+      "recommendation": "Görsel yoğun sayfalarda lazy loading kullan."
+    },
+    "page_size": {
+      "value": "~800KB-1.5MB (tahmini)",
+      "target": "<1MB",
+      "status": "Orta",
+      "notes": "Next.js App Router + Tailwind full CSS + react-simple-keyboard → toplam bundle büyük olabilir. CSS: iki ayrı stylesheet dosyası.",
+      "recommendation": "Tailwind CSS purge doğrulaması yap. Kullanılmayan utility class'ları kaldır. Bundle analyzer kullan."
+    },
+    "requests": {
+      "value": "~25-40 istek (tahmini)",
+      "target": "<30",
+      "status": "Orta",
+      "recommendation": "Chunk birleştirme ve HTTP/2 multiplexing doğrulaması yap."
+    },
+    "page_transition_speed": {
+      "value": "~300-500ms (tahmini)",
+      "target": "<500ms",
+      "status": "İyi",
+      "notes": "Next.js istemci taraflı navigasyon sayfa geçişini hızlandırır",
+      "recommendation": "Prefetching aktif — beklenen sayfaları prefetch et"
+    },
+    "touch_response_time": {
+      "value": "~50-100ms (tahmini)",
+      "target": "<100ms",
+      "status": "İyi",
+      "notes": "PCAP dokunmatik ekran + React event handler kombinasyonu genellikle hızlı yanıt verir",
+      "recommendation": "Dokunma gecikme testini fiziksel cihazda doğrula"
+    },
+    "offline_mode": {
+      "value": "Belirsiz",
+      "target": "Mevcut olmalı",
+      "status": "Bilinmiyor",
+      "notes": "Next.js Service Worker desteği varsayılan değil. Lokal ağ kesintisinde uygulama nasıl davranır bilinmiyor.",
+      "recommendation": "Kritik: offline/ağ hatası senaryosu için fallback ekran tasarla. Menüyü local storage'a cache'le."
+    }
+  },
+  "platform_specific_issues": [
+    {
+      "id": "kiosk-001",
+      "category": "Dokunmatik Hedef Boyutu",
+      "severity": "Yüksek",
+      "title": "Bazı UI elementleri kiosk minimumunun altında kalabilir",
+      "description": "CSS'de .h-10 (40px) button height sınıfları mevcut — kiosk minimum 48px'in altında. react-simple-keyboard'da standart buton 40px yüksekliğinde. Kiosk'ta tüm dokunma hedefleri minimum 48x48px, ideali 56x56px olmalı.",
+      "impact": "Yanlış dokunma, frustrasyon, uzun sipariş süresi",
+      "solution": "Tüm buton height'larını minimum h-12 (48px) veya h-14 (56px) olarak zorla. CSS global button kuralına min-height: 48px ekle."
+    },
+    {
+      "id": "kiosk-002",
+      "category": "Font Boyutu",
+      "severity": "Kritik",
+      "title": "Font boyutları kiosk mesafesinde yetersiz",
+      "description": "CSS'de text-xs (12px), text-sm (14px), text-base (16px) sınıfları kiosk'ta 1-2 metre mesafeden okunamaz. Kiosk standardı: body text minimum 24px, başlık minimum 32px, fiyat/CTA minimum 28px.",
+      "impact": "Kullanıcı ürünleri ve fiyatları okuyamaz, yanlış sipariş riski, sipariş süresi uzar",
+      "solution": "Tailwind config'de kiosk-specific font boyutları tanımla: text-kiosk-body (24px), text-kiosk-title (32px). Ürün isimleri ve fiyatları için minimum 24px kullan."
+    },
+    {
+      "id": "kiosk-003",
+      "category": "Timeout/İnaktivite",
+      "severity": "Yüksek",
+      "title": "Timeout mekanizması belirsiz",
+      "description": "Kiosk'ta belirli süre (örn. 60-90 saniye) dokunulmadığında oturumun sıfırlanması ve attract screen'e dönülmesi gerekir. CSS'de bu mekanizmaya dair animasyon veya sayaç bileşeni görülmüyor.",
+      "impact": "Terk edilmiş sipariş oturumu, sonraki kullanıcıya kişisel veri açıklanması, sıra bekleme verimsizliği",
+      "solution": "İnaktivite sayacı ekle (60 saniye), son 15 saniyede uyarı modalı göster ('Devam etmek istiyor musunuz? 15 saniye içinde oturum sıfırlanacak'), otomatik sıfırlama."
+    },
+    {
+      "id": "kiosk-004",
+      "category": "Metin Girişi / Klavye",
+      "severity": "Yüksek",
+      "title": "Ekran klavyesi (react-simple-keyboard) kiosk'ta UX sorunu",
+      "description": "react-simple-keyboard entegrasyonu metin tabanlı arama için kullanılıyor. Kiosk'ta metin girişi minimize edilmeli — klavye kullanımı yavaş, hatalı ve sıra bekleme süresini artırır.",
+      "impact": "Düşük görev tamamlama oranı, sıra oluşumu, kullanıcı hayal kırıklığı",
+      "solution": "Metin aramasını kategori/görsel navigasyonla değiştir. Yalnızca fiş için e-posta girişi gerekiyorsa ayrı minimize edilmiş klavye kullan. Telefon numarası girişi için sayısal pad tercih et."
+    },
+    {
+      "id": "kiosk-005",
+      "category": "Offline/Ağ Dayanıklılığı",
+      "severity": "Orta",
+      "title": "Ağ kesintisi senaryosu tanımsız",
+      "description": "Next.js tabanlı uygulama lokal ağa bağımlı. Ağ kesintisinde uygulama nasıl davranacağı bilinmiyor. Service Worker veya offline cache mekanizması CSS/HTML yapısında görülmüyor.",
+      "impact": "Mağaza içi aksaklık, müşteri hayal kırıklığı, gelir kaybı",
+      "solution": "Menü verilerini PWA Service Worker ile cache'le. Ağ kesintisinde 'Sistem geçici olarak kullanım dışı, lütfen kasaya gidin' mesajı göster."
+    },
+    {
+      "id": "kiosk-006",
+      "category": "Glass Effect / Yansıma",
+      "severity": "Orta",
+      "title": "Glass morphism efekti mağaza aydınlatmasında sorun yaratabilir",
+      "description": "CSS'de .glass-effect (backdrop-filter: blur(12px), arka plan yarı saydam) kullanılıyor. Kiosk ekranları mağaza içi aydınlatma ve güneş ışığına maruz kalır — yansıma ve parlamalar glass efektini olumsuz etkiler.",
+      "impact": "İçerik okunabilirliği düşer, kullanıcı frustrasyon",
+      "solution": "Glass effect yerine solid, yüksek kontrast arka planlar kullan. WCAG AAA (7:1) kontrast oranını doğrula."
+    },
+    {
+      "id": "kiosk-007",
+      "category": "Yardım Mekanizması",
+      "severity": "Orta",
+      "title": "Personele yardım çağırma butonu görülmüyor",
+      "description": "Kiosk'ta kullanıcının yardıma ihtiyaç duyduğunda personeli çağırabileceği 'Yardım İste' butonu olmalı. Bu buton her ekranda sabit konumda, kolayca erişilebilir olmalı.",
+      "impact": "Sorun yaşayan müşteri sıkışır, deneyim olumsuz",
+      "solution": "Her ekrana sabit 'Yardım / Help' floating butonu ekle. Dokunulduğunda personele bildirim gönder ve 'Personel geliyor, lütfen bekleyin' mesajı göster."
+    },
+    {
+      "id": "kiosk-008",
+      "category": "Çok Dil Desteği",
+      "severity": "Düşük",
+      "title": "Dil değişimi akışı belirsiz",
+      "description": "Kahve Dünyası uluslararası müşteri profili olan bir marka. Kiosk'ta Türkçe/İngilizce değiştirme kolayca erişilebilir olmalı (tercihen ilk ekranda belirgin).",
+      "impact": "Yabancı turist müşteriler sipariş veremez",
+      "solution": "İlk ekranda TR/EN bayrak butonları ekle. Sonraki ekranlarda her zaman erişilebilir dil değişim ikonu."
+    }
+  ],
+  "top_issues": [
+    {
+      "rank": 1,
+      "severity": "Kritik",
+      "category": "Erişilebilirlik / Okunabilirlik",
+      "title": "Font boyutları kiosk standardının altında",
+      "description": "CSS'de text-xs (12px) ve text-sm (14px) kullanımı 1-2 metre mesafeden okunabilirliği yok ediyor.",
+      "impact": "Tüm kullanıcıları etkiliyor — sipariş hataları ve uzun sipariş süreleri",
+      "solution": "Tüm görünür metin bileşenlerini minimum 24px'e yükselt",
+      "quick_win": true
+    },
+    {
+      "rank": 2,
+      "severity": "Yüksek",
+      "category": "Kullanıcı Akışı",
+      "title": "Sipariş akışı 4 dokunuş idealini aşıyor",
+      "description": "Ana akış 6+ dokunuş gerektiriyor — kiosk ideali maksimum 4.",
+      "impact": "Uzun sipariş süresi, sıra oluşumu, kullanıcı memnuniyetsizliği",
+      "solution": "Kategori + ürün listesini tek ekranda birleştir; popüler ürünleri ana ekranda göster",
+      "quick_win": false
+    },
+    {
+      "rank": 3,
+      "severity": "Yüksek",
+      "category": "Platform",
+      "title": "Ekran klavyesi kiosk platformuyla uyumsuz",
+      "description": "react-simple-keyboard ile metin girişi kiosk'ta yavaş ve hatalı.",
+      "impact": "Arama kullanım oranı düşük, görev tamamlama başarısı azalıyor",
+      "solution": "Metin aramasını görsel/kategori navigasyonla değiştir",
+      "quick_win": false
+    },
+    {
+      "rank": 4,
+      "severity": "Yüksek",
+      "category": "Platform",
+      "title": "Timeout mekanizması eksik/belirsiz",
+      "description": "İnaktivite yönetimi kiosk'ta zorunlu — kişisel veri ve oturum güvenliği.",
+      "impact": "Terk edilmiş oturum, kişisel veri riski, sıra verimsizliği",
+      "solution": "60 saniye inaktivite sayacı + uyarı modalı + otomatik sıfırlama",
+      "quick_win": true
+    },
+    {
+      "rank": 5,
+      "severity": "Yüksek",
+      "category": "Erişilebilirlik",
+      "title": "Kontrast oranı kiosk ortamında yetersiz",
+      "description": "Glass morphism efekti ve CSS renk değişkenlerinin WCAG AAA uyumluluğu doğrulanmamış.",
+      "impact": "Parlak mağaza ortamında metin okunamaz hale gelebilir",
+      "solution": "Solid arka planlar kullan, kontrast oranını 7:1 olarak doğrula",
+      "quick_win": true
+    },
+    {
+      "rank": 6,
+      "severity": "Yüksek",
+      "category": "Platform",
+      "title": "Yardım çağırma mekanizması yok",
+      "description": "Kullanıcı sorun yaşadığında personeli çağıracak buton görülmüyor.",
+      "impact": "Sorunlu kullanıcı deneyimi, müşteri hayal kırıklığı",
+      "solution": "Sabit 'Yardım İste' floating butonu tüm ekranlarda",
+      "quick_win": true
+    },
+    {
+      "rank": 7,
+      "severity": "Orta",
+      "category": "UI/UX",
+      "title": "Dokunmatik hedef boyutu tutarsız",
+      "description": "h-10 (40px) bazı alanlarda kullanılıyor — kiosk minimum 48px.",
+      "impact": "Yanlış dokunma, frustrasyon, yavaş etkileşim",
+      "solution": "Global CSS'de minimum button height kuralı: min-height: 48px",
+      "quick_win": true
+    },
+    {
+      "rank": 8,
+      "severity": "Orta",
+      "category": "Performans",
+      "title": "Offline/ağ kesintisi senaryosu tanımsız",
+      "description": "Lokal ağ kesintisinde uygulama nasıl davranacağı belirsiz.",
+      "impact": "Mağaza içi servis aksaklığı",
+      "solution": "Service Worker + menü cache + hata ekranı",
+      "quick_win": false
+    },
+    {
+      "rank": 9,
+      "severity": "Orta",
+      "category": "UI/UX",
+      "title": "Glass morphism efekti mağaza aydınlatmasında sorun yaratabilir",
+      "description": "backdrop-filter: blur efekti parlak ortamlarda okunabilirliği düşürür.",
+      "impact": "İçerik okunabilirliği mağaza koşullarına bağlı",
+      "solution": "Solid yüksek kontrast arka planlar tercih et",
+      "quick_win": true
+    },
+    {
+      "rank": 10,
+      "severity": "Orta",
+      "category": "Bilgi Mimarisi",
+      "title": "Derin navigasyon hiyerarşisi kiosk için uygun değil",
+      "description": "Çok katmanlı kategori yapısı dokunuş sayısını artırıyor.",
+      "impact": "Hedefe ulaşmak daha fazla zaman alıyor",
+      "solution": "Düz (flat) navigasyon yapısı: maksimum 2 seviye (kategori + ürün)",
+      "quick_win": false
+    }
+  ],
+  "recommendations": {
+    "quick_wins": [
+      {
+        "priority": 1,
+        "title": "Font boyutlarını kiosk standardına yükselt",
+        "description": "Tailwind config'e kiosk font boyutları ekle. Tüm ürün adı, fiyat ve CTA metinlerini minimum 24px yap.",
+        "effort": "Düşük",
+        "impact": "Çok Yüksek",
+        "timeline": "1-3 gün"
+      },
+      {
+        "priority": 2,
+        "title": "Inaktivite timeout sistemi ekle",
+        "description": "60 saniyelik inaktivite sayacı, 15 saniye uyarı modalı, otomatik session sıfırlama.",
+        "effort": "Orta",
+        "impact": "Yüksek",
+        "timeline": "3-5 gün"
+      },
+      {
+        "priority": 3,
+        "title": "Glass effect'i solid arka planlarla değiştir",
+        "description": "backdrop-filter: blur kaldır, solid beyaz/koyu arka planlar kullan. WCAG AAA kontrast doğrula.",
+        "effort": "Düşük",
+        "impact": "Orta",
+        "timeline": "1-2 gün"
+      },
+      {
+        "priority": 4,
+        "title": "'Yardım İste' floating butonu ekle",
+        "description": "Tüm ekranlarda sabit konumda personel çağırma butonu. Minimum 56x56px, belirgin renk.",
+        "effort": "Düşük",
+        "impact": "Yüksek",
+        "timeline": "2-3 gün"
+      },
+      {
+        "priority": 5,
+        "title": "Minimum dokunma hedefi boyutunu zorla",
+        "description": "Global CSS'de min-height: 48px kuralı. react-simple-keyboard button height'ını 60px'e çıkar.",
+        "effort": "Düşük",
+        "impact": "Orta",
+        "timeline": "1 gün"
+      }
+    ],
+    "long_term": [
+      {
+        "priority": 1,
+        "title": "Sipariş akışını 3-4 dokunuşa indirgemek için UX yeniden tasarımı",
+        "description": "Kategori sidebar + ürün listesi tek ekranda. Popüler ürünler ana ekranda. Özelleştirme inline bottom sheet.",
+        "effort": "Yüksek",
+        "impact": "Çok Yüksek",
+        "timeline": "3-6 hafta"
+      },
+      {
+        "priority": 2,
+        "title": "Metin aramasını görsel navigasyonla değiştir",
+        "description": "react-simple-keyboard kaldır. Büyük ikonlu görsel kategori filtreleri. Popüler ürünler, öneriler bölümü.",
+        "effort": "Orta",
+        "impact": "Yüksek",
+        "timeline": "2-4 hafta"
+      },
+      {
+        "priority": 3,
+        "title": "Offline PWA desteği",
+        "description": "Service Worker ile menü verilerini cache'le. Ağ kesintisi graceful handling. Local ağ toleransı.",
+        "effort": "Yüksek",
+        "impact": "Orta",
+        "timeline": "4-8 hafta"
+      },
+      {
+        "priority": 4,
+        "title": "Erişilebilirlik geliştirmeleri",
+        "description": "Sesli yönlendirme, yüksek kontrast modu, dil değişimi kolaylaştırma, tekerlekli sandalye erişim testi.",
+        "effort": "Yüksek",
+        "impact": "Orta",
+        "timeline": "4-6 hafta"
+      },
+      {
+        "priority": 5,
+        "title": "Fiziksel kiosk donanımıyla entegre UX testi",
+        "description": "Gerçek 32\" dokunmatik ekranda kullanıcı testi yap. Dokunma hassasiyeti, yansıma, mesafe testleri.",
+        "effort": "Orta",
+        "impact": "Yüksek",
+        "timeline": "Süregelen — her büyük güncellemede"
+      }
+    ]
+  }
+}

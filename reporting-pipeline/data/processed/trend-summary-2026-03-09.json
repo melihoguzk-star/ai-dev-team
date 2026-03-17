@@ -1,0 +1,126 @@
+{
+  "week": "2026-03-09",
+  "generated_at": "2026-03-13T16:09:54.042483",
+  "trends": {
+    "ios_rating": {
+      "platform": "ios",
+      "metric": "rating",
+      "direction": "stable",
+      "strength": "weak",
+      "slope": -0.055,
+      "r_squared": 0.0672,
+      "p_value": 0.8331,
+      "first_value": 1.11,
+      "last_value": 1.0,
+      "total_change_pct": -9.91
+    },
+    "android_rating": {
+      "platform": "android",
+      "metric": "rating",
+      "direction": "decreasing",
+      "strength": "weak",
+      "slope": -0.151071,
+      "r_squared": 0.3718,
+      "p_value": 0.146,
+      "first_value": 2.62,
+      "last_value": 2.04,
+      "total_change_pct": -22.14
+    },
+    "ios_crash_free_user": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "android_crash_free_user": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "ios_downloads": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "android_downloads": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "ios_active_users": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "android_active_users": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "ios_uninstalls": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    },
+    "android_uninstalls": {
+      "direction": "insufficient_data",
+      "strength": null,
+      "slope": null,
+      "r_squared": null
+    }
+  },
+  "platform_comparison": [
+    {
+      "metric": "rating",
+      "metric_label": "App Rating",
+      "ios_last": 1.0,
+      "android_last": 2.04,
+      "diff_absolute": -1.04,
+      "diff_pct_vs_android": -50.98,
+      "4w_divergence": "converging"
+    },
+    {
+      "metric": "crash_free_user",
+      "metric_label": "Crash-Free User %",
+      "ios_last": null,
+      "android_last": null,
+      "diff_absolute": null,
+      "diff_pct_vs_android": null,
+      "4w_divergence": null
+    },
+    {
+      "metric": "downloads",
+      "metric_label": "Downloads",
+      "ios_last": null,
+      "android_last": null,
+      "diff_absolute": null,
+      "diff_pct_vs_android": null,
+      "4w_divergence": null
+    },
+    {
+      "metric": "active_users",
+      "metric_label": "Active Users",
+      "ios_last": null,
+      "android_last": null,
+      "diff_absolute": null,
+      "diff_pct_vs_android": null,
+      "4w_divergence": null
+    },
+    {
+      "metric": "uninstalls",
+      "metric_label": "Uninstalls",
+      "ios_last": null,
+      "android_last": null,
+      "diff_absolute": null,
+      "diff_pct_vs_android": null,
+      "4w_divergence": null
+    }
+  ],
+  "correlations": []
+}

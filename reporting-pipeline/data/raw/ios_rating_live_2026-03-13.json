@@ -1,0 +1,97 @@
+{
+  "app_name": "SunExpress",
+  "platform": "ios",
+  "metric": "rating",
+  "collection_date": "2026-03-13T12:51:40.284331+00:00",
+  "source": "itunes_lookup_api",
+  "live": true,
+  "data": {
+    "global_average": 2.54,
+    "total_ratings_count": 413,
+    "current_version": "1.0.9",
+    "by_country": {
+      "tr": {
+        "rating": 2.75,
+        "count": 194
+      },
+      "de": {
+        "rating": 2.7,
+        "count": 105
+      },
+      "gb": {
+        "rating": 2.18,
+        "count": 22
+      },
+      "nl": {
+        "rating": 1.79,
+        "count": 14
+      },
+      "at": {
+        "rating": 2.27,
+        "count": 11
+      },
+      "ch": {
+        "rating": 1.83,
+        "count": 18
+      },
+      "be": {
+        "rating": 1.36,
+        "count": 11
+      },
+      "fr": {
+        "rating": 1.77,
+        "count": 13
+      },
+      "se": {
+        "rating": 2.33,
+        "count": 3
+      },
+      "no": {
+        "rating": 5.0,
+        "count": 1
+      },
+      "dk": {
+        "rating": 1.0,
+        "count": 1
+      },
+      "cz": {
+        "rating": 4.0,
+        "count": 1
+      },
+      "ua": {
+        "rating": 2.0,
+        "count": 6
+      },
+      "sa": {
+        "rating": 1.0,
+        "count": 1
+      },
+      "ae": {
+        "rating": 1.0,
+        "count": 1
+      },
+      "it": {
+        "rating": 3.0,
+        "count": 4
+      },
+      "es": {
+        "rating": 2.33,
+        "count": 3
+      },
+      "gr": {
+        "rating": 5.0,
+        "count": 1
+      },
+      "hu": {
+        "rating": 1.0,
+        "count": 2
+      },
+      "ba": {
+        "rating": 5.0,
+        "count": 1
+      }
+    },
+    "countries_with_data": 20,
+    "countries_without_data": 33
+  }
+}

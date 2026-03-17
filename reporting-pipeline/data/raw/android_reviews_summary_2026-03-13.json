@@ -1,0 +1,57 @@
+{
+  "app_id": "com.sunexpress.lite",
+  "platform": "android",
+  "collection_date": "2026-03-13T10:30:30.992217+00:00",
+  "snapshot_date": "2026-03-13",
+  "sample_size": 50,
+  "avg_score": 2.46,
+  "distribution": {
+    "positive_4_5": 18,
+    "neutral_3": 0,
+    "negative_1_2": 32,
+    "positive_pct": 36.0,
+    "negative_pct": 64.0
+  },
+  "top_complaint_words": [
+    {
+      "word": "bilet",
+      "count": 10
+    },
+    {
+      "word": "hata",
+      "count": 9
+    },
+    {
+      "word": "berbat",
+      "count": 7
+    },
+    {
+      "word": "kötü",
+      "count": 5
+    },
+    {
+      "word": "oturum",
+      "count": 5
+    },
+    {
+      "word": "diyor",
+      "count": 5
+    },
+    {
+      "word": "sürekli",
+      "count": 4
+    },
+    {
+      "word": "veriyor",
+      "count": 4
+    },
+    {
+      "word": "surekli",
+      "count": 3
+    },
+    {
+      "word": "değil",
+      "count": 3
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "app_name": "SunExpress",
+  "package_name": "com.sunexpress.lite",
+  "platform": "android",
+  "metric": "rating",
+  "collection_date": "2026-03-13T13:07:28.456240+00:00",
+  "source": "google_play_scraper",
+  "live": true,
+  "general_rating": 3.42,
+  "review_countries": [
+    "tr",
+    "de",
+    "gb",
+    "nl",
+    "at",
+    "ch",
+    "fr"
+  ],
+  "period": {
+    "start": "2026-01-19",
+    "end": "2026-03-08",
+    "granularity": "weekly"
+  },
+  "data": [
+    {
+      "week_start": "2026-01-19",
+      "week_end": "2026-01-25",
+      "value": 2.62,
+      "review_count": 8,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-01-26",
+      "week_end": "2026-02-01",
+      "value": 3.18,
+      "review_count": 11,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-02",
+      "week_end": "2026-02-08",
+      "value": 2.17,
+      "review_count": 12,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-09",
+      "week_end": "2026-02-15",
+      "value": 2.54,
+      "review_count": 13,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-16",
+      "week_end": "2026-02-22",
+      "value": 1.46,
+      "review_count": 24,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-02-23",
+      "week_end": "2026-03-01",
+      "value": 2.29,
+      "review_count": 34,
+      "status": "ok"
+    },
+    {
+      "week_start": "2026-03-02",
+      "week_end": "2026-03-08",
+      "value": 2.04,
+      "review_count": 45,
+      "status": "ok"
+    }
+  ]
+}

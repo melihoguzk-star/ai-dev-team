@@ -68,9 +68,13 @@ def pct_change(old, new):
 
 
 def safe_float(v):
-    if v is None or (isinstance(v, float) and np.isnan(v)):
+    if v is None:
         return None
-    return round(float(v), 4)
+    try:
+        f = float(v)
+        return None if np.isnan(f) else round(f, 4)
+    except (TypeError, ValueError):
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -83,7 +87,7 @@ def analyze_trends(df: pd.DataFrame) -> dict:
     for col in METRIC_COLUMNS:
         if col not in df.columns:
             continue
-        y = df[col].values.astype(float)
+        y = pd.to_numeric(df[col], errors="coerce").values.astype(float)
         valid = ~np.isnan(y)
         if valid.sum() < 3:
             results[col] = {"direction": "insufficient_data", "strength": None,
@@ -138,7 +142,7 @@ def detect_anomalies(df: pd.DataFrame, thresholds: dict) -> list:
         if col not in df.columns:
             continue
         platform, metric = col_parts(col)
-        series = df[col].dropna()
+        series = pd.to_numeric(df[col], errors="coerce").dropna()
         if len(series) < 3:
             continue
 
@@ -167,16 +171,23 @@ def detect_anomalies(df: pd.DataFrame, thresholds: dict) -> list:
         week_anomalies = []
         for idx, row in df.iterrows():
             val = row.get(col)
+            try:
+                val = float(val)
+            except (TypeError, ValueError):
+                continue
             if pd.isna(val):
                 continue
-            val = float(val)
 
             # WoW bilgisi
             wow_pct = None
             if idx > 0:
                 prev = df.iloc[idx - 1].get(col)
-                if not pd.isna(prev) and float(prev) != 0:
-                    wow_pct = pct_change(float(prev), val)
+                try:
+                    prev = float(prev)
+                except (TypeError, ValueError):
+                    prev = float("nan")
+                if not pd.isna(prev) and prev != 0:
+                    wow_pct = pct_change(prev, val)
 
             flag = _threshold_flag(val, wow_pct, thresh)
             if flag != "none":
@@ -268,8 +279,12 @@ def platform_comparison(df: pd.DataFrame) -> list:
         for _, row in last4.iterrows():
             iv = row.get(ios_col)
             av = row.get(and_col)
-            if not pd.isna(iv) and not pd.isna(av):
-                diffs.append(float(iv) - float(av))
+            try:
+                iv_f, av_f = float(iv), float(av)
+                if not (pd.isna(iv_f) or pd.isna(av_f)):
+                    diffs.append(iv_f - av_f)
+            except (TypeError, ValueError):
+                pass
 
         divergence = None
         if len(diffs) >= 2:
@@ -310,12 +325,12 @@ def correlation_analysis(df: pd.DataFrame) -> list:
             col2 = f"{platform}_{m2}"
             if col1 not in df.columns or col2 not in df.columns:
                 continue
-            s1 = df[col1].dropna()
-            s2 = df[col2].dropna()
+            s1 = pd.to_numeric(df[col1], errors="coerce").dropna()
+            s2 = pd.to_numeric(df[col2], errors="coerce").dropna()
             common = s1.index.intersection(s2.index)
             if len(common) < 4:
                 continue
-            r, p = stats.pearsonr(s1[common], s2[common])
+            r, p = stats.pearsonr(s1[common].astype(float), s2[common].astype(float))
 
             if abs(r) > 0.7:
                 strength = "strong"
@@ -684,7 +699,7 @@ def main():
         (
             # 99.57 eşiğin (99.5) üzerinde → threshold flag yok, ama serinin minimumu
             "iOS crash-free 9-15 Şub serinin en düşük noktası (99.57)",
-            float(df["ios_crash_free_user"].min()) == 99.57,
+            safe_float(pd.to_numeric(df["ios_crash_free_user"], errors="coerce").min()) == 99.57,
         ),
     ]
 

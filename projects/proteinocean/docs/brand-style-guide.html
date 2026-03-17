@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProteinOcean — Marka Stil Rehberi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@300;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    pre, code { font-family: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace; }
+    .copy-btn:active { transform: scale(0.95); }
+    .sidebar-link { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; font-size: 14px; color: #475569; text-decoration: none; transition: background 0.15s, color 0.15s; }
+    .sidebar-link:hover { background: #f0fdfa; color: #0f766e; }
+    .sidebar-link.active { background: #f0fdfa; color: #0f766e; font-weight: 500; }
+    @media print {
+      .sidebar, aside, nav, .sb-nav, .sb-logo, .sb-footer { display: none !important; }
+      .main, main, .content, .main-content { margin-left: 0 !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; max-width: 100% !important; }
+      body { display: block !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+
+    :root {
+      --color-primary: #2126AB;
+      --color-secondary: #232DA8;
+      --color-accent: #1900FF;
+      --color-error: #DB2626;
+      --color-warning: #FF6600;
+      --color-border: #E5E5E5;
+      --color-text-primary: #070707;
+      --color-text-secondary: #464646;
+      --color-bg-primary: #FFFFFF;
+      --color-bg-secondary: #F8F8F8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-slate-200 sticky top-0 h-screen overflow-y-auto flex-shrink-0">
+      <div class="p-5 border-b border-slate-100">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Stil Rehberi</div>
+        <div class="text-base font-bold text-slate-800">ProteinOcean</div>
+        <div class="text-xs text-slate-400 mt-0.5">2026-03-05</div>
+      </div>
+
+      <nav class="p-3 space-y-0.5">
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 pt-3 pb-1">TASARIM</div>
+        <a href="#colors" class="sidebar-link active"><i data-lucide="palette" class="w-4 h-4"></i> Renk Paleti</a>
+        <a href="#typography" class="sidebar-link"><i data-lucide="type" class="w-4 h-4"></i> Tipografi</a>
+        <a href="#spacing" class="sidebar-link"><i data-lucide="ruler" class="w-4 h-4"></i> Spacing</a>
+        <a href="#components" class="sidebar-link"><i data-lucide="square" class="w-4 h-4"></i> Bileşenler</a>
+
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 pt-4 pb-1">KOD</div>
+        <a href="#swift-colors" class="sidebar-link"><i data-lucide="code-2" class="w-4 h-4"></i> SwiftUI Renkler</a>
+        <a href="#swift-fonts" class="sidebar-link"><i data-lucide="code-2" class="w-4 h-4"></i> SwiftUI Fontlar</a>
+        <a href="#swift-layout" class="sidebar-link"><i data-lucide="code-2" class="w-4 h-4"></i> SwiftUI Layout</a>
+
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 pt-4 pb-1">DOSYALAR</div>
+        <a href="brand-tokens.json" target="_blank" class="sidebar-link"><i data-lucide="file-json" class="w-4 h-4"></i> brand-tokens.json</a>
+        <a href="brand-analysis-report.html" class="sidebar-link"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Analiz Raporu</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1 p-8 max-w-4xl">
+
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900">Marka Stil Rehberi</h1>
+        <p class="text-slate-500 mt-1">iOS geliştirici referansı · Renkler: web · Bileşenler + Font: Figma</p>
+      </div>
+
+      <!-- RENK PALETİ -->
+      <section id="colors" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="palette" class="w-5 h-5 text-teal-600"></i> Renk Paleti
+          <span class="text-xs bg-teal-100 text-teal-700 font-bold px-2 py-0.5 rounded ml-1">WEB</span>
+        </h2>
+
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#2126AB"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Primary</div>
+            <div class="text-[10px] text-slate-400 font-mono">#2126AB</div>
+          </div>
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#232DA8"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Secondary</div>
+            <div class="text-[10px] text-slate-400 font-mono">#232DA8</div>
+          </div>
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#1900FF"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Accent</div>
+            <div class="text-[10px] text-slate-400 font-mono">#1900FF</div>
+          </div>
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#DB2626"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Error</div>
+            <div class="text-[10px] text-slate-400 font-mono">#DB2626</div>
+          </div>
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#FF6600"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Warning</div>
+            <div class="text-[10px] text-slate-400 font-mono">#FF6600</div>
+          </div>
+          <div class="text-center">
+            <div class="h-14 rounded-lg mb-1.5 border border-slate-200" style="background:#E5E5E5"></div>
+            <div class="text-[10px] font-semibold text-slate-600">Border</div>
+            <div class="text-[10px] text-slate-400 font-mono">#E5E5E5</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TİPOGRAFİ -->
+      <section id="typography" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="type" class="w-5 h-5 text-teal-600"></i> Tipografi
+          <span class="text-xs bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mb-4 space-y-4">
+          <div style="font-family:'Montserrat',sans-serif; font-weight:600; font-size:28px; line-height:1.2; color:#070707;">ProteinOcean</div>
+          <div class="border-t border-slate-100 pt-4 space-y-3">
+            <div class="flex items-baseline gap-4">
+              <div style="font-family:'Montserrat',sans-serif; font-weight:600; font-size:18px; line-height:24px; color:#070707;">Nav Title — 18px/600</div>
+              <div class="text-xs text-slate-400 font-mono">SemiBold</div>
+            </div>
+            <div class="flex items-baseline gap-4">
+              <div style="font-family:'Montserrat',sans-serif; font-weight:600; font-size:16px; line-height:20px; color:#070707;">Section Header — 16px/600</div>
+              <div class="text-xs text-slate-400 font-mono">SemiBold</div>
+            </div>
+            <div class="flex items-baseline gap-4">
+              <div style="font-family:'Montserrat',sans-serif; font-weight:300; font-size:14px; line-height:20px; color:#464646;">Body text — 14px/300 — Ürün açıklaması</div>
+              <div class="text-xs text-slate-400 font-mono">Light</div>
+            </div>
+            <div class="flex items-baseline gap-4">
+              <div style="font-family:'Montserrat',sans-serif; font-weight:500; font-size:12px; line-height:16px; color:#9B9B9B;">Caption — 12px/500</div>
+              <div class="text-xs text-slate-400 font-mono">Medium</div>
+            </div>
+            <div class="flex items-baseline gap-4">
+              <div style="font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; line-height:20px; color:#2126AB;">₺1.299,00</div>
+              <div class="text-xs text-slate-400 font-mono">Price — Bold</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SPACING -->
+      <section id="spacing" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="ruler" class="w-5 h-5 text-teal-600"></i> Spacing & Layout
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4 text-center">
+            <div class="text-2xl font-bold text-slate-800">20px</div>
+            <div class="text-xs text-slate-500 mt-1">Sayfa Padding</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4 text-center">
+            <div class="text-2xl font-bold text-slate-800">12px</div>
+            <div class="text-xs text-slate-500 mt-1">Grid Gap</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4 text-center">
+            <div class="text-2xl font-bold text-slate-800">16px</div>
+            <div class="text-xs text-slate-500 mt-1">Bölüm Gap</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-4 text-center">
+            <div class="text-2xl font-bold text-slate-800">44px</div>
+            <div class="text-xs text-slate-500 mt-1">Min Touch</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BİLEŞENLER -->
+      <section id="components" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="square" class="w-5 h-5 text-teal-600"></i> Bileşen Boyutları
+          <span class="text-xs bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <!-- Butonlar -->
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-4">
+          <div class="text-sm font-semibold text-slate-700 mb-4">Butonlar (h=56px)</div>
+          <div class="flex gap-3 items-center mb-4">
+            <button class="text-white text-sm font-semibold rounded-lg px-5" style="height:56px; background:#2126AB; font-family:'Montserrat',sans-serif; font-weight:600;">Primary Buton</button>
+            <button class="text-sm font-semibold rounded-lg px-5 border-2 border-dashed" style="height:56px; color:#1900FF; border-color:#1900FF; background:transparent; font-family:'Montserrat',sans-serif; font-weight:600;">Secondary Buton</button>
+          </div>
+          <div class="text-xs text-slate-500">
+            Her iki buton da <strong>56px yükseklik</strong>, <strong>8px radius</strong>, <strong>Montserrat SemiBold 16px</strong>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="bg-white rounded-xl border border-slate-200 p-5 mb-4">
+          <div class="text-sm font-semibold text-slate-700 mb-4">Input (h=50px)</div>
+          <div class="border rounded-lg px-4 flex items-center mb-3" style="height:50px; border-color:#E5E5E5; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:300; color:#9B9B9B;">Ürün ara...</div>
+          <div class="text-xs text-slate-500">h=50px · padding=16px · radius=8px · font=Montserrat Light 14px</div>
+        </div>
+
+        <!-- Ürün Kartı -->
+        <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <div class="text-sm font-semibold text-slate-700 mb-4">Ürün Kartı (172×278px)</div>
+          <div class="flex gap-6 items-start">
+            <div class="rounded-xl border border-slate-200 overflow-hidden flex-shrink-0" style="width:100px; height:162px; background:white;">
+              <div class="bg-slate-100" style="height:93px;"></div>
+              <div class="p-2">
+                <div class="bg-slate-200 h-2 rounded mb-1.5 w-full"></div>
+                <div class="bg-slate-200 h-2 rounded w-2/3 mb-2"></div>
+                <div class="font-bold text-xs" style="color:#2126AB;">₺1.299</div>
+              </div>
+            </div>
+            <div class="text-xs text-slate-600 space-y-1.5">
+              <div><span class="font-semibold">Genişlik:</span> 172px</div>
+              <div><span class="font-semibold">Yükseklik:</span> 278px</div>
+              <div><span class="font-semibold">Görsel yüksekliği:</span> 160px</div>
+              <div><span class="font-semibold">Radius:</span> 12px</div>
+              <div><span class="font-semibold">Grid:</span> 2 kolon, 12px boşluk</div>
+              <div><span class="font-semibold">İndirim tag:</span> 35×20px, r=6px</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SWIFTUI RENKLER -->
+      <section id="swift-colors" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="code-2" class="w-5 h-5 text-teal-600"></i> SwiftUI — Renk Extension
+        </h2>
+
+        <div class="bg-slate-900 rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-700">
+            <span class="text-xs text-slate-400 font-mono">ProteinOceanApp.swift</span>
+            <button onclick="copyCode('swift-colors-code')" class="copy-btn text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Kopyala
+            </button>
+          </div>
+          <pre id="swift-colors-code" class="p-4 text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">extension</span> <span class="text-teal-300">Color</span> {
+    <span class="text-slate-500">/// Hex string'den Color. "#2126AB" veya "2126AB" kabul eder.</span>
+    <span class="text-purple-400">init</span>(hex: <span class="text-teal-300">String</span>) {
+        <span class="text-purple-400">let</span> hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        <span class="text-purple-400">var</span> int: <span class="text-teal-300">UInt64</span> = 0
+        Scanner(string: hex).scanHexInt64(&amp;int)
+        <span class="text-purple-400">let</span> r, g, b, a: <span class="text-teal-300">UInt64</span>
+        <span class="text-purple-400">switch</span> hex.count {
+        <span class="text-purple-400">case</span> 6:  (r, g, b, a) = (int >> 16, int >> 8 &amp; 0xFF, int &amp; 0xFF, 255)
+        <span class="text-purple-400">case</span> 8:  (r, g, b, a) = (int >> 24, int >> 16 &amp; 0xFF, int >> 8 &amp; 0xFF, int &amp; 0xFF)
+        <span class="text-purple-400">default</span>: (r, g, b, a) = (0, 0, 0, 255)
+        }
+        <span class="text-purple-400">self</span>.init(.sRGB,
+                  red:     Double(r) / 255,
+                  green:   Double(g) / 255,
+                  blue:    Double(b) / 255,
+                  opacity: Double(a) / 255)
+    }
+
+    <span class="text-purple-400">static let</span> brandPrimary   = Color(hex: <span class="text-green-400">"#2126AB"</span>)  <span class="text-slate-500">// Navigasyon, tab tint</span>
+    <span class="text-purple-400">static let</span> brandSecondary = Color(hex: <span class="text-green-400">"#232DA8"</span>)  <span class="text-slate-500">// Fiyat rengi</span>
+    <span class="text-purple-400">static let</span> brandAccent    = Color(hex: <span class="text-green-400">"#1900FF"</span>)  <span class="text-slate-500">// CTA border</span>
+    <span class="text-purple-400">static let</span> brandError     = Color(hex: <span class="text-green-400">"#DB2626"</span>)  <span class="text-slate-500">// İndirim badge, hata</span>
+    <span class="text-purple-400">static let</span> brandWarning   = Color(hex: <span class="text-green-400">"#FF6600"</span>)  <span class="text-slate-500">// Stok uyarısı, lansman</span>
+    <span class="text-purple-400">static let</span> brandBorder    = Color(hex: <span class="text-green-400">"#E5E5E5"</span>)  <span class="text-slate-500">// Kart border, divider</span>
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- SWIFTUI FONTLAR -->
+      <section id="swift-fonts" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="code-2" class="w-5 h-5 text-teal-600"></i> SwiftUI — Montserrat Font
+          <span class="text-xs bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded ml-1">FIGMA</span>
+        </h2>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+          <div class="font-semibold mb-1">Kurulum Gerekli</div>
+          Montserrat.ttf dosyalarını Xcode projesine ekle ve Info.plist'e <code class="bg-amber-100 px-1 rounded">UIAppFonts</code> dizisi olarak tanımla.
+          İndir: <a href="https://fonts.google.com/specimen/Montserrat" target="_blank" class="underline">fonts.google.com/specimen/Montserrat</a>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-700">
+            <span class="text-xs text-slate-400 font-mono">BrandFont.swift</span>
+            <button onclick="copyCode('swift-fonts-code')" class="copy-btn text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Kopyala
+            </button>
+          </div>
+          <pre id="swift-fonts-code" class="p-4 text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">extension</span> <span class="text-teal-300">Font</span> {
+    <span class="text-slate-500">// Figma tipografi skalası — Montserrat</span>
+    <span class="text-purple-400">static let</span> brandNavTitle      = Font.custom(<span class="text-green-400">"Montserrat-SemiBold"</span>, size: 18)
+    <span class="text-purple-400">static let</span> brandSectionHeader  = Font.custom(<span class="text-green-400">"Montserrat-SemiBold"</span>, size: 16)
+    <span class="text-purple-400">static let</span> brandBody           = Font.custom(<span class="text-green-400">"Montserrat-Light"</span>,    size: 14)
+    <span class="text-purple-400">static let</span> brandCaption         = Font.custom(<span class="text-green-400">"Montserrat-Medium"</span>,   size: 12)
+    <span class="text-purple-400">static let</span> brandPrice           = Font.custom(<span class="text-green-400">"Montserrat-Bold"</span>,     size: 16)
+}
+
+<span class="text-slate-500">// Kullanım örnekleri:</span>
+<span class="text-slate-500">// Text("Kategoriler").font(.brandNavTitle)</span>
+<span class="text-slate-500">// Text("₺1.299").font(.brandPrice).foregroundStyle(Color.brandSecondary)</span>
+<span class="text-slate-500">// Text("Ürün açıklaması").font(.brandBody)</span></code></pre>
+        </div>
+      </section>
+
+      <!-- SWIFTUI LAYOUT -->
+      <section id="swift-layout" class="mb-12">
+        <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <i data-lucide="code-2" class="w-5 h-5 text-teal-600"></i> SwiftUI — Layout & Spacing
+        </h2>
+
+        <div class="bg-slate-900 rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-700">
+            <span class="text-xs text-slate-400 font-mono">BrandLayout.swift</span>
+            <button onclick="copyCode('swift-layout-code')" class="copy-btn text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Kopyala
+            </button>
+          </div>
+          <pre id="swift-layout-code" class="p-4 text-sm text-slate-300 overflow-x-auto"><code><span class="text-purple-400">enum</span> <span class="text-teal-300">Brand</span> {
+    <span class="text-purple-400">enum</span> <span class="text-teal-300">Spacing</span> {
+        <span class="text-purple-400">static let</span> pagePadding: <span class="text-teal-300">CGFloat</span> = 20   <span class="text-slate-500">// Figma: yatay padding</span>
+        <span class="text-purple-400">static let</span> gridGap: <span class="text-teal-300">CGFloat</span>     = 12   <span class="text-slate-500">// Figma: ürün grid boşluğu</span>
+        <span class="text-purple-400">static let</span> sectionGap: <span class="text-teal-300">CGFloat</span>  = 16   <span class="text-slate-500">// Bölüm arası boşluk</span>
+        <span class="text-purple-400">static let</span> touchMin: <span class="text-teal-300">CGFloat</span>    = 44   <span class="text-slate-500">// iOS min touch target</span>
+    }
+
+    <span class="text-purple-400">enum</span> <span class="text-teal-300">Radius</span> {
+        <span class="text-purple-400">static let</span> page: <span class="text-teal-300">CGFloat</span>    = 20   <span class="text-slate-500">// Figma: sayfa üst köşe</span>
+        <span class="text-purple-400">static let</span> card: <span class="text-teal-300">CGFloat</span>    = 12   <span class="text-slate-500">// Ürün kartı, kategori kartı</span>
+        <span class="text-purple-400">static let</span> button: <span class="text-teal-300">CGFloat</span>  = 8    <span class="text-slate-500">// Primary / secondary buton</span>
+        <span class="text-purple-400">static let</span> input: <span class="text-teal-300">CGFloat</span>   = 8    <span class="text-slate-500">// Input alanı</span>
+        <span class="text-purple-400">static let</span> badge: <span class="text-teal-300">CGFloat</span>   = 6    <span class="text-slate-500">// İndirim badge</span>
+    }
+
+    <span class="text-purple-400">enum</span> <span class="text-teal-300">Component</span> {
+        <span class="text-purple-400">static let</span> buttonHeight: <span class="text-teal-300">CGFloat</span>      = 56   <span class="text-slate-500">// Figma</span>
+        <span class="text-purple-400">static let</span> inputHeight: <span class="text-teal-300">CGFloat</span>       = 50   <span class="text-slate-500">// Figma</span>
+        <span class="text-purple-400">static let</span> productCardWidth: <span class="text-teal-300">CGFloat</span>  = 172  <span class="text-slate-500">// Figma</span>
+        <span class="text-purple-400">static let</span> productCardHeight: <span class="text-teal-300">CGFloat</span> = 278  <span class="text-slate-500">// Figma</span>
+        <span class="text-purple-400">static let</span> productImageHeight: <span class="text-teal-300">CGFloat</span>= 160  <span class="text-slate-500">// Figma</span>
+    }
+}</code></pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function copyCode(id) {
+      const el = document.getElementById(id);
+      const text = el ? el.innerText : '';
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+  </script>
+</body>
+</html>

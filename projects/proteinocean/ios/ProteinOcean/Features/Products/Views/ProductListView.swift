@@ -15,8 +15,8 @@ struct ProductListView: View {
     }
 
     private let gridColumns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
+        GridItem(.flexible(), spacing: BrandStyle.Spacing.grid),
+        GridItem(.flexible(), spacing: BrandStyle.Spacing.grid)
     ]
 
     var body: some View {
@@ -40,7 +40,7 @@ struct ProductListView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 10)
-            .background(Color(.systemGroupedBackground))
+            .background(Color.brandBackgroundSecondary)
 
             Divider()
 
@@ -54,7 +54,7 @@ struct ProductListView: View {
             } else {
                 ScrollView {
                     if isGridLayout {
-                        LazyVGrid(columns: gridColumns, spacing: 12) {
+                        LazyVGrid(columns: gridColumns, spacing: BrandStyle.Spacing.grid) {
                             ForEach(viewModel.products) { product in
                                 ProductCard(product: product, isGrid: true)
                                     .onAppear {
@@ -64,9 +64,9 @@ struct ProductListView: View {
                                     }
                             }
                         }
-                        .padding()
+                        .padding(BrandStyle.Spacing.page)
                     } else {
-                        LazyVStack(spacing: 12) {
+                        LazyVStack(spacing: BrandStyle.Spacing.grid) {
                             ForEach(viewModel.products) { product in
                                 ProductCard(product: product, isGrid: false)
                                     .onAppear {
@@ -76,7 +76,7 @@ struct ProductListView: View {
                                     }
                             }
                         }
-                        .padding()
+                        .padding(BrandStyle.Spacing.page)
                     }
 
                     if viewModel.isLoadingMore {
@@ -86,11 +86,22 @@ struct ProductListView: View {
                 }
             }
         }
+        .background(Color.brandBackground)
+        .clipShape(UnevenRoundedRectangle(
+            topLeadingRadius: BrandStyle.Radius.page,
+            bottomLeadingRadius: 0,
+            bottomTrailingRadius: 0,
+            topTrailingRadius: BrandStyle.Radius.page
+        ))
+        .background(Color.brandPrimary)
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadProducts()
         }
+        .toolbarBackground(Color.brandPrimary, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .confirmationDialog("Siralama", isPresented: $showSortSheet) {
             ForEach(ProductSortType.allCases, id: \.rawValue) { sort in
                 Button(sort.displayName) {
@@ -121,7 +132,7 @@ struct ProductCard: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(product.name)
-                    .font(.subheadline)
+                    .font(.brandSectionHead)
                     .lineLimit(2)
                     .foregroundStyle(.primary)
 
@@ -129,8 +140,8 @@ struct ProductCard: View {
             }
             .padding(10)
         }
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color.brandBackground)
+        .clipShape(RoundedRectangle(cornerRadius: BrandStyle.Radius.card))
         .shadow(color: .black.opacity(0.07), radius: 5, x: 0, y: 2)
         .overlay(alignment: .topTrailing) {
             discountBadge
@@ -138,19 +149,19 @@ struct ProductCard: View {
     }
 
     private var listCard: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: BrandStyle.Spacing.grid) {
             productImage
                 .frame(width: 90, height: 90)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(RoundedRectangle(cornerRadius: BrandStyle.Radius.card))
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(product.name)
-                    .font(.subheadline)
+                    .font(.brandSectionHead)
                     .lineLimit(3)
 
                 if let brand = product.brand {
                     Text(brand.name)
-                        .font(.caption)
+                        .font(.brandCaption)
                         .foregroundStyle(.secondary)
                 }
 
@@ -161,9 +172,9 @@ struct ProductCard: View {
 
             Spacer()
         }
-        .padding(12)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(BrandStyle.Spacing.card)
+        .background(Color.brandBackground)
+        .clipShape(RoundedRectangle(cornerRadius: BrandStyle.Radius.card))
         .shadow(color: .black.opacity(0.07), radius: 5, x: 0, y: 2)
     }
 
@@ -201,16 +212,15 @@ struct ProductCard: View {
         VStack(alignment: .leading, spacing: 2) {
             if let sellPrice = product.minPrice {
                 Text(sellPrice.formatted(.currency(code: "TRY")))
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.blue)
+                    .font(.brandPrice)
+                    .foregroundStyle(Color.brandSecondary)
             }
 
             if let originalPrice = product.originalPrice,
                let sellPrice = product.minPrice,
                originalPrice > sellPrice {
                 Text(originalPrice.formatted(.currency(code: "TRY")))
-                    .font(.caption)
+                    .font(.brandCaption)
                     .strikethrough()
                     .foregroundStyle(.secondary)
             }
@@ -221,13 +231,12 @@ struct ProductCard: View {
     private var discountBadge: some View {
         if let discount = product.discountPercent {
             Text("%-\(discount)")
-                .font(.caption2)
-                .fontWeight(.bold)
+                .font(.brandCaption)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(.red)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .background(Color.brandError)
+                .clipShape(RoundedRectangle(cornerRadius: BrandStyle.Radius.badge))
                 .padding(8)
         }
     }
@@ -236,11 +245,11 @@ struct ProductCard: View {
     private var stockBadge: some View {
         if !product.isInStock {
             Text("Stokta Yok")
-                .font(.caption2)
-                .foregroundStyle(.orange)
+                .font(.brandCaption)
+                .foregroundStyle(Color.brandWarning)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 3)
-                .background(Color.orange.opacity(0.12))
+                .background(Color.brandWarning.opacity(0.12))
                 .clipShape(Capsule())
         }
     }

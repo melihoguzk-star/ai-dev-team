@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Dev Team — Pipeline Mimari Rehberi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    #sidebar { height: 100vh; position: fixed; top: 0; left: 0; overflow-y: auto; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: #0D9488; border-radius: 2px; }
+    .card { transition: border-color 0.2s; }
+    .card:hover { border-color: #99F6E4; }
+    .card-body { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+    .card-body.collapsed { max-height: 0 !important; opacity: 0; }
+    .nav-item { transition: background 0.15s; }
+    .nav-item:hover { background: #F0FDFA; }
+    .nav-item.active { background: #F0FDFA; color: #0D9488; font-weight: 600; }
+    .nav-item.active i { color: #0D9488; }
+    .mermaid svg { max-width: 100%; height: auto; }
+    pre { font-family: 'Menlo', 'Consolas', monospace; }
+    @media print {
+      #sidebar { display: none; }
+      #main { margin-left: 0 !important; }
+      .no-print { display: none; }
+      .card-body { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-[#334155]">
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside id="sidebar" class="w-64 bg-white border-r border-[#E2E8F0] z-30 no-print">
+
+  <!-- Logo -->
+  <div class="px-5 py-5 border-b border-[#E2E8F0]">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-[#0D9488] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">AI</div>
+      <div>
+        <div class="font-bold text-sm text-[#0F172A]">AI Dev Team</div>
+        <div class="text-xs text-[#94A3B8]">Pipeline Rehberi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="px-3 py-4">
+    <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider px-3 mb-2">Pipeline</div>
+    <a href="#pipeline-akisi" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 cursor-pointer no-underline text-[#334155]">
+      <i data-lucide="git-branch" class="w-4 h-4 text-[#64748B]"></i>
+      <span class="text-sm">Pipeline Akışı</span>
+    </a>
+    <a href="#agent-tanimlari" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 cursor-pointer no-underline text-[#334155]">
+      <i data-lucide="bot" class="w-4 h-4 text-[#64748B]"></i>
+      <span class="text-sm">Agent Tanımları</span>
+    </a>
+
+    <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider px-3 mb-2 mt-5">Faz Detayları</div>
+    <a href="#faz-promptlari" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 cursor-pointer no-underline text-[#334155]">
+      <i data-lucide="terminal" class="w-4 h-4 text-[#64748B]"></i>
+      <span class="text-sm">Faz Prompt'ları</span>
+    </a>
+    <a href="#kalite-kapilari" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 cursor-pointer no-underline text-[#334155]">
+      <i data-lucide="shield-check" class="w-4 h-4 text-[#64748B]"></i>
+      <span class="text-sm">Kalite Kapıları</span>
+    </a>
+    <a href="#handoff" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg mb-0.5 cursor-pointer no-underline text-[#334155]">
+      <i data-lucide="arrow-right-left" class="w-4 h-4 text-[#64748B]"></i>
+      <span class="text-sm">Handoff Protokolü</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <div class="absolute bottom-0 left-0 w-64 px-5 py-4 border-t border-[#E2E8F0] bg-white">
+    <div class="text-xs text-[#94A3B8]">claude-sonnet-4-6</div>
+    <div class="text-xs text-[#94A3B8]">6 Mart 2026</div>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<div id="main" class="ml-64 min-h-screen">
+
+  <!-- Breadcrumb -->
+  <div class="bg-white border-b border-[#E2E8F0] px-8 py-3">
+    <div class="flex items-center gap-2 text-sm text-[#64748B]">
+      <i data-lucide="home" class="w-3.5 h-3.5"></i>
+      <span>Analiz</span>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      <span class="text-[#0D9488] font-medium">Pipeline Mimari Rehberi</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="bg-white border-b border-[#E2E8F0] px-8 py-6">
+    <h1 class="text-2xl font-bold text-[#0F172A] mb-1">AI Dev Team — Pipeline Mimari Rehberi</h1>
+    <p class="text-[#64748B] text-sm mb-5">Web sitesini iOS native uygulamaya dönüştüren 8 fazlı otomasyon pipeline'ının tam mimarisi. Agent tanımları, faz prompt'ları, kalite kapıları ve handoff protokolü.</p>
+
+    <!-- Stats -->
+    <div class="flex gap-6 flex-wrap">
+      <div class="text-center">
+        <div class="text-3xl font-bold text-[#0D9488]">9</div>
+        <div class="text-xs text-[#94A3B8] mt-0.5">Faz</div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-[#0D9488]">13</div>
+        <div class="text-xs text-[#94A3B8] mt-0.5">Agent</div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-[#0D9488]">70</div>
+        <div class="text-xs text-[#94A3B8] mt-0.5">Min Kalite Skoru</div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-[#0D9488]">3x</div>
+        <div class="text-xs text-[#94A3B8] mt-0.5">Paralel Grup</div>
+      </div>
+      <div class="w-px bg-[#E2E8F0]"></div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-[#0D9488]">~6h</div>
+        <div class="text-xs text-[#94A3B8] mt-0.5">Ort. Süre</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="px-8 py-6 space-y-5">
+
+    <!-- ════════════════ 1. PİPELİNE AKIŞI ════════════════ -->
+    <div id="pipeline-akisi" class="card bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <button onclick="toggleCard('c1')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#F0FDFA] border border-[#99F6E4] flex items-center justify-center flex-shrink-0">
+            <i data-lucide="git-branch" class="w-4 h-4 text-[#0D9488]"></i>
+          </div>
+          <div class="text-left">
+            <div class="font-semibold text-[#0F172A] text-sm">Pipeline Akışı</div>
+            <div class="text-xs text-[#64748B]">Faz bağımlılıkları ve paralel çalışma noktaları</div>
+          </div>
+        </div>
+        <i id="c1-icon" data-lucide="chevron-down" class="w-4 h-4 text-[#94A3B8] transition-transform flex-shrink-0"></i>
+      </button>
+
+      <div id="c1" class="card-body px-6 pb-6" style="max-height:3000px">
+
+        <!-- Özet kartlar -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4">
+            <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-1">Başlangıç</div>
+            <div class="font-semibold text-[#0F172A] text-sm">Tek URL</div>
+            <div class="text-xs text-[#64748B] mt-1">Pipeline tüm fazları otomatik yürütür</div>
+          </div>
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4">
+            <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-1">Paralel Gruplar</div>
+            <div class="font-semibold text-[#0F172A] text-sm">1.5+2 · 6a+6b · 7a+7b · 8a+8b</div>
+            <div class="text-xs text-[#64748B] mt-1">Toplam süreyi önemli ölçüde kısaltır</div>
+          </div>
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4">
+            <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-1">Son Çıktı</div>
+            <div class="font-semibold text-[#0F172A] text-sm">iOS App + Backend + Infra + Docs</div>
+            <div class="text-xs text-[#64748B] mt-1">Production-ready çıktı seti</div>
+          </div>
+        </div>
+
+        <!-- Mermaid -->
+        <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">Faz Bağımlılık Diyagramı</div>
+        <div class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-4 mb-6 overflow-x-auto">
+          <div class="mermaid">
+flowchart TD
+  F1["🔍 Faz 1 · Web Analizi\nweb-analyzer"]
+  F15["🎨 Faz 1.5 · Marka Kimliği\nbrand-analyzer"]
+  F2["🏗️ Faz 2 · Mimari Tasarım\nsystem-architect"]
+  F3["📋 Faz 3 · BA Doküman\nba-doc-generator"]
+  F4["🖼️ Faz 4 · UI/UX Tasarım\nui-designer"]
+  F5["📱 Faz 5 · iOS Dönüşümü\nuiux-translator"]
+  F6A["⚙️ Faz 6a · Backend\nbackend-developer"]
+  F6B["🍎 Faz 6b · iOS Core\nswift-expert"]
+  F6C["📲 Faz 6c · iOS UI\nswift-expert / mobile-dev"]
+  F7A["🧪 Faz 7a · Test\ntest-automator"]
+  F7B["🔎 Faz 7b · Kod İnceleme\ncode-reviewer"]
+  F8A["🚀 Faz 8a · DevOps\ndevops-engineer"]
+  F8B["📚 Faz 8b · Dokümantasyon\ndocumentation-engineer"]
+
+  F1 --> F15 & F2
+  F15 & F2 --> F3
+  F3 --> F4
+  F4 --> F5
+  F5 --> F6A & F6B
+  F6B --> F6C
+  F6A & F6C --> F7A & F7B
+  F7A & F7B --> F8A & F8B
+
+  style F1  fill:#0D9488,color:#fff,stroke:#0F766E
+  style F15 fill:#7C3AED,color:#fff,stroke:#6D28D9
+  style F2  fill:#2563EB,color:#fff,stroke:#1D4ED8
+  style F3  fill:#059669,color:#fff,stroke:#047857
+  style F4  fill:#D97706,color:#fff,stroke:#B45309
+  style F5  fill:#DC2626,color:#fff,stroke:#B91C1C
+  style F6A fill:#0891B2,color:#fff,stroke:#0E7490
+  style F6B fill:#0891B2,color:#fff,stroke:#0E7490
+  style F6C fill:#0891B2,color:#fff,stroke:#0E7490
+  style F7A fill:#7C3AED,color:#fff,stroke:#6D28D9
+  style F7B fill:#7C3AED,color:#fff,stroke:#6D28D9
+  style F8A fill:#BE123C,color:#fff,stroke:#9F1239
+  style F8B fill:#BE123C,color:#fff,stroke:#9F1239
+          </div>
+        </div>
+
+        <!-- Bağımlılık tablosu -->
+        <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">Bağımlılık Tablosu</div>
+        <div class="overflow-x-auto rounded-xl border border-[#E2E8F0]">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-[#F0FDFA]">
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Faz</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Ad</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Bağımlı Olduğu</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Paralel?</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Süre</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#F1F5F9]">
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">1</td><td class="px-4 py-3 font-medium text-[#0F172A]">Web Analizi</td><td class="px-4 py-3 text-[#64748B]">—</td><td class="px-4 py-3">—</td><td class="px-4 py-3 text-[#64748B] text-xs">15–30 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">1.5</td><td class="px-4 py-3 font-medium text-[#0F172A]">Marka Kimliği</td><td class="px-4 py-3 text-[#64748B]">Faz 1</td><td class="px-4 py-3"><span class="bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-xs font-semibold">Faz 2 ile</span></td><td class="px-4 py-3 text-[#64748B] text-xs">10–20 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">2</td><td class="px-4 py-3 font-medium text-[#0F172A]">Mimari Tasarım</td><td class="px-4 py-3 text-[#64748B]">Faz 1</td><td class="px-4 py-3"><span class="bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-xs font-semibold">Faz 1.5 ile</span></td><td class="px-4 py-3 text-[#64748B] text-xs">10–20 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">3</td><td class="px-4 py-3 font-medium text-[#0F172A]">BA Doküman</td><td class="px-4 py-3 text-[#64748B]">Faz 1, 2</td><td class="px-4 py-3"><span class="bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] rounded-full px-2 py-0.5 text-xs">Hayır</span></td><td class="px-4 py-3 text-[#64748B] text-xs">15–25 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">4</td><td class="px-4 py-3 font-medium text-[#0F172A]">UI/UX Tasarım</td><td class="px-4 py-3 text-[#64748B]">Faz 1, 1.5, 3</td><td class="px-4 py-3"><span class="bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] rounded-full px-2 py-0.5 text-xs">Hayır</span></td><td class="px-4 py-3 text-[#64748B] text-xs">20–30 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">5</td><td class="px-4 py-3 font-medium text-[#0F172A]">iOS Dönüşümü</td><td class="px-4 py-3 text-[#64748B]">Faz 1.5, 3, 4</td><td class="px-4 py-3"><span class="bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] rounded-full px-2 py-0.5 text-xs">Hayır</span></td><td class="px-4 py-3 text-[#64748B] text-xs">10–20 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">6a/6b</td><td class="px-4 py-3 font-medium text-[#0F172A]">Backend + iOS Core</td><td class="px-4 py-3 text-[#64748B]">Faz 2, 3, 5</td><td class="px-4 py-3"><span class="bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-xs font-semibold">Birbirleriyle</span></td><td class="px-4 py-3 text-[#64748B] text-xs">60–120 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">6c</td><td class="px-4 py-3 font-medium text-[#0F172A]">iOS UI Katmanı</td><td class="px-4 py-3 text-[#64748B]">Faz 6b</td><td class="px-4 py-3"><span class="bg-[#F8FAFC] text-[#94A3B8] border border-[#E2E8F0] rounded-full px-2 py-0.5 text-xs">6b biter, sonra</span></td><td class="px-4 py-3 text-[#64748B] text-xs">30–60 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">7a/7b</td><td class="px-4 py-3 font-medium text-[#0F172A]">Test + Kod İnceleme</td><td class="px-4 py-3 text-[#64748B]">Faz 6</td><td class="px-4 py-3"><span class="bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-xs font-semibold">Tamamen paralel</span></td><td class="px-4 py-3 text-[#64748B] text-xs">30–60 dk</td></tr>
+              <tr class="hover:bg-[#F8FAFC]"><td class="px-4 py-3 font-mono text-xs font-bold text-[#0D9488]">8a/8b</td><td class="px-4 py-3 font-medium text-[#0F172A]">DevOps + Dokümantasyon</td><td class="px-4 py-3 text-[#64748B]">Faz 1–7</td><td class="px-4 py-3"><span class="bg-green-50 text-green-700 border border-green-200 rounded-full px-2 py-0.5 text-xs font-semibold">Tamamen paralel</span></td><td class="px-4 py-3 text-[#64748B] text-xs">20–40 dk</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ 2. AGENT TANIMLARI ════════════════ -->
+    <div id="agent-tanimlari" class="card bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <button onclick="toggleCard('c2')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#F0FDFA] border border-[#99F6E4] flex items-center justify-center flex-shrink-0">
+            <i data-lucide="bot" class="w-4 h-4 text-[#0D9488]"></i>
+          </div>
+          <div class="text-left">
+            <div class="font-semibold text-[#0F172A] text-sm">Agent Tanımları</div>
+            <div class="text-xs text-[#64748B]">Her agent'ın modeli, görevi ve girdi/çıktı dosyaları</div>
+          </div>
+          <span class="bg-[#F0FDFA] text-[#0D9488] border border-[#99F6E4] rounded-full px-2 py-0.5 text-xs font-semibold">13 agent</span>
+        </div>
+        <i id="c2-icon" data-lucide="chevron-down" class="w-4 h-4 text-[#94A3B8] transition-transform flex-shrink-0"></i>
+      </button>
+
+      <div id="c2" class="card-body px-6 pb-6" style="max-height:4000px">
+        <div class="overflow-x-auto rounded-xl border border-[#E2E8F0]">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-[#F0FDFA]">
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Agent</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Model</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Faz</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Girdi</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Çıktı</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#F1F5F9]">
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">web-analyzer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">opus-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">1</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Hedef URL</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">analysis/web-analysis-report.html</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">brand-analyzer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">1.5</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">web-analysis-report.html + URL (CSS)</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">docs/brand-tokens.json<br>docs/brand-style-guide.html</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">system-architect</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">opus-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">2</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">web-analysis-report.html</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">docs/architecture-decisions.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">ba-doc-generator</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">3</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">web-analysis-report.html + architecture-decisions.md</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">docs/ba-document.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">ui-designer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">4</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">web-analysis-report.html + ba-document.md + architecture-decisions.md</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">design/components/<br>design/tokens.json</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">uiux-translator</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">5</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">design/components/ + ba-document.md + brand-tokens.json</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">docs/ios-design-spec.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">backend-developer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">6a</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">architecture-decisions.md + ba-document.md</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">backend/</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">swift-expert</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">6b / 6c</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">architecture-decisions.md + ios-design-spec.md + brand-tokens.json</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">ios/ (core + UI)</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">mobile-developer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">6c</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">ios-design-spec.md + brand-tokens.json + ios/ (core)</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">ios/ (Flutter/RN)</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">test-automator</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">7a</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">ba-document.md + backend/ + ios/</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">tests/backend/ + tests/ios/</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">code-reviewer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">7b / Kalite Kapısı</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">backend/ + ios/ + tests/ + architecture-decisions.md</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">docs/code-review-report.html</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">devops-engineer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">8a</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">architecture-decisions.md + backend/</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">infra/ (Docker, CI/CD, IaC)</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs font-medium">documentation-engineer</code></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">sonnet-4-6</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">8b</td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">docs/ + backend/ + ios/ + infra/</td>
+                <td class="px-4 py-3"><code class="text-xs text-[#7C3AED]">README.md + docs/api-docs/ + ARCHITECTURE.md</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ 3. FAZ PROMPT'LARI ════════════════ -->
+    <div id="faz-promptlari" class="card bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <button onclick="toggleCard('c3')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#F0FDFA] border border-[#99F6E4] flex items-center justify-center flex-shrink-0">
+            <i data-lucide="terminal" class="w-4 h-4 text-[#0D9488]"></i>
+          </div>
+          <div class="text-left">
+            <div class="font-semibold text-[#0F172A] text-sm">Faz Prompt'ları</div>
+            <div class="text-xs text-[#64748B]">Claude Code'a yapıştırılacak hazır komutlar</div>
+          </div>
+          <span class="bg-[#F0FDFA] text-[#0D9488] border border-[#99F6E4] rounded-full px-2 py-0.5 text-xs font-semibold">12 prompt</span>
+        </div>
+        <i id="c3-icon" data-lucide="chevron-down" class="w-4 h-4 text-[#94A3B8] transition-transform flex-shrink-0"></i>
+      </button>
+
+      <div id="c3" class="card-body px-6 pb-6" style="max-height:15000px">
+        <div class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800 mb-6">
+          <code class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-xs">[BÜYÜK_HARF]</code> ile belirtilen kısımları projeye göre değiştirin.
+        </div>
+
+        <!-- Prompt yardımcı fonksiyon -->
+        <div class="space-y-5">
+
+          <!-- FAZ 1 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#0D9488] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Web Analizi</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">web-analyzer</code>
+              <button onclick="copyPrompt('p1')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p1" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">web-analyzer subagent'ını kullan.
+
+[URL] adresini analiz et. Tüm 6 analiz katmanını eksiksiz tamamla:
+- Sayfa yapısı ve route'lar
+- UI bileşenleri (her sayfada)
+- API endpoint'leri (URL, method, request/response)
+- Veri modeli (entity'ler ve ilişkiler)
+- İş mantığı ve kullanıcı akışları
+- Teknoloji stack (frontend / backend / 3rd party)
+
+Çıktıyı ~/ai-dev-team/analysis/web-analysis-report.html olarak kaydet.
+
+Tamamlandığında raporla:
+- Toplam sayfa sayısı
+- Tespit edilen API endpoint sayısı
+- Veri modeli sayısı
+- Kullanıcı akışı sayısı
+- Tespit edilen risk sayısı</pre>
+          </div>
+
+          <!-- FAZ 1.5 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#7C3AED] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1.5</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Marka Kimliği Analizi</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">brand-analyzer</code>
+              <button onclick="copyPrompt('p15')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p15" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">brand-analyzer subagent'ını kullan.
+
+Şu dosyayı oku:
+1. ~/ai-dev-team/analysis/web-analysis-report.html
+
+Ayrıca [URL] adresine WebFetch ile eriş ve CSS dosyalarını analiz et.
+
+Marka kimliğini analiz et:
+- Renk paleti (primary, secondary, accent, background, text, status renkleri)
+- Tipografi (font ailesi, ağırlıklar, boyut skalası)
+- Spacing ve grid sistemi
+- Border radius ve shadow değerleri
+- İkon seti ve stili
+- Buton ve form stilleri
+
+Çıktıları kaydet:
+- ~/ai-dev-team/docs/brand-tokens.json
+- ~/ai-dev-team/docs/brand-style-guide.html
+
+Özet: ana renk, tipografi, ikon kütüphanesi, güven skoru (CSS'den mi / tahmini mi?)</pre>
+          </div>
+
+          <!-- FAZ 2 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#2563EB] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Mimari Tasarım</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">system-architect</code>
+              <button onclick="copyPrompt('p2')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p2" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">system-architect subagent'ını kullan.
+
+~/ai-dev-team/analysis/web-analysis-report.html dosyasını oku.
+
+5 karar alanını tamamla:
+1. Backend teknoloji seçimi (framework, DB, ORM, auth, hosting)
+2. API tasarımı (REST vs GraphQL, endpoint yapısı, error standardı)
+3. Veritabanı şeması (tablolar, ilişkiler, index stratejisi)
+4. iOS mimari kararları (pattern, networking, state, persistence, navigation)
+5. Proje yapısı (backend + iOS dizin yapıları)
+
+Her karar için: seçim, gerekçe, riskler, alternatifler.
+
+Çıktıyı ~/ai-dev-team/docs/architecture-decisions.md olarak kaydet.</pre>
+          </div>
+
+          <!-- FAZ 3 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#059669] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+              <span class="font-semibold text-[#0F172A] text-sm">BA Doküman Üretimi</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">ba-doc-generator</code>
+              <button onclick="copyPrompt('p3')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p3" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">ba-doc-generator subagent'ını kullan.
+
+Şu iki dosyayı oku:
+1. ~/ai-dev-team/analysis/web-analysis-report.html
+2. ~/ai-dev-team/docs/architecture-decisions.md
+
+Kapsamlı iş analizi dokümanı üret.
+
+Kurallar:
+- FR, BR, AC, VAL numaralandırması sürekli olmalı (bölüm başında sıfırlama YOK)
+- Her modül: açıklama, iş akışı diyagramı (mermaid), FR, BR, AC, VAL
+- GIVEN-WHEN-THEN formatı KULLANMA
+- Her gereksinim somut ve test edilebilir olmalı
+
+Çıktıyı ~/ai-dev-team/docs/ba-document.md olarak kaydet.</pre>
+          </div>
+
+          <!-- FAZ 4 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#D97706] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">4</span>
+              <span class="font-semibold text-[#0F172A] text-sm">UI/UX Tasarım</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">ui-designer</code>
+              <button onclick="copyPrompt('p4')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p4" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">ui-designer subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/analysis/web-analysis-report.html
+2. ~/ai-dev-team/docs/ba-document.md
+3. ~/ai-dev-team/docs/architecture-decisions.md
+
+Her ekran ve bileşen için component spec üret:
+- Varyantlar, design tokens, states (default/hover/active/disabled/focus)
+- Erişilebilirlik (ARIA, klavye, kontrast — WCAG 2.1 AA)
+- Dark mode desteği
+- Responsive davranış
+
+Çıktıları kaydet:
+- ~/ai-dev-team/design/components/ (her bileşen için ayrı .md)
+- ~/ai-dev-team/design/tokens.json
+- ~/ai-dev-team/design/CHANGELOG.md</pre>
+          </div>
+
+          <!-- FAZ 5 -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#DC2626] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">5</span>
+              <span class="font-semibold text-[#0F172A] text-sm">iOS Tasarım Dönüşümü</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">uiux-translator</code>
+              <button onclick="copyPrompt('p5')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p5" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">uiux-translator subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/design/components/ (tüm component spec'ler)
+2. ~/ai-dev-team/docs/ba-document.md
+3. ~/ai-dev-team/docs/architecture-decisions.md
+4. ~/ai-dev-team/docs/brand-tokens.json
+
+Web → iOS HIG uyumlu dönüşüm:
+1. Component Hierarchy — ağaç yapısı (web bileşeni → SwiftUI karşılığı)
+2. Ekran Listesi — SwiftUI view adları
+3. Navigasyon Haritası — mermaid diagram
+4. Tasarım Token'ları — Web → iOS semantic color + SF Pro font mapping
+5. Component Detayları — SwiftUI kod taslakları
+
+Çıktıyı ~/ai-dev-team/docs/ios-design-spec.md olarak kaydet.</pre>
+          </div>
+
+          <!-- FAZ 6a -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#0891B2] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">6a</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Backend Geliştirme</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">backend-developer</code>
+              <button onclick="copyPrompt('p6a')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p6a" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">backend-developer subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/docs/architecture-decisions.md
+2. ~/ai-dev-team/docs/ba-document.md
+
+Backend geliştir:
+- API endpoint'leri (architecture-decisions.md'deki tasarıma uygun)
+- Veritabanı modelleri ve migration'lar
+- Authentication ve authorization
+- Error handling ve validation
+- Tüm FR'leri karşılayan business logic
+
+Kodu ~/ai-dev-team/backend/ dizinine kaydet.
+README.md ile kurulum talimatlarını ekle.</pre>
+          </div>
+
+          <!-- FAZ 6b -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#0891B2] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">6b</span>
+              <span class="font-semibold text-[#0F172A] text-sm">iOS Core Modüller</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">swift-expert</code>
+              <button onclick="copyPrompt('p6b')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p6b" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">swift-expert subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/docs/architecture-decisions.md
+2. ~/ai-dev-team/docs/ios-design-spec.md
+3. ~/ai-dev-team/docs/ba-document.md
+
+iOS core modüllerini geliştir:
+- Networking layer (URLSession + async/await, API client)
+- Data models (Codable struct'lar, backend API'ye uyumlu)
+- Business logic layer
+- Persistence layer (SwiftData modelleri)
+- Utility ve extension'lar
+
+Kodu ~/ai-dev-team/ios/ dizinine kaydet.</pre>
+          </div>
+
+          <!-- FAZ 6c -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#0891B2] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">6c</span>
+              <span class="font-semibold text-[#0F172A] text-sm">iOS UI Katmanı</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">swift-expert / mobile-developer</code>
+              <button onclick="copyPrompt('p6c')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p6c" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">Not: ~/ai-dev-team/docs/tech-decisions.json oku.
+"platform": "ios-native"   → swift-expert kullan
+"platform": "flutter"/"react-native" → mobile-developer kullan
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/docs/ios-design-spec.md
+2. ~/ai-dev-team/docs/brand-tokens.json
+3. ~/ai-dev-team/design/tokens.json
+4. ~/ai-dev-team/ios/ (mevcut core modüller)
+
+iOS UI katmanını geliştir:
+- SwiftUI view'ları (ios-design-spec'teki ekran listesine uygun)
+- NavigationStack yapısı
+- Reusable component'ler
+- Dark mode ve Dynamic Type desteği
+- Erişilebilirlik (VoiceOver, aksesibilite label'ları)
+
+Kodu ~/ai-dev-team/ios/ dizinindeki mevcut yapıya entegre et.</pre>
+          </div>
+
+          <!-- FAZ 7a -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#7C3AED] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">7a</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Otomatik Test Yazımı</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">test-automator</code>
+              <button onclick="copyPrompt('p7a')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p7a" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">test-automator subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/docs/ba-document.md (AC listesi)
+2. ~/ai-dev-team/backend/
+3. ~/ai-dev-team/ios/
+
+Her AC için test yaz:
+- Backend: API endpoint testleri (unit + integration)
+- iOS: ViewModel unit testleri + UI testleri
+- Her test, hangi AC'yi karşıladığını comment ile belirtsin
+
+Hedef: test coverage >= %80
+
+Testleri kaydet:
+- ~/ai-dev-team/tests/backend/
+- ~/ai-dev-team/tests/ios/</pre>
+          </div>
+
+          <!-- FAZ 7b -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#7C3AED] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">7b</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Kod İnceleme</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">code-reviewer</code>
+              <button onclick="copyPrompt('p7b')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p7b" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">code-reviewer subagent'ını kullan.
+
+İncele:
+1. ~/ai-dev-team/backend/
+2. ~/ai-dev-team/ios/
+3. ~/ai-dev-team/tests/
+
+Referans:
+- ~/ai-dev-team/docs/architecture-decisions.md
+- ~/ai-dev-team/docs/ba-document.md
+
+Değerlendirme kriterleri:
+- Kod kalitesi ve okunabilirlik
+- Mimari kararlara uyum
+- Error handling, security, performance
+- BA dokümanındaki tüm FR'lerin implement edilip edilmediği
+
+100 üzerinden skor ver. Skor 70 altıysa kritik sorunları listele.
+
+Çıktıyı ~/ai-dev-team/docs/code-review-report.html olarak kaydet.</pre>
+          </div>
+
+          <!-- FAZ 8a -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#BE123C] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">8a</span>
+              <span class="font-semibold text-[#0F172A] text-sm">DevOps &amp; Deployment</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">devops-engineer</code>
+              <button onclick="copyPrompt('p8a')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p8a" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">devops-engineer subagent'ını kullan.
+
+Şu dosyaları oku:
+1. ~/ai-dev-team/docs/architecture-decisions.md
+2. ~/ai-dev-team/backend/
+
+Deployment altyapısını oluştur:
+- Dockerfile ve docker-compose.yml
+- CI/CD pipeline (GitHub Actions)
+- Environment konfigürasyonu (.env.example, staging/production)
+- Monitoring ve logging setup
+- Terraform/IaC dosyaları (gerekirse)
+- Deployment checklist
+
+Çıktıları ~/ai-dev-team/infra/ dizinine kaydet.</pre>
+          </div>
+
+          <!-- FAZ 8b -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-lg bg-[#BE123C] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">8b</span>
+              <span class="font-semibold text-[#0F172A] text-sm">Dokümantasyon</span>
+              <code class="bg-[#F0FDFA] text-[#0D9488] px-2 py-0.5 rounded text-xs ml-1">documentation-engineer</code>
+              <button onclick="copyPrompt('p8b')" class="ml-auto text-xs text-[#64748B] hover:text-[#0D9488] bg-[#F8FAFC] hover:bg-[#F0FDFA] border border-[#E2E8F0] px-3 py-1 rounded-lg transition-colors">Kopyala</button>
+            </div>
+            <pre id="p8b" class="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-xs text-[#334155] leading-relaxed">documentation-engineer subagent'ını kullan.
+
+Şu dizinleri oku:
+1. ~/ai-dev-team/docs/
+2. ~/ai-dev-team/backend/
+3. ~/ai-dev-team/ios/
+4. ~/ai-dev-team/infra/
+
+Üret:
+1. ~/ai-dev-team/README.md — proje genel bakış, kurulum, çalıştırma
+2. ~/ai-dev-team/docs/api-docs/ — endpoint'ler + request/response örnekleri
+3. ~/ai-dev-team/docs/CONTRIBUTING.md — katkı kılavuzu
+4. ~/ai-dev-team/docs/ARCHITECTURE.md — mimari genel bakış (mermaid)
+
+Tüm dokümantasyon Türkçe. Teknik terimler İngilizce kalabilir.</pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ 4. KALİTE KAPILARI ════════════════ -->
+    <div id="kalite-kapilari" class="card bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <button onclick="toggleCard('c4')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#F0FDFA] border border-[#99F6E4] flex items-center justify-center flex-shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4 text-[#0D9488]"></i>
+          </div>
+          <div class="text-left">
+            <div class="font-semibold text-[#0F172A] text-sm">Kalite Kapıları</div>
+            <div class="text-xs text-[#64748B]">Her faz sonrası code-reviewer ile otomatik değerlendirme</div>
+          </div>
+        </div>
+        <i id="c4-icon" data-lucide="chevron-down" class="w-4 h-4 text-[#94A3B8] transition-transform flex-shrink-0"></i>
+      </button>
+
+      <div id="c4" class="card-body px-6 pb-6" style="max-height:5000px">
+
+        <!-- Skor eşikleri -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl p-3">
+            <span class="text-xl">✅</span>
+            <div>
+              <div class="font-semibold text-green-800 text-sm">Skor ≥ 70</div>
+              <div class="text-xs text-[#64748B]">Geçer — sonraki faza devam</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-orange-50 border border-orange-200 rounded-xl p-3">
+            <span class="text-xl">⚠️</span>
+            <div>
+              <div class="font-semibold text-orange-800 text-sm">Skor 50–69</div>
+              <div class="text-xs text-[#64748B]">Koşullu — max 3 düzeltme</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-3">
+            <span class="text-xl">❌</span>
+            <div>
+              <div class="font-semibold text-red-800 text-sm">Skor &lt; 50</div>
+              <div class="text-xs text-[#64748B]">Başarısız — fazı yeniden çalıştır</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-[#E2E8F0]">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-[#F0FDFA]">
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs w-12">Faz</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Kontrol Listesi</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Geri Bildirim Dosyası</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#F1F5F9]">
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">1</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Tüm sayfalar ve route'lar listelenmiş mi?<br>
+                  □ Her sayfadaki UI bileşenler tespit edilmiş mi?<br>
+                  □ API endpoint'leri URL/method/response ile var mı?<br>
+                  □ Entity'ler ve ilişkiler çıkarılmış mı?<br>
+                  □ Kullanıcı akışları ve iş kuralları belirlenmiş mi?<br>
+                  □ Teknoloji stack tespiti yapılmış mı?<br>
+                  □ HTML rapor düzgün render ediliyor mu?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-1.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">1.5</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Tüm semantik renk rolleri tanımlı mı?<br>
+                  □ Tipografi h1–caption skalası eksiksiz mi?<br>
+                  □ Spacing xs–2xl skalası tanımlı mı?<br>
+                  □ Border radius ve shadow değerleri var mı?<br>
+                  □ iOS font ve SF Symbols eşleşmesi yapılmış mı?<br>
+                  □ Tahmini değerler işaretlenmiş mi?<br>
+                  □ Style guide HTML görsel içerik sunuyor mu?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-1.5.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">2</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ 5 karar alanı tamamlanmış mı?<br>
+                  □ Her karar gerekçelendirilmiş mi?<br>
+                  □ DB tabloları ve ilişkiler tanımlı mı?<br>
+                  □ iOS pattern seçimi yapılmış mı?<br>
+                  □ Overengineering yok mu?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-2.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">3</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ FR/BR/AC/VAL numaralandırması sürekli mi?<br>
+                  □ Her modül için iş akışı diyagramı var mı?<br>
+                  □ Her gereksinim somut ve test edilebilir mi?<br>
+                  □ Tüm web sayfaları BA'da kapsanmış mı?<br>
+                  □ GIVEN-WHEN-THEN kullanılmamış mı?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-3.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">4</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Tüm ekranlar için component spec mevcut mu?<br>
+                  □ 5 state tanımlı mı (default/hover/active/disabled/focus)?<br>
+                  □ WCAG 2.1 AA uyumlu mu?<br>
+                  □ Dark mode düşünülmüş mü?<br>
+                  □ SwiftUI karşılıkları verilmiş mi?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-4.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">5</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Tüm web bileşenleri iOS karşılığıyla eşleştirilmiş mi?<br>
+                  □ Mermaid navigasyon diyagramı var mı?<br>
+                  □ HIG uyumu kontrol edilmiş mi?<br>
+                  □ iOS-specific pattern'ler düşünülmüş mü?<br>
+                  □ Web → iOS token mapping yapılmış mı?<br>
+                  □ SwiftUI kod taslakları mevcut mu?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-5.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">6</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Mimari kararlara uyum sağlandı mı?<br>
+                  □ Tüm FR'ler implement edilmiş mi?<br>
+                  □ Backend ↔ iOS API uyumu var mı?<br>
+                  □ Security best practices uygulandı mı?<br>
+                  □ Backend çalışıyor, iOS build alıyor mu?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-6.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">7</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ Her AC için en az 1 test var mı?<br>
+                  □ Happy path + error case testleri var mı?<br>
+                  □ iOS ViewModel unit testleri var mı?<br>
+                  □ Edge case'ler test edilmiş mi?<br>
+                  □ Coverage ≥ %80 mi?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-7.md</code></td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-4 font-bold text-[#0D9488] align-top">8</td>
+                <td class="px-4 py-4 text-xs text-[#334155] leading-6 align-top">
+                  □ GitHub Actions workflow tanımlı mı?<br>
+                  □ Dockerfile çalışır mı?<br>
+                  □ .env.example ve env ayrımı var mı?<br>
+                  □ Tüm endpoint'ler belgelenmiş mi?<br>
+                  □ Deployment checklist tamamlanmış mı?
+                </td>
+                <td class="px-4 py-4 align-top"><code class="text-xs text-[#7C3AED]">docs/quality-feedback-faz-8.md</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ 5. HANDOFF PROTOKOLÜ ════════════════ -->
+    <div id="handoff" class="card bg-white rounded-xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+      <button onclick="toggleCard('c5')" class="w-full flex items-center justify-between px-6 py-4 hover:bg-[#F8FAFC] transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#F0FDFA] border border-[#99F6E4] flex items-center justify-center flex-shrink-0">
+            <i data-lucide="arrow-right-left" class="w-4 h-4 text-[#0D9488]"></i>
+          </div>
+          <div class="text-left">
+            <div class="font-semibold text-[#0F172A] text-sm">Handoff Protokolü</div>
+            <div class="text-xs text-[#64748B]">Faz geçiş kuralları, hata tipleri ve retry mekanizması</div>
+          </div>
+        </div>
+        <i id="c5-icon" data-lucide="chevron-down" class="w-4 h-4 text-[#94A3B8] transition-transform flex-shrink-0"></i>
+      </button>
+
+      <div id="c5" class="card-body px-6 pb-6" style="max-height:4000px">
+
+        <!-- Geçiş adımları -->
+        <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">Standart Faz Geçiş Akışı</div>
+        <div class="grid grid-cols-4 gap-3 mb-6">
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">💾</div>
+            <div class="font-semibold text-[#0F172A] text-xs mb-1">1. Tamamlama</div>
+            <div class="text-xs text-[#64748B]">Agent çıktıyı kaydeder ve istatistik raporlar</div>
+          </div>
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">🔎</div>
+            <div class="font-semibold text-[#0F172A] text-xs mb-1">2. Kalite Kapısı</div>
+            <div class="text-xs text-[#64748B]">code-reviewer kontrol listesini çalıştırır</div>
+          </div>
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">📊</div>
+            <div class="font-semibold text-[#0F172A] text-xs mb-1">3. Skor</div>
+            <div class="text-xs text-[#64748B]">≥70 devam · 50–69 düzeltme · &lt;50 tekrar</div>
+          </div>
+          <div class="bg-[#F0FDFA] border border-[#99F6E4] rounded-xl p-4 text-center">
+            <div class="text-2xl mb-2">✅</div>
+            <div class="font-semibold text-[#0F172A] text-xs mb-1">4. Sonraki Faz</div>
+            <div class="text-xs text-[#64748B]">Onaylanır, sonraki prompt uygulanır</div>
+          </div>
+        </div>
+
+        <!-- Hata tablosu -->
+        <div class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">Hata Tipleri ve Eylemler</div>
+        <div class="overflow-x-auto rounded-xl border border-[#E2E8F0] mb-6">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-[#F0FDFA]">
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Hata Tipi</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Açıklama</th>
+                <th class="text-left px-4 py-3 font-semibold text-[#0D9488] text-xs">Eylem</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#F1F5F9]">
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-red-50 text-red-700 border border-red-200 rounded-full px-2 py-0.5 text-xs font-semibold">AGENT_FAILURE</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Timeout veya crash</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">Aynı prompt ile 1 kez daha dene</td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-orange-50 text-orange-700 border border-orange-200 rounded-full px-2 py-0.5 text-xs font-semibold">INCOMPLETE_OUTPUT</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Bazı bölümler eksik</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">Tamamlama prompt'u ile eksikleri doldur</td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full px-2 py-0.5 text-xs font-semibold">WRONG_FORMAT</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Yanlış format veya dosya adı</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">Format düzeltme prompt'u uygula</td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-red-50 text-red-700 border border-red-200 rounded-full px-2 py-0.5 text-xs font-semibold">QUALITY_FAIL</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Kalite skoru &lt; 70</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">Max 3 düzeltme → insan müdahalesi</td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-red-50 text-red-700 border border-red-200 rounded-full px-2 py-0.5 text-xs font-semibold">DEPENDENCY_MISSING</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Girdi dosyası bulunamadı</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">Bağımlı fazı tekrar çalıştır</td>
+              </tr>
+              <tr class="hover:bg-[#F8FAFC]">
+                <td class="px-4 py-3"><span class="bg-gray-100 text-gray-600 border border-gray-200 rounded-full px-2 py-0.5 text-xs font-semibold">CONFLICT</span></td>
+                <td class="px-4 py-3 text-xs text-[#64748B]">Önceki kararlarla çelişki</td>
+                <td class="px-4 py-3 text-xs text-[#334155]">İnsan müdahalesi iste</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Retry politikası -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div class="font-semibold text-amber-800 text-sm mb-3">Retry Politikası</div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-[#0D9488]">3</div>
+              <div class="text-xs font-medium text-[#0F172A]">Max Düzeltme</div>
+              <div class="text-xs text-[#64748B]">deneme / faz</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-[#0D9488]">2</div>
+              <div class="text-xs font-medium text-[#0F172A]">Max Tam Tekrar</div>
+              <div class="text-xs text-[#64748B]">restart / faz</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-[#0D9488]">👤</div>
+              <div class="text-xs font-medium text-[#0F172A]">Escalation</div>
+              <div class="text-xs text-[#64748B]">3. denemeden sonra insan müdahalesi</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+  function toggleCard(id) {
+    const body = document.getElementById(id);
+    const icon = document.getElementById(id + '-icon');
+    body.classList.toggle('collapsed');
+    icon.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+  }
+
+  function copyPrompt(id) {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+      const btn = el.previousElementSibling.querySelector('button');
+      if (btn) { btn.textContent = 'Kopyalandı!'; setTimeout(() => btn.textContent = 'Kopyala', 2000); }
+    });
+  }
+
+  // Active nav on scroll
+  const navLinks = document.querySelectorAll('.nav-item');
+  window.addEventListener('scroll', () => {
+    const sections = ['pipeline-akisi','agent-tanimlari','faz-promptlari','kalite-kapilari','handoff'];
+    let current = sections[0];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 120) current = id;
+    });
+    navLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

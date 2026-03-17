@@ -27,6 +27,13 @@ RAW_DIR = BASE_DIR / "data" / "raw"
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 CONFIG_DIR = BASE_DIR / "config"
 
+# Live veri destekli metrikler (slug → metric_id)
+# Credential olmayan metrikler (downloads, active_users, uninstalls) BOŞ bırakılır
+LIVE_SLUGS  = {"rating", "crashlytics"}   # live dosya aranır
+EMPTY_SLUGS = {"downloads", "active_users", "uninstalls"}  # credential yok → "-"
+
+# Metrik kaynak izleme (process sırasında doldurulur)
+_DATA_SOURCES: dict = {}  # "platform_metric_id" → "live" | "empty"
 
 # ---------------------------------------------------------------------------
 # Metrik adı normalizasyonu (dosya adı → config id)
@@ -63,47 +70,117 @@ COLUMN_ORDER = [
 ]
 
 
+# Rapor haftaları (collect-ratings.py ile senkron)
+REPORT_WEEKS = [
+    ("2026-01-19", "2026-01-25"),
+    ("2026-01-26", "2026-02-01"),
+    ("2026-02-02", "2026-02-08"),
+    ("2026-02-09", "2026-02-15"),
+    ("2026-02-16", "2026-02-22"),
+    ("2026-02-23", "2026-03-01"),
+    ("2026-03-02", "2026-03-08"),
+]
+
+
 # ---------------------------------------------------------------------------
-# 1. PARSE — raw JSON → DataFrame satırları
+# 1. PARSE — raw JSON → DataFrame satırları  (live only, no mock fallback)
 # ---------------------------------------------------------------------------
-def parse_raw_files(week: str) -> pd.DataFrame:
-    """data/raw/ altındaki *_{week}.json dosyalarını okur, tek DataFrame döner."""
-    pattern = f"*_{week}.json"
-    files = sorted(RAW_DIR.glob(pattern))
-
-    if not files:
-        print(f"HATA: {RAW_DIR} altında '{pattern}' eşleşmesi bulunamadı.", file=sys.stderr)
-        sys.exit(1)
-
-    frames = []
-    for path in files:
-        # Dosya adından platform ve metrik slug'ını çıkar
-        # Örn: ios_active_users_2026-03-02.json → platform=ios, slug=active_users
-        stem = path.stem  # ios_active_users_2026-03-02
-        parts = stem.split("_")
-        # parts = ['ios', 'active', 'users', '2026-03-02']
-        # Tarih son eleman (2026-03-02 içinde - var, _ yok → tek parça kalır)
-        platform = parts[0]                  # ios / android
-        metric_slug = "_".join(parts[1:-1])  # active_users / crashlytics / ...
-
-        metric_id = FILE_TO_METRIC_ID.get(metric_slug)
-        if not metric_id:
-            print(f"UYARI: Tanınmayan metrik slug '{metric_slug}' ({path.name}), atlanıyor.")
+def _find_live_file(platform: str, slug: str) -> tuple[Path | None, dict | None]:
+    """
+    live:true ve data list şemasına sahip en yeni dosyayı döner.
+    Döner: (path, raw_dict) | (None, None)
+    """
+    candidates = sorted(RAW_DIR.glob(f"{platform}_{slug}_live_*.json"), reverse=True)
+    for path in candidates:
+        try:
+            with open(path, encoding="utf-8") as f:
+                raw = json.load(f)
+            if raw.get("live", False) and isinstance(raw.get("data"), list):
+                return path, raw
+        except Exception:
             continue
+    return None, None
 
-        with open(path, encoding="utf-8") as f:
-            raw = json.load(f)
 
-        df = pd.DataFrame(raw["data"])
-        df["week_start"] = pd.to_datetime(df["week_start"])
-        df["week_end"] = pd.to_datetime(df["week_end"])
-        df["platform"] = platform
-        df["metric_id"] = metric_id
-        df["column"] = f"{platform}_{metric_id}"
-        frames.append(df)
+def _load_weekly_list(raw: dict) -> list[dict]:
+    """
+    JSON data → haftalık liste.
+    Sadece weekly list şeması desteklenir (collect-ratings.py yeni formatı).
+    """
+    data = raw.get("data", [])
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def _empty_weeks_df(platform: str, metric_id: str) -> pd.DataFrame:
+    """Veri olmayan metrik için NaN dolu DataFrame döner (REPORT_WEEKS boyutunda)."""
+    rows = [{"week_start": ws, "week_end": we, "value": np.nan}
+            for ws, we in REPORT_WEEKS]
+    df = pd.DataFrame(rows)
+    df["week_start"]  = pd.to_datetime(df["week_start"])
+    df["week_end"]    = pd.to_datetime(df["week_end"])
+    df["platform"]    = platform
+    df["metric_id"]   = metric_id
+    df["column"]      = f"{platform}_{metric_id}"
+    df["data_source"] = "empty"
+    return df
+
+
+def parse_raw_files(week: str) -> pd.DataFrame:
+    """
+    Her (platform, slug) için:
+      - LIVE_SLUGS   → live dosya ara; live:true ise kullan, değilse boş
+      - EMPTY_SLUGS  → hiç dosya arama, NaN döner
+    _DATA_SOURCES sözlüğünü günceller.
+    """
+    global _DATA_SOURCES
+    _DATA_SOURCES = {}
+
+    platforms = ["ios", "android"]
+    frames    = []
+
+    for platform in platforms:
+        for slug, metric_id in FILE_TO_METRIC_ID.items():
+            col = f"{platform}_{metric_id}"
+
+            if slug in EMPTY_SLUGS:
+                # Credential yok → boş
+                df = _empty_weeks_df(platform, metric_id)
+                frames.append(df)
+                print(f"  {col:30s} [EMPTY — credential yok]")
+                _DATA_SOURCES[col] = "empty"
+                continue
+
+            # LIVE_SLUGS
+            live_path, raw = _find_live_file(platform, slug)
+            if live_path and raw is not None:
+                rows = _load_weekly_list(raw)
+                if rows:
+                    df = pd.DataFrame(rows)
+                    df["week_start"]  = pd.to_datetime(df["week_start"])
+                    df["week_end"]    = pd.to_datetime(df["week_end"])
+                    df["platform"]    = platform
+                    df["metric_id"]   = metric_id
+                    df["column"]      = col
+                    df["data_source"] = "live"
+                    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+                    frames.append(df)
+                    non_null = df["value"].notna().sum()
+                    print(f"  {col:30s} [LIVE: {live_path.name}] "
+                          f"({non_null}/{len(df)} hafta dolu)")
+                    _DATA_SOURCES[col] = "live"
+                    continue
+
+            # Live yoksa → boş
+            df = _empty_weeks_df(platform, metric_id)
+            frames.append(df)
+            reason = "live dosya yok" if live_path is None else "data listesi boş"
+            print(f"  {col:30s} [EMPTY — {reason}]")
+            _DATA_SOURCES[col] = "empty"
 
     if not frames:
-        print("HATA: İşlenecek dosya bulunamadı.", file=sys.stderr)
+        print("HATA: İşlenecek veri bulunamadı.", file=sys.stderr)
         sys.exit(1)
 
     return pd.concat(frames, ignore_index=True)
@@ -131,6 +208,10 @@ def merge_metrics(long_df: pd.DataFrame) -> pd.DataFrame:
 
     ordered_cols = ["week_start", "week_end"] + COLUMN_ORDER
     pivot = pivot[[c for c in ordered_cols if c in pivot.columns]]
+
+    # data_source sütunları ekle (her metrik için live/mock)
+    for col in COLUMN_ORDER:
+        pivot[f"{col}_source"] = _DATA_SOURCES.get(col, "unknown")
 
     return pivot
 
@@ -284,9 +365,15 @@ def main():
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Parse
-    print("► PARSE: raw JSON dosyaları okunuyor...")
+    print("► PARSE: raw JSON dosyaları okunuyor (live öncelikli)...")
     long_df = parse_raw_files(week)
     print(f"  {len(long_df)} veri noktası yüklendi ({long_df['column'].nunique()} metrik×platform)")
+
+    # Kaynak özeti
+    live_cols = [c for c, s in _DATA_SOURCES.items() if s == "live"]
+    mock_cols = [c for c, s in _DATA_SOURCES.items() if s == "mock"]
+    print(f"  LIVE: {', '.join(live_cols) or 'yok'}")
+    print(f"  MOCK: {', '.join(mock_cols) or 'yok'}")
 
     # 2. Merge
     print("► MERGE: pivot tablo oluşturuluyor...")
@@ -320,8 +407,8 @@ def main():
     out_wow  = PROCESSED_DIR / f"wow-changes-{week}.csv"
     out_comp = PROCESSED_DIR / f"platform-comparison-{week}.csv"
 
-    # Ana tablo: pivot + MA4
-    pivot_with_ma.to_csv(out_main, index=False, float_format="%.2f")
+    # Ana tablo: pivot + MA4  (NaN → "-")
+    pivot_with_ma.to_csv(out_main, index=False, float_format="%.2f", na_rep="-")
     # WoW tablosu + anomali flag birleşimi
     wow_with_flags = wow.merge(
         anomaly_df[["week_start", "column", "anomaly_flag"]].pivot_table(
@@ -330,8 +417,8 @@ def main():
         on="week_start",
         how="left",
     )
-    wow_with_flags.to_csv(out_wow, index=False, float_format="%.2f")
-    comparison.to_csv(out_comp, index=False, float_format="%.2f")
+    wow_with_flags.to_csv(out_wow, index=False, float_format="%.2f", na_rep="-")
+    comparison.to_csv(out_comp, index=False, float_format="%.2f", na_rep="-")
 
     print(f"\n✓ Çıktılar kaydedildi:")
     print(f"  {out_main}")
@@ -339,37 +426,40 @@ def main():
     print(f"  {out_comp}")
 
     # ---------------------------------------------------------------------------
-    # Doğrulama
+    # Veri kaynağı özeti
     # ---------------------------------------------------------------------------
     print(f"\n{'─'*60}")
-    print("  DOĞRULAMA")
+    print("  VERİ KAYNAĞI ÖZETİ")
     print(f"{'─'*60}")
+    live_cols  = [c for c, s in _DATA_SOURCES.items() if s == "live"]
+    empty_cols = [c for c, s in _DATA_SOURCES.items() if s == "empty"]
+    print(f"  LIVE  ({len(live_cols)}): {', '.join(live_cols) or 'yok'}")
+    print(f"  EMPTY ({len(empty_cols)}): {', '.join(empty_cols) or 'yok'}")
 
-    last = pivot.iloc[-1]
-    checks = [
-        ("iOS rating (son hafta)",           last.get("ios_rating"),           2.8),
-        ("Android active users (son hafta)", last.get("android_active_users"), 51000),
-        ("iOS crash-free (son hafta)",        last.get("ios_crash_free_user"),  99.88),
-    ]
-    all_ok = True
-    for label, actual, expected in checks:
-        ok = pd.notna(actual) and abs(float(actual) - float(expected)) < 0.01
-        status = "✓" if ok else "✗"
-        if not ok:
-            all_ok = False
-        print(f"  {status} {label}: {actual} (beklenen: {expected})")
+    # Rating değerleri farklı mı?
+    if "ios_rating" in live_cols and "android_rating" in live_cols:
+        ios_vals = pivot["ios_rating"].dropna().tolist()
+        and_vals = pivot["android_rating"].dropna().tolist()
+        print(f"\n  iOS rating (haftalık)    : {[round(v,2) for v in ios_vals]}")
+        print(f"  Android rating (haftalık): {[round(v,2) for v in and_vals]}")
+        all_same_ios = len(set(round(v,2) for v in ios_vals)) == 1
+        all_same_and = len(set(round(v,2) for v in and_vals)) == 1
+        if all_same_ios:
+            print("  ⚠ iOS: Tüm haftalar aynı değer — review sayısı yetersiz olabilir")
+        else:
+            print("  ✓ iOS: Haftalar arasında farklı değerler var")
+        if all_same_and:
+            print("  ⚠ Android: Tüm haftalar aynı değer — review sayısı yetersiz olabilir")
+        else:
+            print("  ✓ Android: Haftalar arasında farklı değerler var")
 
-    if all_ok:
-        print("\n  Tüm doğrulama kontrolleri geçti.")
-    else:
-        print("\n  UYARI: Bazı doğrulama kontrolleri başarısız.", file=sys.stderr)
-        sys.exit(1)
-
-    # Anomali özeti
+    # Anomali özeti (sadece veri olan metrikler)
     if not criticals.empty:
         print(f"\n  ⚠ KRİTİK ANOMALİLER:")
         for _, r in criticals.iterrows():
-            print(f"    [{r['week_start'].date()}] {r['column']}: {r['value']} (WoW: {r['wow_pct']}%)")
+            if pd.notna(r["value"]):
+                print(f"    [{r['week_start'].date()}] {r['column']}: {r['value']} "
+                      f"(WoW: {r['wow_pct']}%)")
 
     print(f"\n{'='*60}\n")
 

@@ -1,0 +1,55 @@
+{
+  "app_name": "SunExpress",
+  "platform": "ios",
+  "metric": "crash_free_user",
+  "collection_date": "2026-03-13T12:52:34.226038+00:00",
+  "source": "mock_data",
+  "live": false,
+  "period": {
+    "start": "2026-01-14",
+    "end": "2026-03-10",
+    "granularity": "weekly"
+  },
+  "data": [
+    {
+      "week_start": "2026-01-14",
+      "week_end": "2026-01-20",
+      "value": 99.71
+    },
+    {
+      "week_start": "2026-01-21",
+      "week_end": "2026-01-27",
+      "value": 99.87
+    },
+    {
+      "week_start": "2026-01-28",
+      "week_end": "2026-02-03",
+      "value": 99.74
+    },
+    {
+      "week_start": "2026-02-04",
+      "week_end": "2026-02-10",
+      "value": 99.82
+    },
+    {
+      "week_start": "2026-02-11",
+      "week_end": "2026-02-17",
+      "value": 99.87
+    },
+    {
+      "week_start": "2026-02-18",
+      "week_end": "2026-02-24",
+      "value": 99.9
+    },
+    {
+      "week_start": "2026-02-25",
+      "week_end": "2026-03-03",
+      "value": 99.81
+    },
+    {
+      "week_start": "2026-03-04",
+      "week_end": "2026-03-10",
+      "value": 99.82
+    }
+  ]
+}

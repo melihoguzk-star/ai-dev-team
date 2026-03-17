@@ -14,7 +14,9 @@ Her faz çıktısı aşağıdaki dizin yapısına uygun olmalıdır:
 │   ├── web-analysis-report.html       # Ana analiz raporu
 │   └── web-analysis-report.md         # (opsiyonel) Markdown versiyonu
 │
-├── docs/                              # Faz 2, 3, 5, 7b, 8b çıktıları
+├── docs/                              # Faz 1.5, 2, 3, 5, 7b, 8b çıktıları
+│   ├── brand-tokens.json              # Faz 1.5: Marka token'ları (makine okunur)
+│   ├── brand-style-guide.html         # Faz 1.5: Görsel marka rehberi
 │   ├── architecture-decisions.md      # Faz 2: Mimari kararlar
 │   ├── ba-document.md                 # Faz 3: İş analizi dokümanı
 │   ├── ios-design-spec.md             # Faz 5: iOS tasarım spesifikasyonu
@@ -69,13 +71,14 @@ Her faz, sadece kendi bağımlı olduğu fazların çıktılarını okur. Gereks
 
 | Hedef Faz | Okuması Gereken Dosyalar | Neden |
 |-----------|--------------------------|-------|
+| **Faz 1.5** | `analysis/web-analysis-report.html` | Web analizindeki UI ve renk ipuçlarını okumak için |
 | **Faz 2** | `analysis/web-analysis-report.html` | Sitenin teknik yapısını anlamak için |
 | **Faz 3** | `analysis/web-analysis-report.html` + `docs/architecture-decisions.md` | Analiz + mimari kararları sentezlemek için |
-| **Faz 4** | `analysis/web-analysis-report.html` + `docs/ba-document.md` | Mevcut UI'ı anlamak + ekranları bilmek için |
-| **Faz 5** | `design/components/` + `docs/ba-document.md` + `docs/architecture-decisions.md` | Design spec'leri iOS'a çevirmek için |
+| **Faz 4** | `analysis/web-analysis-report.html` + `docs/ba-document.md` + `docs/brand-tokens.json` | Mevcut UI'ı anlamak + ekranları bilmek + marka token'larını uygulamak için |
+| **Faz 5** | `design/components/` + `docs/ba-document.md` + `docs/architecture-decisions.md` + `docs/brand-tokens.json` | Design spec'leri iOS'a çevirirken marka token'larını birebir uygulamak için |
 | **Faz 6a** | `docs/architecture-decisions.md` + `docs/ba-document.md` | Tech stack + gereksinimler için |
 | **Faz 6b** | `docs/architecture-decisions.md` + `docs/ios-design-spec.md` + `docs/ba-document.md` | iOS core modülleri için |
-| **Faz 6c** | `docs/ios-design-spec.md` + `design/tokens.json` + `ios/` (mevcut core) | UI katmanı için + core entegrasyonu |
+| **Faz 6c** | `docs/ios-design-spec.md` + `docs/brand-tokens.json` + `design/tokens.json` + `ios/` (mevcut core) | UI katmanı için + marka tutarlılığı + core entegrasyonu |
 | **Faz 7a** | `docs/ba-document.md` + `backend/` + `ios/` | AC'lere uygun test yazmak için |
 | **Faz 7b** | `backend/` + `ios/` + `tests/` + `docs/architecture-decisions.md` + `docs/ba-document.md` | Kod + mimari + BA uyum kontrolü |
 | **Faz 8a** | `docs/architecture-decisions.md` + `backend/` | Deployment altyapısı hazırlamak için |
@@ -245,7 +248,8 @@ Her faz geçişinde aşağıdaki durum dosyasını güncelleyin:
 | Faz | Durum | Skor | Deneme | Başlangıç | Bitiş | Notlar |
 |-----|-------|------|--------|-----------|-------|--------|
 | 1 | ✅ Tamamlandı | 85 | 1/3 | 2026-03-04 23:50 | 2026-03-05 00:05 | — |
-| 2 | 🔄 Devam ediyor | — | 1/3 | 2026-03-05 00:06 | — | — |
+| 1.5 | 🔄 Devam ediyor | — | 1/3 | 2026-03-05 00:06 | — | — |
+| 2 | ⏳ Bekliyor | — | — | — | — | — |
 | 3 | ⏳ Bekliyor | — | — | — | — | — |
 | 4 | ⏳ Bekliyor | — | — | — | — | — |
 | 5 | ⏳ Bekliyor | — | — | — | — | — |

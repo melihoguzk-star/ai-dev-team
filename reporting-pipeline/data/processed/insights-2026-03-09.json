@@ -1,0 +1,26 @@
+{
+  "week": "2026-03-09",
+  "generated_at": "2026-03-13T16:09:54.042922",
+  "total_insights": 1,
+  "by_priority": {
+    "critical": 0,
+    "important": 1,
+    "info": 0
+  },
+  "insights": [
+    {
+      "id": "INS-01",
+      "priority": "important",
+      "category": "rating",
+      "platform": "android",
+      "observation": "Android puanı da 2.62 → 2.04 düştü. iOS ile eş zamanlı düşüş her iki platformda ortak bir sorunun işareti.",
+      "hypothesis": "Platform bağımsız bir ürün/akış sorunu mevcut olabilir. Ortak backend hatası veya kullanıcı deneyimi regresyonu.",
+      "action": "iOS ve Android rating düşüşlerinin hangi tarihte örtüştüğünü belirle. O tarihteki backend deploy'ları ve A/B test değişikliklerini incele.",
+      "supporting_data": {
+        "android_trend_slope": -0.151071,
+        "ios_trend_slope": -0.055,
+        "weeks_declining": "16 Şub'dan itibaren her iki platform"
+      }
+    }
+  ]
+}

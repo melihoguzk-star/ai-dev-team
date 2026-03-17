@@ -21,19 +21,27 @@ struct CategoriesView: View {
                     }
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
+                        LazyVGrid(columns: columns, spacing: BrandStyle.Spacing.section) {
                             ForEach(viewModel.rootCategories) { category in
                                 NavigationLink(value: category) {
                                     StoreCategoryCard(category: category)
                                 }
                             }
                         }
-                        .padding()
+                        .padding(BrandStyle.Spacing.page)
                     }
                 }
             }
+            .background(Color.brandBackground)
+            .clipShape(UnevenRoundedRectangle(
+                topLeadingRadius: BrandStyle.Radius.page,
+                bottomLeadingRadius: 0,
+                bottomTrailingRadius: 0,
+                topTrailingRadius: BrandStyle.Radius.page
+            ))
+            .background(Color.brandPrimary)
             .navigationTitle("Kategoriler")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: StoreCategory.self) { category in
                 ProductListView(
                     title: category.name,
@@ -43,6 +51,9 @@ struct CategoriesView: View {
             .task {
                 await viewModel.loadCategories()
             }
+            .toolbarBackground(Color.brandPrimary, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 }
@@ -64,22 +75,21 @@ struct StoreCategoryCard: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(category.name)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(.brandSectionHead)
                     .foregroundStyle(.primary)
                     .lineLimit(2)
 
                 if let count = category.productCount {
-                    Text("\(count) urun")
-                        .font(.caption)
+                    Text("\(count) ürün")
+                        .font(.brandCaption)
                         .foregroundStyle(.secondary)
                 }
             }
             .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .background(Color.brandBackground)
+        .clipShape(RoundedRectangle(cornerRadius: BrandStyle.Radius.card))
         .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
     }
 }
@@ -103,7 +113,7 @@ struct StoreCategoryPlaceholderImage: View {
 
     var body: some View {
         Rectangle()
-            .fill(Color.blue.opacity(0.08))
+            .fill(Color.brandPrimary.opacity(0.08))
             .overlay {
                 Text(emoji)
                     .font(.system(size: 44))
@@ -119,7 +129,7 @@ struct ErrorView: View {
         VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 44))
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color.brandWarning)
 
             Text(message)
                 .multilineTextAlignment(.center)
